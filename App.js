@@ -8,6 +8,7 @@ import RegistreCliente from './screens/initial/RegistreCliente';
 import ConfirmaEmpresa from './screens/initial/ConfirmaEmpresa';
 import RegistreEmpresa from './screens/initial/RegistreEmpresa';
 import InitPages from './screens/init';
+import CustomerScreensVendorPage from './screens/customer/CompanyScreen/topbar'
 
 import CustomerScreens from './screens/customer'
 import { Api } from 'meconnect-sdk';
@@ -28,6 +29,7 @@ export default function App() {
           <Stack.Screen name="InitPages" component={InitPages}/>
 
           <Stack.Screen name="CustomerScreens"  component={CustomerScreens} />
+          <Stack.Screen name="CustomerScreensVendorPage"  component={CustomerScreensVendorPage} />
 
 
           <Stack.Screen name="EscolherConta" component={EscolherConta} />

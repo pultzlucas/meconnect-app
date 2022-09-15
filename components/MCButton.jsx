@@ -1,30 +1,39 @@
 import { Colors } from "meconnect-sdk"
-import { Button, Pressable, StyleSheet, Text, TouchableOpacity } from "react-native"
+import { ActivityIndicator, Button, Pressable, StyleSheet, Text, TouchableOpacity } from "react-native"
 
-function MCButton({ styleType = 'primary', size = 'small', onClick, children, style }) {
+function MCButton({ styleType = 'primary', size = 'medium', onClick, children, style, isLoading = false }) {
   const styleTypeString = styleType.charAt(0).toUpperCase() + styleType.slice(1)
   const sizeString = size.charAt(0).toUpperCase() + size.slice(1)
   return (
     <TouchableOpacity
       onPress={onClick}
       style={[
+        {
+          display: 'flex'
+        },
         styles[`button${styleTypeString}`],
         styles[`button${sizeString}`],
-        {...style}
+        { ...style }
       ]}
     >
-      <Text
-        style={[
-          styles[`text${styleTypeString}`],
-          styles[`text${sizeString}`],
-        ]}
-      >
-        {children}</Text>
+      {isLoading && <ActivityIndicator size="small" color="white" />}
+      {
+        !isLoading &&
+        <Text
+          style={[
+            styles[`text${styleTypeString}`],
+            styles[`text${sizeString}`],
+          ]}
+        >{children}</Text>
+      }
     </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
+  button: {
+    display: 'flex',
+  },
   buttonPrimary: {
     alignItems: 'center',
     justifyContent: 'center',

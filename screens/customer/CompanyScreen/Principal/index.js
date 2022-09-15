@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, RefreshControl } from "react";
 import {
   View,
   Text,
@@ -9,24 +9,56 @@ import {
 import MCButton from "../../../../components/MCButton";
 import { Api, Colors } from "meconnect-sdk";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
-export default function Prin() {
+export default function Prin({ route }) {
   const [vendor, setVendor] = useState({})
+  const [connected, setConnected] = useState(false)
+  const [customerId, setCustomerId] = useState(null)
+  const { vendor_id } = route.params
 
   async function getVendor() {
-    await Api.token.set('1|1FcZk8sxDaIV6P70Hxy70UQk0spUo4CjkYlctvpf')
-    const { data } = await Api.db.vendors.get(1)
-    console.log(data)
+    const { data } = await Api.db.vendors.get(vendor_id)
     return data
+  }
+
+  async function connect() {
+    const { status } = await Api.db.connections.connect({
+      customer_id: customerId,
+      vendor_id: vendor_id
+    })
+
+    if (status === 200) {
+      setConnected(true)
+    }
+  }
+
+  async function disconnect() {
+    const { status } = await Api.db.connections.disconnect({
+      customer_id: customerId,
+      vendor_id: vendor_id
+    })
+
+    if (status === 200) {
+      setConnected(false)
+    }
   }
 
   useEffect(() => {
     getVendor().then(vendor => setVendor(vendor))
+  }, [connected])
+
+  useEffect(() => {
+    AsyncStorage.getItem('@CustomerId').then(async id => {
+      setCustomerId(id)
+      const { data } = await Api.db.connections.isConnected(id, vendor_id)
+      setConnected(data.connected)
+    })
   }, [])
 
   return (
-    <ScrollView >
+    <ScrollView>
       <View style={styles.container}>
 
         {/* Fotos */}
@@ -38,27 +70,23 @@ export default function Prin() {
         <Text style={styles.desc} >{vendor.description}</Text>
 
         {/* Conectar */}
-        <MCButton style={styles.btn} children={"Conectar"} />
-        <Text style={styles.ttt}>Conectados</Text>
-        <Text style={styles.tt2}>{vendor.customers_connected}</Text>
+        {
+          connected ?
+            <MCButton style={styles.btn} children={"Desconectar"} onClick={disconnect} /> :
+            <MCButton style={styles.btn} children={"Conectar"} onClick={connect} />
+        }
+
+        <View>
+          <Text style={styles.ttt}>Conectados</Text>
+          <Text style={styles.tt2}>{vendor.customers_connected}</Text>
+        </View>
 
 
         {/* CNPJ */}
         <Text style={styles.cnpj}>CNPJ: {vendor.cnpj}</Text>
 
         {/* Infos */}
-        <Text allowFontScaling={false} style={styles.soci}>
-          Redes Sociais:
-        </Text>
-        <Text style={styles.soci2}>
-          Facebook: KidsPlay{"\n"}Instagram: @kidsplaybr{"\n"}Linkedin:@kidsplay{"\n"} Email: {vendor.email}
-        </Text>
-        <Text allowFontScaling={false} style={styles.soci}>
-          Horário de Funcionamento:
-        </Text>
-        <Text style={styles.soci3}>
-          Das 7:00 até 12:00{"\n"}Das 13:00 até 18:00
-        </Text>
+        <Text style={styles.bio}>{vendor.bio}</Text>
       </View>
     </ScrollView>
   );
@@ -99,10 +127,13 @@ const styles = StyleSheet.create({
   logo: {
     borderWidth: 2,
     borderColor: "#ffffff",
-    width: 180,
-    height: 180,
+    width: 160,
+    height: 160,
     marginBottom: 5,
-    borderRadius: 110,
+    borderRadius: 200,
+    borderWidth: 5,
+    borderColor: '#eee',
+    borderStyle: 'solid',
   },
   titulo: {
     fontSize: 30,
@@ -118,47 +149,21 @@ const styles = StyleSheet.create({
   },
   cnpj: {
     borderColor: "#EEEEEE",
-    borderWidth: 7,
+    // borderWidth: 7,
+    borderBottomWidth: 7,
+    borderTopWidth: 7,
     color: Colors.Black,
-    width: 500,
-    height: 50,
+    width: '100%',
     textAlign: "center",
     fontSize: 18,
-    fontWeight: "bold",
-    marginTop: "5%",
-    paddingTop: 13,
+    marginTop: 20,
+    padding: 10,
   },
-  soci: {
-    fontSize: 25,
-    fontWeight: "bold",
-    borderColor: "#EEEEEE",
-    color: Colors.Black,
-    borderWidth: 10,
-    paddingTop: 8,
-    width: 460,
-    textAlign: "center",
-    borderBottomWidth: 0,
-    borderTopWidth: 0,
-  },
-  soci2: {
+  bio: {
     fontSize: 17,
-    textAlign: "center",
     color: Colors.Black,
-    borderColor: "#EEEEEE",
-    borderWidth: 10,
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    width: 460,
-  },
-  soci3: {
-    fontSize: 17,
-    textAlign: "center",
-    color: Colors.Black,
-    borderColor: "#EEEEEE",
-    borderWidth: 10,
-    borderTopWidth: 0,
-    borderBottomWidth: 0,
-    width: 460,
+    width: '100%',
     marginBottom: 200,
+    padding: 10,
   },
 });

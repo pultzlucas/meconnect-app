@@ -13,7 +13,7 @@ import { NativeModules } from "react-native";
 
 const Tab = createMaterialBottomTabNavigator();
 
-export default function Routes() {
+export default function Routes({ route }) {
   return (
     <Tab.Navigator
       initialRouteName="Exploração"

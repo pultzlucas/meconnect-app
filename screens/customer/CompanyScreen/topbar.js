@@ -12,7 +12,8 @@ import { Colors } from "meconnect-sdk";
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function TopBar() {
+export default function TopBar({ route }) {
+  const { vendor_id } = route.params
   return (
     <Tab.Navigator
       activeColor="#F5803E"
@@ -33,11 +34,11 @@ export default function TopBar() {
     >
 
 
-      <Tab.Screen name="Principal" component={Prin} />
+      <Tab.Screen name="Principal" component={Prin} initialParams={{ vendor_id }} />
 
-      <Tab.Screen name="Posts" component={Post} />
+      <Tab.Screen name="Posts" component={Post} initialParams={{ vendor_id }}/>
 
-      <Tab.Screen name="Produtos" component={Prods} />
+      <Tab.Screen name="Produtos" component={Prods} initialParams={{ vendor_id }}/>
     </Tab.Navigator>
   );
 }

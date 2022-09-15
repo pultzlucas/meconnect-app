@@ -11,7 +11,7 @@ import {
 import { Api, Colors } from "meconnect-sdk";
 
 
-export default function Post() {
+export default function Post({ route }) {
   const Item = ({ title, content, media_url, created_at }) => (
     <View style={styles.item}>
       <Text style={styles.date}>{created_at}</Text>
@@ -34,8 +34,7 @@ export default function Post() {
   const [posts, setPosts] = useState([]);
 
   async function getPosts() {
-    // await Api.token.set("1|jnA1wBtsiyauJOeWOGY1QfuMuoEXtRnIIDX63MPQ");
-    const posts = await Api.db.vendors.getPosts(1);
+    const posts = await Api.db.vendors.getPosts(route.params.vendor_id);
     return posts.data
   }
 
@@ -50,7 +49,7 @@ export default function Post() {
       <TextInput
         style={styles.searchInput}
         onChangeText={query => {
-          if(!query) {
+          if (!query) {
             getPosts().then(posts => setPosts(posts))
           }
 
@@ -83,7 +82,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 10,
     padding: 10,
-    elevation: 3,  
+    elevation: 3,
     fontSize: 18,
     color: '#333'
   },

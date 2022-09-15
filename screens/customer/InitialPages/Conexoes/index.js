@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from 'react-native';
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import ConnectionsList from "../../../../components/CardCone";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -9,25 +9,15 @@ const myIcon = <Ionicons name="ellipsis-vertical" size={26} color="#fff" />;
 import { Api } from "meconnect-sdk";
 import Search from "../../../../components/SearchInput";
 
-export default function Conection() {
+
+
+export default function Conection({ navigation }) {
   return (
-    <View style={styles.container}>
-      <MCHeader title={"Conexões"}>
-        <OptionsMenu
-          customButton={myIcon}
-          buttonStyle={{
-            width: 32,
-            height: 8,
-            margin: 7.5,
-            resizeMode: "contain",
-          }}
-          destructiveIndex={1}
-          options={["Edit", "Delete", "Cancel"]}
-        />
-      </MCHeader>
-      <Search placeholder={"Pesquisar conexões"}/>
-      <ConnectionsList />
-    </View>
+      <View style={styles.container}>
+        <MCHeader title={"Conexões"}></MCHeader>
+        {/* <Search placeholder={"Pesquisar conexões"} /> */}
+        <ConnectionsList navigation={navigation} />
+      </View>
   );
 }
 

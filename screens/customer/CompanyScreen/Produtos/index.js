@@ -12,7 +12,7 @@ import {
 import { Searchbar } from "react-native-paper";
 import { Api } from "meconnect-sdk";
 
-export default function Prods() {
+export default function Prods({ route }) {
   const [products, setProducts] = useState([])
 
   // Barra de Pesquisa
@@ -52,8 +52,7 @@ export default function Prods() {
   }
 
   async function getProducts() {
-    // await Api.token.set("1|1FcZk8sxDaIV6P70Hxy70UQk0spUo4CjkYlctvpf");
-    const products = await Api.db.vendors.getProducts(1);
+    const products = await Api.db.vendors.getProducts(route.params.vendor_id);
     return products.data
   }
 

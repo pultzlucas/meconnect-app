@@ -1,33 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity, RefreshControl } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'react-native-paper';
 import { Api } from 'meconnect-sdk';
+import { useCallback } from 'react';
 
-const DATA = [
-  {
-    id: '1',
-    title: 'Santo Calçado',
-    desc: 'Melhor loja e atacado de roupas e sapatos da cidade',
-  },
-  {
-    id: '2',
-    title: 'Leo Eventos',
-    desc: 'Empresa de preparação de eventos e cia',
-  },
-  {
-    id: '3',
-    title: 'KidsPlay',
-    desc: 'E-commerce de brinquedos',
-  },
-];
-
-export default function ConnectionsList() {
+export default function ConnectionsList({ navigation }) {
   const [vendors, setVendors] = useState([])
+  const [refreshing, setRefreshing] = useState(false);
 
   const renderItem = ({ item }) => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={() => {
+      navigation.navigate('CustomerScreensVendorPage', { vendor_id: item.id })
+    }}>
       <View style={styles.item}>
         <Text style={styles.title}>{item.commercial}</Text>
         <Text style={styles.desc}>{item.description}</Text>
@@ -36,20 +22,35 @@ export default function ConnectionsList() {
   );
 
   async function fetchVendors() {
-    const res = await fetch('https://meconnect-api.herokuapp.com/api/users/vendor', {
-      headers: {
-        'Authorization': "Bearer " + await Api.token.get()
-      }
-    })
+    const { data: connections } = await Api.db.customers.getConnections(1)
+    let vendors = []
 
-    return res.json()
+    for (let conn of connections) {
+      const { data: vendor } = await Api.db.vendors.get(conn.vendor_id)
+      vendors.push(vendor)
+    }
+
+    console.log(vendors)
+    return vendors
   }
 
   useEffect(() => {
     fetchVendors().then(vendors => {
       setVendors(vendors)
     })
-  })
+  }, [refreshing])
+
+
+  // Scroll down refreshing Refreshing
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -57,7 +58,12 @@ export default function ConnectionsList() {
         data={vendors}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-      />
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }/>
     </SafeAreaView>
   );
 }
