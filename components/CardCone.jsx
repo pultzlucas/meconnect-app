@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity, RefreshControl } from 'react-native';
+import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Button } from 'react-native-paper';
-import { Api } from 'meconnect-sdk';
+import { Api, Colors } from 'meconnect-sdk';
 import { useCallback } from 'react';
 
 export default function ConnectionsList({ navigation }) {
   const [vendors, setVendors] = useState([])
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => {
@@ -30,13 +31,15 @@ export default function ConnectionsList({ navigation }) {
       vendors.push(vendor)
     }
 
-    console.log(vendors)
     return vendors
   }
 
   useEffect(() => {
+    setIsLoading(true)
+    setVendors([])
     fetchVendors().then(vendors => {
       setVendors(vendors)
+      setIsLoading(false)
     })
   }, [refreshing])
 
@@ -49,11 +52,12 @@ export default function ConnectionsList({ navigation }) {
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    wait(1000).then(() => setRefreshing(false));
+    wait(500).then(() => setRefreshing(false));
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
+      {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
       <FlatList
         data={vendors}
         renderItem={renderItem}
@@ -63,7 +67,7 @@ export default function ConnectionsList({ navigation }) {
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
-        }/>
+        } />
     </SafeAreaView>
   );
 }
