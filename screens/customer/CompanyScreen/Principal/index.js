@@ -10,12 +10,15 @@ import MCButton from "../../../../components/MCButton";
 import { Api, Colors } from "meconnect-sdk";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Splash from "../../../../components/Splash";
 
 
 export default function Prin({ route }) {
   const [vendor, setVendor] = useState({})
   const [connected, setConnected] = useState(false)
   const [customerId, setCustomerId] = useState(null)
+  const [showSplash, setShowSplash] = useState(false)
+  const [loadingConnections, setLoadingConnections] = useState(false)
   const { vendor_id } = route.params
 
   async function getVendor() {
@@ -24,35 +27,42 @@ export default function Prin({ route }) {
   }
 
   async function connect() {
+    setLoadingConnections(true)
     const { status } = await Api.db.connections.connect({
       customer_id: customerId,
       vendor_id: vendor_id
     })
-
+    
     if (status === 200) {
       setConnected(true)
     }
   }
-
+  
   async function disconnect() {
+    setLoadingConnections(true)
     const { status } = await Api.db.connections.disconnect({
       customer_id: customerId,
       vendor_id: vendor_id
     })
-
+    
     if (status === 200) {
       setConnected(false)
     }
   }
-
+  
   useEffect(() => {
-    getVendor().then(vendor => setVendor(vendor))
+    getVendor().then(vendor => {
+      setVendor(vendor)
+      setLoadingConnections(false)
+    })
   }, [connected])
 
   useEffect(() => {
+    setShowSplash(true)
     AsyncStorage.getItem('@CustomerId').then(async id => {
       setCustomerId(id)
       const { data } = await Api.db.connections.isConnected(id, vendor_id)
+      setShowSplash(false)
       setConnected(data.connected)
     })
   }, [])
@@ -60,7 +70,6 @@ export default function Prin({ route }) {
   return (
     <ScrollView>
       <View style={styles.container}>
-
         {/* Fotos */}
         <Image style={styles.banner} source={{ uri: vendor.banner_url }} />
         <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
@@ -72,8 +81,8 @@ export default function Prin({ route }) {
         {/* Conectar */}
         {
           connected ?
-            <MCButton style={styles.btn} children={"Desconectar"} onClick={disconnect} /> :
-            <MCButton style={styles.btn} children={"Conectar"} onClick={connect} />
+            <MCButton style={styles.btn} isLoading={loadingConnections} children={"Desconectar"} onClick={disconnect} /> :
+            <MCButton style={styles.btn} isLoading={loadingConnections} children={"Conectar"} onClick={connect} />
         }
 
         <View>
@@ -88,6 +97,7 @@ export default function Prin({ route }) {
         {/* Infos */}
         <Text style={styles.bio}>{vendor.bio}</Text>
       </View>
+      <Splash show={showSplash} />
     </ScrollView>
   );
 }

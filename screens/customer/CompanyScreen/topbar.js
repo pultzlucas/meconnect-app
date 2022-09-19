@@ -31,14 +31,15 @@ export default function TopBar({ route }) {
           backgroundColor: "#fff",
         },
       }}
+      initialRouteName="Principal"
+      backBehavior="history"
+      
     >
-
-
       <Tab.Screen name="Principal" component={Prin} initialParams={{ vendor_id }} />
 
-      <Tab.Screen name="Posts" component={Post} initialParams={{ vendor_id }}/>
+      <Tab.Screen name="Posts" component={Post} initialParams={{ vendor_id }} />
 
-      <Tab.Screen name="Produtos" component={Prods} initialParams={{ vendor_id }}/>
+      <Tab.Screen name="Produtos" component={Prods} initialParams={{ vendor_id }} />
     </Tab.Navigator>
   );
 }

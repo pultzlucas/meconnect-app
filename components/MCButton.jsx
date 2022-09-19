@@ -16,7 +16,7 @@ function MCButton({ styleType = 'primary', size = 'medium', onClick, children, s
         { ...style }
       ]}
     >
-      {isLoading && <ActivityIndicator size="small" color="white" />}
+      {isLoading && <ActivityIndicator size='small' color="white" />}
       {
         !isLoading &&
         <Text
