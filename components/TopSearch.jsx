@@ -3,10 +3,9 @@ import * as React from 'react';
 import { StatusBar, StyleSheet, View } from "react-native";
 import { Searchbar } from 'react-native-paper';
 
-export default function TopSearch(title) {
+export default function TopSearch({ onChangeText }) {
   const [searchQuery, setSearchQuery] = React.useState('');
 
-  const onChangeSearch = query => setSearchQuery(query);
 
   return (
     <View style={styles.container}>
@@ -21,8 +20,7 @@ export default function TopSearch(title) {
           marginTop: 10,
         }}
         placeholder="Pesquisar"
-        onChangeText={onChangeSearch}
-        value={searchQuery}
+        onChangeText={onChangeText}
       />
     </View>
   );
@@ -30,7 +28,5 @@ export default function TopSearch(title) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.DarkOrange,
-    marginTop: StatusBar.currentHeight,
   }
 })

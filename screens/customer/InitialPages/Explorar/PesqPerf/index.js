@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity, RefreshControl, ActivityIndicator, Image, Dimensions } from 'react-native';
-import { NavigationContainer, useIsFocused } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button } from 'react-native-paper';
-import { Api, Colors } from 'meconnect-sdk';
-import { useCallback } from 'react';
+import { Api, Colors } from "meconnect-sdk";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image } from "react-native";
+import TopSearch from "../../../../../components/TopSearch";
+import ConnectionsList from "../../../../../components/CardCone";
+import CardPerfSearch from "../../../../../components/CardPerfSearch";
 
-export default function ConnectionsList({ navigation }) {
-  const isFocused = useIsFocused();
-
+export default function Perf({ navigation }) {
   const [vendors, setVendors] = useState([])
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
@@ -27,16 +24,9 @@ export default function ConnectionsList({ navigation }) {
     </TouchableOpacity>
   );
 
-  async function fetchVendors() {
-    const { data: connections } = await Api.db.customers.getConnections(1)
-    let vendors = []
-
-    for (let conn of connections) {
-      const { data: vendor } = await Api.db.vendors.get(conn.vendor_id)
-      vendors.push(vendor)
-    }
-
-    return vendors
+  async function fetchVendors(text) {
+    const { data } = await Api.db.vendors.getByCommercial(text)
+    return data
   }
 
   useEffect(() => {
@@ -46,7 +36,7 @@ export default function ConnectionsList({ navigation }) {
       setVendors(vendors)
       setIsLoading(false)
     })
-  }, [refreshing, isFocused])
+  }, [refreshing])
 
 
   // Scroll down refreshing Refreshing
@@ -60,9 +50,22 @@ export default function ConnectionsList({ navigation }) {
     wait(500).then(() => setRefreshing(false));
   }, []);
 
+
   return (
     <View style={styles.container}>
+      <TopSearch onChangeText={txt => {
+        setIsLoading(true)
+        setVendors([])
+        fetchVendors(txt).then(vendors => {
+          setVendors(vendors)
+          setIsLoading(false)
+        })
+      }} />
+
+      {vendors.length === 0 &&  <Text style={styles.placeholder}>Nenhum perfil encontrado</Text>}
+
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+
       <FlatList
         data={vendors}
         renderItem={renderItem}
@@ -74,13 +77,19 @@ export default function ConnectionsList({ navigation }) {
             onRefresh={onRefresh}
           />
         } />
-      <StatusBar />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "#fff",
+    flex: 1,
+  },
+  placeholder: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: Colors.DarkGray
   },
   item: {
     backgroundColor: '#F3F3F3',
