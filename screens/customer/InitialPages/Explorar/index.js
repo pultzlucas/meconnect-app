@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import "react-native-gesture-handler";
 
 import TopSearch  from "../../../../components/TopSearch";
-import MyTabs from "../topBar";
+import MyTabs from "./topBar";
 
 export default function Exploration() {
   return (

@@ -51,6 +51,7 @@ export default function Prin({ route }) {
   }
   
   useEffect(() => {
+    setLoadingConnections(true)
     getVendor().then(vendor => {
       setVendor(vendor)
       setLoadingConnections(false)
