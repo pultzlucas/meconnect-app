@@ -2,12 +2,9 @@ import { Api, Colors } from "meconnect-sdk";
 import React, { useCallback, useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image } from "react-native";
 import TopSearch from "../../../../../components/TopSearch";
-import ConnectionsList from "../../../../../components/CardCone";
-import CardPerfSearch from "../../../../../components/CardPerfSearch";
 
 export default function Perf({ navigation }) {
   const [vendors, setVendors] = useState([])
-  const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
 
   const renderItem = ({ item }) => (
@@ -29,28 +26,6 @@ export default function Perf({ navigation }) {
     return data
   }
 
-  useEffect(() => {
-    setIsLoading(true)
-    setVendors([])
-    fetchVendors().then(vendors => {
-      setVendors(vendors)
-      setIsLoading(false)
-    })
-  }, [refreshing])
-
-
-  // Scroll down refreshing Refreshing
-
-  const wait = (timeout) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  }
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    wait(500).then(() => setRefreshing(false));
-  }, []);
-
-
   return (
     <View style={styles.container}>
       <TopSearch onChangeText={txt => {
@@ -62,7 +37,7 @@ export default function Perf({ navigation }) {
         })
       }} />
 
-      {vendors.length === 0 &&  <Text style={styles.placeholder}>Nenhum perfil encontrado</Text>}
+      {(vendors.message || vendors.length === 0 ) && <Text style={styles.placeholder}>Nenhum perfil encontrado</Text>}
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 
@@ -71,12 +46,7 @@ export default function Perf({ navigation }) {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         style={styles.container}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-          />
-        } />
+        />
     </View>
   );
 }

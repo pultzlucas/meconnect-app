@@ -76,11 +76,6 @@ export default function Prods({ route }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    flex: 1,
-    width: '100%',
-  },
-  icone1: {
-    marginRight: 15,
   },
   prod: {
     width: "100%",
@@ -93,8 +88,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 8,
-    marginVertical: 8,
     marginHorizontal: 16,
+    marginBottom: 10
   },
   desc: {
     fontSize: 15,

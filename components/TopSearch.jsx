@@ -4,9 +4,6 @@ import { StatusBar, StyleSheet, View } from "react-native";
 import { Searchbar } from 'react-native-paper';
 
 export default function TopSearch({ onChangeText }) {
-  const [searchQuery, setSearchQuery] = React.useState('');
-
-
   return (
     <View style={styles.container}>
       <Searchbar
@@ -28,5 +25,6 @@ export default function TopSearch({ onChangeText }) {
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom: 10
   }
 })
