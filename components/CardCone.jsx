@@ -61,7 +61,7 @@ export default function ConnectionsList({ navigation }) {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
       <FlatList
         data={vendors}
@@ -74,8 +74,7 @@ export default function ConnectionsList({ navigation }) {
             onRefresh={onRefresh}
           />
         } />
-      <StatusBar />
-    </View>
+    </SafeAreaView>
   );
 }
 

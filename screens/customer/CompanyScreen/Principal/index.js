@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   ScrollView,
+  StatusBar,
 } from "react-native";
 import MCButton from "../../../../components/MCButton";
 import { Api, Colors } from "meconnect-sdk";

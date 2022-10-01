@@ -3,20 +3,18 @@ import MCHeader from "../../../../components/MCHeader";
 import ConnectionsList from "../../../../components/CardCone";
 import { useIsFocused } from '@react-navigation/native';
 
-export default function Conection({ navigation }) {  
+export default function Conection({ navigation }) {
   return (
-      <View style={styles.container}>
-        <MCHeader title={"Conexões"}></MCHeader>
-        <ConnectionsList navigation={navigation} />
-      </View>
+    <View style={styles.container}>
+      <MCHeader title={"Conexões"}></MCHeader>
+      <ConnectionsList navigation={navigation} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: StatusBar.currentHeight - 6
   },
 });

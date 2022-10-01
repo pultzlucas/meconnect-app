@@ -14,13 +14,12 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.DarkOrange,
     width: "100%",
-    height: 60,
+    height: 50,
     alignItems: "center",
     flexDirection: "row",
     paddingHorizontal: 20,
     position: 'relative',
     top: 0,
-    marginTop: StatusBar.currentHeight,
   },
 
   title: {

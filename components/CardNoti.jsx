@@ -61,6 +61,7 @@ function Noti() {
         data={notifications}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        style={{marginBottom: 70}}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

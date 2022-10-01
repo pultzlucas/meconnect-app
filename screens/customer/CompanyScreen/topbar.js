@@ -21,7 +21,6 @@ export default function TopBar({ route }) {
       screenOptions={{
         tabBarStyle: {
           backgroundColor: Colors.DarkOrange,
-          marginTop: StatusBar.currentHeight,
           padding: 3,
         },
 
