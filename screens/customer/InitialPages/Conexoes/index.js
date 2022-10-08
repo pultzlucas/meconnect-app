@@ -6,6 +6,7 @@ import { useIsFocused } from '@react-navigation/native';
 export default function Conection({ navigation }) {
   return (
     <View style={styles.container}>
+      <StatusBar/>
       <MCHeader title={"Conexões"}></MCHeader>
       <ConnectionsList navigation={navigation} />
     </View>

@@ -6,6 +6,7 @@ import NotificationsList from "../../../../components/CardNoti";
 export default function Notification() {
   return (
     <View style={styles.container}>
+      <StatusBar/>
       <MCHeader title={"Notificações"}></MCHeader>
       <NotificationsList />
     </View>

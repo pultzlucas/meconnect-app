@@ -5,7 +5,7 @@ import { Api, Colors } from 'meconnect-sdk';
 
 
 
-export default function RegistreCliente({ route }) {
+export default function RegistreCliente({ route, navigation }) {
   const [description, setDescription] = useState('')
   const [name, setName] = useState('')
   const [commercial, setCommercial] = useState('')
@@ -40,6 +40,7 @@ export default function RegistreCliente({ route }) {
     if(res.status === 200) {
       console.log(res.data.message)
       Api.token.set(res.data.token)
+      navigation.navigate('VendorScreens')
     }
 
     console.log(res)

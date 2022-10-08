@@ -5,7 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Api } from 'meconnect-sdk';
 import MCButton from '../../components/MCButton';
 
-import * as Device from 'expo-device';
+import { registerForPushNotificationsAsync } from '../../notification-token'
+
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -54,6 +55,8 @@ export default function Login({ navigation }) {
       device_token: await AsyncStorage.getItem('@MCON_NOTIFICATION_TOKEN')
     })
 
+    console.log(data)
+
     if (status === 200) {
       ToastAndroid.show('Login efetuado com sucesso', ToastAndroid.SHORT);
 
@@ -62,14 +65,17 @@ export default function Login({ navigation }) {
       AsyncStorage.setItem('@UserType', data.user_type)
 
       if (data.user_type === 'customer') {
+        console.log('customer account entered')
         AsyncStorage.setItem('@CustomerId', String(data.id))
+        navigation.navigate("CustomerScreens")
       }
-
+      
       if (data.user_type === 'vendor') {
+        console.log('vendor account entered')
         AsyncStorage.setItem('@VendorId', String(data.id))
+        navigation.navigate("VendorScreens")
       }
 
-      navigation.navigate("CustomerScreens")
       return
     }
 
@@ -98,36 +104,7 @@ export default function Login({ navigation }) {
   );
 }
 
-async function registerForPushNotificationsAsync() {
-  let token;
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
 
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  return token;
-}
 
 const styles = StyleSheet.create({
   container: {

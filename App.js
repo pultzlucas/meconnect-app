@@ -8,15 +8,23 @@ import RegistreCliente from './screens/initial/RegistreCliente';
 import ConfirmaEmpresa from './screens/initial/ConfirmaEmpresa';
 import RegistreEmpresa from './screens/initial/RegistreEmpresa';
 import InitPages from './screens/init';
-import CustomerScreensVendorPage from './screens/customer/CompanyScreen/topbar'
 
+import CustomerScreensVendorPage from './screens/customer/CompanyScreen/topbar'
 import CustomerScreens from './screens/customer'
+
+import VendorScreens from './screens/vendor';
+import VendorScreensVendorPage from './screens/vendor/CompanyScreen/topbar'
+
+
 import { Api } from 'meconnect-sdk';
+import EditProfile from './screens/vendor/edit-profile';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  
+  useEffect(() => {
+    Api.config.setApiDomain('http://192.168.15.177:80/api')
+  })
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -28,10 +36,16 @@ export default function App() {
         >
           <Stack.Screen name="InitPages" component={InitPages}/>
 
+          {/* Customer Screens */}
           <Stack.Screen name="CustomerScreens"  component={CustomerScreens} />
           <Stack.Screen name="CustomerScreensVendorPage"  component={CustomerScreensVendorPage} />
 
+          {/* Vendor Screens */}
+          <Stack.Screen name="VendorScreens"  component={VendorScreens} />
+          <Stack.Screen name="VendorScreensVendorPage"  component={VendorScreensVendorPage} />
+          <Stack.Screen name="VendorProfileEdit"  component={EditProfile} />
 
+          {/* Initial Screens */}
           <Stack.Screen name="EscolherConta" component={EscolherConta} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="RegistreCliente" component={RegistreCliente} />

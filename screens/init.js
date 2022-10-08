@@ -1,14 +1,14 @@
+import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Api, Colors } from "meconnect-sdk"
 import { useEffect } from "react"
 import { ActivityIndicator, StyleSheet, View } from "react-native"
 
 export default function InitPages({ navigation }) {
     useEffect(() => {
-        Api.token.isset().then(isset => {
-            Api.token.get().then(console.log)
-
+        Api.token.isset().then(async isset => {
             if (isset) {
-                navigation.navigate("CustomerScreens")
+                if (await AsyncStorage.getItem('@UserType') === 'customer') navigation.navigate("CustomerScreens")
+                if (await AsyncStorage.getItem('@UserType') === 'vendor') navigation.navigate("VendorScreens")
             } else {
                 navigation.navigate("EscolherConta")
             }
