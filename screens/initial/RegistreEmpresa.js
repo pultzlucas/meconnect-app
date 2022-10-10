@@ -2,9 +2,9 @@ import { StyleSheet, View } from 'react-native';
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { TextElement } from 'react-native-elements/dist/text/Text';
 import { useState } from 'react';
+
 import MCButton from '../../components/MCButton';
-
-
+import MCInput from '../../components/MCInput';
 
 export default function RegistreEmpresa({ navigation }) {
   const [cnpj, setCnpj] = useState('')
@@ -40,26 +40,29 @@ export default function RegistreEmpresa({ navigation }) {
       >Registre Sua Conta Empresarial
       </TextElement>
 
-      <Input
-        onChangeText={value => setCnpj(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setCnpj(value)}
         placeholder="CNPJ"
         keyboardType='numeric'
-        leftIcon={{ type: 'font-awesome', name: '' }}
+        value={'13785287000154'}
       />
-      <Input
-        onChangeText={value => setSenha(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setSenha(value)}
         placeholder="Sua Senha"
-        leftIcon={{ type: 'font-awesome', name: '' }}
         secureTextEntry={true}
+        // value={'L5@1sp5ltz'}
       />
-      <Input
-        onChangeText={value => setSenha2(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setSenha2(value)}
         placeholder="Repita a Senha"
-        leftIcon={{ type: 'font-awesome', name: '' }}
         secureTextEntry={true}
+        // value={'L5@1sp5ltz'}
       />
 
-      <MCButton size='medium' onClick={register}>Registrar</MCButton>
+      <MCButton style={styles.btn} size='medium' onClick={register}>Registrar</MCButton>
     </View>
 
   );
@@ -70,5 +73,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  input: {
+    marginTop: 10,
+  },
+  btn: {
+    marginTop: 10,
   },
 });

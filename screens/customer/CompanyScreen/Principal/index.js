@@ -12,6 +12,7 @@ import { Api, Colors } from "meconnect-sdk";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from "../../../../components/Splash";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 
 export default function Prin({ route }) {
@@ -33,24 +34,24 @@ export default function Prin({ route }) {
       customer_id: customerId,
       vendor_id: vendor_id
     })
-    
+
     if (status === 200) {
       setConnected(true)
     }
   }
-  
+
   async function disconnect() {
     setLoadingConnections(true)
     const { status } = await Api.db.connections.disconnect({
       customer_id: customerId,
       vendor_id: vendor_id
     })
-    
+
     if (status === 200) {
       setConnected(false)
     }
   }
-  
+
   useEffect(() => {
     setLoadingConnections(true)
     getVendor().then(vendor => {
@@ -77,7 +78,7 @@ export default function Prin({ route }) {
         <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
 
         {/* Cabeçalho */}
-        <Text style={styles.titulo}>{vendor.name}</Text>
+        <Text style={styles.titulo}>{vendor.commercial}</Text>
         <Text style={styles.desc} >{vendor.description}</Text>
 
         {/* Conectar */}
@@ -87,9 +88,9 @@ export default function Prin({ route }) {
             <MCButton style={styles.btn} isLoading={loadingConnections} children={"Conectar"} onClick={connect} />
         }
 
-        <View>
-          <Text style={styles.ttt}>Conectados</Text>
-          <Text style={styles.tt2}>{vendor.customers_connected}</Text>
+        <View style={styles.customersConnected}>
+          <MaterialCommunityIcons name="connection" size={20} style={styles.customersConnectedTitle} color={Colors.DarkGray} />
+          <Text style={styles.customersConnectedTotal}>{vendor.customers_connected}</Text>
         </View>
 
 
@@ -110,26 +111,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     color: Colors.Black,
   },
-  ttt: {
-    backgroundColor: "#DDDDDD",
-    textAlign: "center",
-    width: 200,
-    fontSize: 15,
-    fontWeight: "bold",
-    padding: 7,
-    borderRadius: 8,
-    borderWidth: 1,
-    marginTop: "5%",
+  customersConnected: {
+    position: 'relative',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#ddd',
+    borderWidth: 2,
+    borderRadius: 10,
+    width: '50%',
+    marginTop: 10,
   },
-  tt2: {
-    width: 200,
+  customersConnectedTitle: {
+    backgroundColor: "#DDDDDD",
     padding: 7,
-    textAlign: "center",
-    fontSize: 15,
-    fontWeight: "bold",
-    borderRadius: 8,
-    borderWidth: 1,
-    borderTopWidth: 0,
+  },
+  customersConnectedTotal: {
+    textAlign: 'center',
+    margin: 'auto',
+    flex: 1,
   },
   banner: {
     width: "100%",

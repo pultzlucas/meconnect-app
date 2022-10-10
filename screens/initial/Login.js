@@ -4,6 +4,7 @@ import { TextElement } from 'react-native-elements/dist/text/Text';
 import { useEffect, useRef, useState } from 'react';
 import { Api } from 'meconnect-sdk';
 import MCButton from '../../components/MCButton';
+import MCInput from '../../components/MCInput';
 
 import { registerForPushNotificationsAsync } from '../../notification-token'
 
@@ -55,7 +56,7 @@ export default function Login({ navigation }) {
       device_token: await AsyncStorage.getItem('@MCON_NOTIFICATION_TOKEN')
     })
 
-    console.log(data)
+    AsyncStorage.multiRemove(['@CustomerId', '@VendorId', '@UserType'])
 
     if (status === 200) {
       ToastAndroid.show('Login efetuado com sucesso', ToastAndroid.SHORT);
@@ -69,7 +70,7 @@ export default function Login({ navigation }) {
         AsyncStorage.setItem('@CustomerId', String(data.id))
         navigation.navigate("CustomerScreens")
       }
-      
+
       if (data.user_type === 'vendor') {
         console.log('vendor account entered')
         AsyncStorage.setItem('@VendorId', String(data.id))
@@ -88,18 +89,22 @@ export default function Login({ navigation }) {
 
       <Text>Digite as credenciais para acessar sua conta</Text>
 
-      <Input
-        onChangeText={value => setEmail(value)}
+
+
+      <MCInput
+        style={styles.input}
+        onInput={value => setEmail(value)}
         placeholder="E-mail"
       />
 
-      <Input
-        onChangeText={value => setPassword(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setPassword(value)}
         placeholder="Sua Senha"
         secureTextEntry={true}
       />
 
-      <MCButton size='medium' isLoading={loading} onClick={login}>Login</MCButton>
+      <MCButton style={styles.btn} size='medium' isLoading={loading} onClick={login}>Login</MCButton>
     </View>
   );
 }
@@ -113,4 +118,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  input: {
+    marginTop: 12,
+  },
+  btn: {
+    marginTop: 12,
+  }
 });

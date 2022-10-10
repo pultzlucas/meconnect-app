@@ -63,7 +63,7 @@ export default function Products({ route }) {
   // Body
   return (
     <SafeAreaView style={styles.container}>
-      <Search title={"Pesquisar produto"} />
+      {/* <Search title={"Pesquisar produto"} /> */}
       <FlatList
         data={products}
         renderItem={renderItem}
@@ -76,6 +76,7 @@ export default function Products({ route }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    flex: 1,
   },
   prod: {
     width: "100%",

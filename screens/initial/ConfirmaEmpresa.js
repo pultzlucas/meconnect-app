@@ -2,7 +2,9 @@ import { StyleSheet, TextInput, View, ScrollView, StatusBar } from 'react-native
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { useEffect, useState } from 'react';
 import { Api, Colors } from 'meconnect-sdk';
-
+import MCButton from '../../components/MCButton'
+import MCInput from '../../components/MCInput'
+import MCTextarea from '../../components/MCTextarea'
 
 
 export default function RegistreCliente({ route, navigation }) {
@@ -37,10 +39,13 @@ export default function RegistreCliente({ route, navigation }) {
       device_token: 'asd'
     })
 
-    if(res.status === 200) {
+    if (res.status === 200) {
       console.log(res.data.message)
       Api.token.set(res.data.token)
-      navigation.navigate('VendorScreens')
+      AsyncStorage.setItem('@VendorId', String(data.id))
+      
+      console.log('vendor account entered')
+      navigation.navigate("VendorScreens")
     }
 
     console.log(res)
@@ -48,103 +53,69 @@ export default function RegistreCliente({ route, navigation }) {
 
   return (
     <ScrollView>
+      <View style={styles.container}>
 
-      <Text style={styles.title}>
-        Confirme os dados
-      </Text>
+        <Text style={styles.title}>
+          Confirme os dados
+        </Text>
 
-      <View style={styles.form}>
-        <Input
-          onChangeText={text => setName(text)}
-          value={name}
-          placeholder="Nome fantasia"
-        />
+        <View style={styles.form}>
+          <MCInput
+            onInput={text => setName(text)}
+            value={name}
+            label="Nome fantasia"
+          />
 
-        <Input
-          onChangeText={text => setCommercial(text)}
-          value={commercial}
-          placeholder="Nome comercial"
-        />
+          <MCTextarea on label="Slogan">{description}</MCTextarea>
 
-        <Input
-          onChangeText={text => setEmail(text)}
-          value={email}
-          placeholder="Email"
-        />
+          <MCInput
+            onInput={text => setCommercial(text)}
+            value={commercial}
+            label="Nome comercial"
+          />
 
-        <Input
-          onChangeText={text => setTel(text)}
-          value={tel}
-          placeholder="Telefone"
-          keyboardType='phone-pad'
-        />
+          <MCInput
+            onInput={text => setEmail(text)}
+            value={email}
+            label="Email"
+          />
 
-        <Input
-          onChangeText={text => setCep(text)}
-          value={cep}
-          placeholder="CEP"
-        />
+          <MCInput
+            onInput={text => setTel(text)}
+            value={tel}
+            label="Telefone"
+            keyboardType='phone-pad'
+          />
 
-        <TextInput
-          value={description}
-          style={styles.descriptionInput}
-          editable
-          multiline
-          numberOfLines={6}
-          placeholder="Descrição da empresa"
-          onChangeText={text => setDescription(text)}>
-        </TextInput>
+          <MCInput
+            onInput={text => setCep(text)}
+            value={cep}
+            label="CEP"
+          />
 
-        <Button
-          title="Registrar"
-          loading={false}
-          loadingProps={{ size: 'small', color: 'white' }}
-          buttonStyle={{
-            backgroundColor: '#FFA245',
-            borderRadius: 5,
-          }}
-          titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
-          containerStyle={{
-            marginHorizontal: 50,
-            height: 50,
-            width: 200,
-            marginVertical: 10,
-          }}
-          onPress={entrar}
 
-        />
+        </View>
+
+        <MCButton onInput={text => setDescription(text)} style={styles.btn} onClick={entrar}>Registrar</MCButton>
       </View>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    paddingBottom: 20
   },
 
   title: {
     textAlign: 'center',
-    marginVertical: 20,
+    marginTop: 20,
     fontSize: 20,
   },
 
-  form: {
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    width: '90%',
+  btn: {
+    marginTop: 20,
   },
-
-  descriptionInput: {
-    borderColor: Colors.DarkGray,
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderRadius: 5,
-    width: '100%',
-    padding: 10,
-    textAlignVertical: 'top',
-    fontSize: 16,
-  }
 });

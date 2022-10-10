@@ -38,7 +38,7 @@ export default function Perf({ navigation }) {
         })
       }} />
 
-      {(vendors.message || vendors.length === 0 ) && <Text style={styles.placeholder}>Nenhum perfil encontrado</Text>}
+      {(!!vendors.message || vendors.length === 0 ) && <Text style={styles.placeholder}>Nenhum perfil encontrado</Text>}
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 

@@ -4,7 +4,7 @@ import { TextElement } from 'react-native-elements/dist/text/Text';
 import { Api } from 'meconnect-sdk';
 import { useState } from 'react';
 import MCButton from '../../components/MCButton';
-
+import MCInput from '../../components/MCInput';
 
 
 export default function RegistreCliente({ navigation }) {
@@ -43,32 +43,32 @@ export default function RegistreCliente({ navigation }) {
       >Registre Sua Conta Cliente
       </TextElement>
 
-      <Input
-        onChangeText={value => setNome(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setNome(value)}
         placeholder="Nome Completo"
-        leftIcon={{ type: 'font-awesome', name: '' }}
       />
 
-      <Input
-        onChangeText={value => setEmail(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setEmail(value)}
         placeholder="Email"
-        leftIcon={{ type: 'font-awesome', name: '' }}
       />
 
-      <Input
-        onChangeText={value => setSenha(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setSenha(value)}
         placeholder="Sua Senha"
-        leftIcon={{ type: 'font-awesome', name: '' }}
         secureTextEntry={true}
       />
-      <Input
-        onChangeText={value => setSenha2(value)}
+      <MCInput
+        style={styles.input}
+        onInput={value => setSenha2(value)}
         placeholder="Repita a Senha"
-        leftIcon={{ type: 'font-awesome', name: '' }}
         secureTextEntry={true}
       />
 
-      <MCButton size='medium' onClick={register}>Registrar</MCButton>
+      <MCButton style={styles.btn} size='medium' onClick={register}>Registrar</MCButton>
     </View>
 
   );
@@ -79,6 +79,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  input: {
+    marginTop: 10,
+  },
+  btn:  {
+    marginTop: 10,
   },
 });
 

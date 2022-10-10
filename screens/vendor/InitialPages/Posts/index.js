@@ -1,12 +1,18 @@
 import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, Image, ActivityIndicator } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
-import ConnectionsList from "../../../../components/CardCone";
-import { useIsFocused } from '@react-navigation/native';
+import HeaderOption from "../../../../components/HeaderOption";
 import { useCallback, useEffect, useState } from 'react';
 import { Api, Colors } from 'meconnect-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Conection({ navigation }) {
+import Entypo from "react-native-vector-icons/Entypo";
+import { ResizeMode, Video } from 'expo-av';
+import formatDateString from '../../../../format-date-string';
+import Post from '../../../../components/Post';
+import MCButton from '../../../../components/MCButton';
+import { useIsFocused } from '@react-navigation/native';
+
+export default function Posts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState([])
@@ -18,19 +24,16 @@ export default function Conection({ navigation }) {
       setPosts(data)
       setIsLoading(false)
     })
-  }, [refreshing])
+  }, [refreshing, useIsFocused()])
 
-  const renderItem = ({ item: { title, content, media_url, created_at } }) => {
-    return (
-      <View style={styles.item}>
-        <Text style={styles.date}>{created_at}</Text>
-        <Text style={styles.title}>{title}</Text>
-        {
-          media_url && <Image style={styles.img} source={{ uri: media_url }} />
-        }
-        <Text style={styles.desc}>{content}</Text>
-      </View>
-    )
+  const renderItem = ({ item: { title, content, media_url, created_at, media_type } }) => {
+    return <Post
+      title={title}
+      content={content}
+      media_url={media_url}
+      media_type={media_type}
+      created_at={created_at}
+    />
   };
 
   const wait = (timeout) => {
@@ -42,17 +45,31 @@ export default function Conection({ navigation }) {
     wait(500).then(() => setRefreshing(false));
   }, []);
 
+  const Placeholder = () => (
+    <View style={styles.placeholderContainer}>
+      <Text style={styles.placeholderText}>Você ainda não publicou nenhum post</Text>
+      <MCButton style={styles.placeholderBtn} onClick={() => navigation.navigate('VendorCreatePost')}>Criar um post</MCButton>
+    </View>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar></StatusBar>
-      <MCHeader title={'Posts'}></MCHeader>
+
+      <MCHeader title={'Meus posts'}>
+        <HeaderOption onClick={() => navigation.navigate('VendorCreatePost')}>
+          <Entypo name="plus" size={30} color={'white'}></Entypo>
+        </HeaderOption>
+      </MCHeader>
+
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+
+      {(posts.length === 0 && !isLoading) && <Placeholder />}
 
       <FlatList
         data={posts}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{ marginBottom: 70 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -69,29 +86,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  item: {
-    backgroundColor: "#F3F3F3",
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 8,
-    marginHorizontal: 16,
+  placeholderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333333",
+  placeholderText: {
+    color: Colors.DarkGray
   },
-  desc: {
-    fontSize: 17,
-    color: "#333333",
+  placeholderBtn: {
+    marginTop: 10,
   },
-  date: {
-    fontSize: 14,
-    color: "#000",
-    textAlign: "right",
-  },
-  img: {
-    width: '100%',
-    height: 200,
-  }
 });

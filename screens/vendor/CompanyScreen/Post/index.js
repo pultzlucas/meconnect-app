@@ -3,24 +3,21 @@ import {
   View,
   FlatList,
   StyleSheet,
-  Image,
-  Text,
-  TextInput,
 } from "react-native";
 
 import { Api, Colors } from "meconnect-sdk";
+import Post from '../../../../components/Post'
 
 
-export default function Post({ route }) {
-  const renderItem = ({ item: { title, content, media_url, created_at } }) => (
-    <View style={styles.item}>
-      <Text style={styles.date}>{created_at}</Text>
-      <Text style={styles.title}>{title}</Text>
-      {
-        media_url && <Image style={styles.img} source={{ uri: media_url }} />
-      }
-      <Text style={styles.desc}>{content}</Text>
-    </View>
+export default function Posts({ route }) {
+  const renderItem = ({ item: { title, content, media_url, created_at, media_type } }) => (
+    <Post
+      title={title}
+      content={content}
+      media_url={media_url}
+      media_type={media_type}
+      created_at={created_at}
+    />
   );
 
   const [posts, setPosts] = useState([]);
@@ -38,7 +35,7 @@ export default function Post({ route }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      {/* <TextInput
         style={styles.searchInput}
         onChangeText={query => {
           if (!query) {
@@ -52,7 +49,7 @@ export default function Post({ route }) {
         }}
         value={searchQuery}
         placeholder='Procurar postagens'
-      />
+      /> */}
 
       <FlatList
         data={posts}
@@ -65,7 +62,8 @@ export default function Post({ route }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    flex: 1
   },
   searchInput: {
     position: "relative",
@@ -78,30 +76,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#333'
   },
-  item: {
-    backgroundColor: "#F3F3F3",
-    padding: 15,
-    borderRadius: 8,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#333333",
-  },
-  desc: {
-    fontSize: 17,
-    color: "#333333",
-  },
-  date: {
-    fontSize: 14,
-    color: "#000",
-    textAlign: "right",
-  },
-  img: {
-    width: '100%',
-    height: 200,
-  }
 });
 

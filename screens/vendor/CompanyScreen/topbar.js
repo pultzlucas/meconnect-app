@@ -34,9 +34,9 @@ export default function TopBar({ route }) {
       backBehavior="history"
       
     >
-      <Tab.Screen name="Principal" component={Principal}/>
-      <Tab.Screen name="Posts" component={Post}/>
-      <Tab.Screen name="Products" component={Products}/>
+      <Tab.Screen name="Principal" component={Principal} initialParams={{vendor_id}}/>
+      <Tab.Screen name="Posts" component={Post} initialParams={{vendor_id}}/>
+      <Tab.Screen name="Products" component={Products} initialParams={{vendor_id}}/>
     </Tab.Navigator>
   );
 }

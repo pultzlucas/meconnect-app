@@ -18,6 +18,8 @@ import VendorScreensVendorPage from './screens/vendor/CompanyScreen/topbar'
 
 import { Api } from 'meconnect-sdk';
 import EditProfile from './screens/vendor/edit-profile';
+import CreatePost from './screens/vendor/create-post';
+import CreateProduct from './screens/vendor/create-product';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,9 +31,8 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false
+          headerShown: false,
         }}
-        // initialRouteName={tokenIsSet ? 'CustomerScreens' : 'EscolherConta'}
         initialRouteName={'InitPages'}
         >
           <Stack.Screen name="InitPages" component={InitPages}/>
@@ -44,6 +45,8 @@ export default function App() {
           <Stack.Screen name="VendorScreens"  component={VendorScreens} />
           <Stack.Screen name="VendorScreensVendorPage"  component={VendorScreensVendorPage} />
           <Stack.Screen name="VendorProfileEdit"  component={EditProfile} />
+          <Stack.Screen name="VendorCreatePost"  component={CreatePost} />
+          <Stack.Screen name="VendorCreateProduct"  component={CreateProduct} />
 
           {/* Initial Screens */}
           <Stack.Screen name="EscolherConta" component={EscolherConta} />

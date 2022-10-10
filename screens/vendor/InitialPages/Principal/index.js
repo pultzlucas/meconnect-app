@@ -19,46 +19,23 @@ import Entypo from "react-native-vector-icons/Entypo";
 import HeaderOption from "../../../../components/HeaderOption";
 import OptionMenu from "react-native-option-menu";
 import logout from "../../../../logout-action";
+import { useIsFocused } from "@react-navigation/native";
 
-export default function Principal({ navigation }) {
-  const [vendor, setVendor] = useState({})
-  const [connected, setConnected] = useState(false)
-  const [customerId, setCustomerId] = useState(null)
-  const [showSplash, setShowSplash] = useState(false)
-  const [loadingConnections, setLoadingConnections] = useState(false)
-  const [vendorId, setVendorId] = useState('')
+export default function Principal({ navigation, route: { params: { vendorId } } }) {
+  const [vendor, setVendor] = useState('')
+  const isFocused = useIsFocused();
 
-  async function getVendor() {
-    const { data } = await Api.db.vendors.get(vendorId)
-    return data
+  function getVendorInfo() {
+    Api.db.vendors.get(vendorId).then(({ data }) => {
+      if (data) {
+        setVendor(data)
+      }
+    })
   }
 
   useEffect(() => {
-    AsyncStorage.getItem('@VendorId').then(vendorId => {
-      setVendorId(vendorId)
-      setLoadingConnections(true)
-      getVendor().then(vendor => {
-        setVendor(vendor)
-        setLoadingConnections(false)
-      })
-    })
-  }, [connected])
-
-  useEffect(() => {
-    setShowSplash(true)
-    AsyncStorage.getItem('@CustomerId').then(async id => {
-      setCustomerId(id)
-      const { data } = await Api.db.connections.isConnected(id, vendorId)
-      setShowSplash(false)
-      setConnected(data.connected)
-    })
-  }, [])
-
-  const [visible, setVisible] = useState(false);
-  const openMenu = () => {
-    setVisible(true)
-  };
-  const closeMenu = () => setVisible(false);
+    getVendorInfo()
+  }, [isFocused])
 
   return (
     <ScrollView>
@@ -85,7 +62,7 @@ export default function Principal({ navigation }) {
         </View>
 
         {/* Cabeçalho */}
-        <Text style={styles.titulo}>{vendor.name}</Text>
+        <Text style={styles.titulo}>{vendor.commercial}</Text>
         <Text style={styles.desc} >{vendor.description}</Text>
 
         <View style={styles.customersConnected}>
@@ -100,7 +77,6 @@ export default function Principal({ navigation }) {
         {/* Infos */}
         <Text style={styles.bio}>{vendor.bio}</Text>
       </View>
-      <Splash show={showSplash} />
     </ScrollView >
   );
 }
@@ -168,7 +144,6 @@ const styles = StyleSheet.create({
   },
   cnpj: {
     borderColor: "#EEEEEE",
-    // borderWidth: 7,
     borderBottomWidth: 7,
     borderTopWidth: 7,
     color: Colors.Black,
@@ -182,7 +157,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: Colors.Black,
     width: '100%',
-    marginBottom: 100,
     padding: 10,
   },
 });

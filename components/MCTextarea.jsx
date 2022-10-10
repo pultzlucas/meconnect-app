@@ -1,29 +1,28 @@
 import { Colors } from "meconnect-sdk";
-import React from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native"
+import { StyleSheet, Text, View } from "react-native";
+import { TextInput } from "react-native";
+import { Input } from "react-native-elements";
 
-export default function MCInput({ type = 'text', placeholder, onInput, value, label, style, secureTextEntry, editable = true }) {
+export default function MCTextarea({ placeholder, children = '', label, lines = 2, onInput }) {
     return (
         <View>
             {label && <Text style={styles.label}>{label}</Text>}
             <TextInput
-                style={[styles.input, {...style}]}
-                onChangeText={onInput}
                 placeholder={placeholder}
-                keyboardType={type}
-                value={value}
-                editable={editable}
-                secureTextEntry={secureTextEntry}
-                selectionColor='#FFCCA0'
+                multiline
+                editable
+                numberOfLines={lines}
+                style={styles.textarea}
+                value={String(children)}
+                onChangeText={onInput}
             />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    input: {
-        paddingVertical: 8,
-        paddingHorizontal: 20,
+    textarea: {
+        padding: 10,
         backgroundColor: '#F9F9F9',
         borderColor: '#EEEEEE',
         color: Colors.Black,
@@ -32,6 +31,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         width: 320,
         elevation: 3,
+        textAlignVertical: 'top',
     },
     label: {
         color: Colors.DarkGray,

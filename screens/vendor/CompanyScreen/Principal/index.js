@@ -56,7 +56,7 @@ export default function Principal({ route }) {
         </View>
 
         {/* Cabeçalho */}
-        <Text style={styles.titulo}>{vendor.name}</Text>
+        <Text style={styles.titulo}>{vendor.commercial}</Text>
         <Text style={styles.desc} >{vendor.description}</Text>
 
         <View style={styles.customersConnected}>

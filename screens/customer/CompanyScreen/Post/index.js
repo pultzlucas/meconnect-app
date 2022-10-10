@@ -9,25 +9,16 @@ import {
 } from "react-native";
 
 import { Api, Colors } from "meconnect-sdk";
+import Post from '../../../../components/Post'
 
-
-export default function Post({ route }) {
-  const Item = ({ title, content, media_url, created_at }) => (
-    <View style={styles.item}>
-      <Text style={styles.date}>{created_at}</Text>
-      <Text style={styles.title}>{title}</Text>
-      {
-        media_url && <Image style={styles.img} source={{ uri: media_url }} />
-      }
-      <Text style={styles.desc}>{content}</Text>
-    </View>
-  );
-  const renderItem = ({ item }) => (
-    <Item
-      media_url={item.media_url}
-      title={item.title}
-      content={item.content}
-      created_at={item.created_at}
+export default function Posts({ route }) {
+  const renderItem = ({ item: { title, content, media_url, created_at, media_type } }) => (
+    <Post
+      title={title}
+      content={content}
+      media_url={media_url}
+      media_type={media_type}
+      created_at={created_at}
     />
   );
 
@@ -46,7 +37,7 @@ export default function Post({ route }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
+      {/* <TextInput
         style={styles.searchInput}
         onChangeText={query => {
           if (!query) {
@@ -60,7 +51,7 @@ export default function Post({ route }) {
         }}
         value={searchQuery}
         placeholder='Procurar postagens'
-      />
+      /> */}
 
       <FlatList
         data={posts}
@@ -73,7 +64,8 @@ export default function Post({ route }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
+    flex: 1,
   },
   searchInput: {
     position: "relative",

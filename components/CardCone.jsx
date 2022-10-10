@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, FlatList, StyleSheet, Text, StatusBar, TouchableOpacity, RefreshControl, ActivityIndicator, Image, Dimensions } from 'react-native';
 import { NavigationContainer, useIsFocused } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Button } from 'react-native-paper';
 import { Api, Colors } from 'meconnect-sdk';
 import { useCallback } from 'react';
+
+import MCButton from '../components/MCButton'
 
 export default function ConnectionsList({ navigation }) {
   const isFocused = useIsFocused();
@@ -60,9 +60,25 @@ export default function ConnectionsList({ navigation }) {
     wait(500).then(() => setRefreshing(false));
   }, []);
 
+
+  const Placeholder = () => (
+    <View style={styles.placeholderContainer}>
+      <Text style={styles.placeholder}>Você não possui nenhuma conexão</Text>
+      <MCButton 
+        style={styles.placeholderBtn} 
+        size={'medium'} 
+        onClick={() => navigation.navigate('Explorar', { screen: 'CustomerScreens' })}>
+        Explorar conexões
+      </MCButton>
+    </View>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+
+      {(vendors.length === 0 && !isLoading) && <Placeholder />}
+
       <FlatList
         data={vendors}
         renderItem={renderItem}
@@ -80,6 +96,18 @@ export default function ConnectionsList({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+  },
+  placeholderContainer: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  placeholderBtn: {
+    marginTop: 10,
+  },
+  placeholder: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: Colors.DarkGray
   },
   item: {
     backgroundColor: '#F3F3F3',

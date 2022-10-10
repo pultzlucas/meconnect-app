@@ -21,11 +21,6 @@ export default function Routes({ route }) {
       activeColor="#F5803E"
       inactiveColor="#999"
       barStyle={{
-        marginLeft: 20,
-        marginRight: 20,
-        marginBottom: 10,
-        borderTopColor: "transparent",
-        position: "absolute",
         backgroundColor: "#f5f5f5",
       }}
     >
