@@ -55,7 +55,7 @@ export default function Routes({ route }) {
         }}
       />
 
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Logout"
         component={''}
         listeners={{
@@ -69,7 +69,7 @@ export default function Routes({ route }) {
             <Ionicons name="log-out" size={25} color={color} />
           ),
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

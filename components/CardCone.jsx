@@ -5,6 +5,7 @@ import { Api, Colors } from 'meconnect-sdk';
 import { useCallback } from 'react';
 
 import MCButton from '../components/MCButton'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ConnectionsList({ navigation }) {
   const isFocused = useIsFocused();
@@ -28,7 +29,7 @@ export default function ConnectionsList({ navigation }) {
   );
 
   async function fetchVendors() {
-    const { data: connections } = await Api.db.customers.getConnections(1)
+    const { data: connections } = await Api.db.customers.getConnections(await AsyncStorage.getItem('@CustomerId'))
     let vendors = []
 
     for (let conn of connections) {
@@ -64,9 +65,9 @@ export default function ConnectionsList({ navigation }) {
   const Placeholder = () => (
     <View style={styles.placeholderContainer}>
       <Text style={styles.placeholder}>Você não possui nenhuma conexão</Text>
-      <MCButton 
-        style={styles.placeholderBtn} 
-        size={'medium'} 
+      <MCButton
+        style={styles.placeholderBtn}
+        size={'medium'}
         onClick={() => navigation.navigate('Explorar', { screen: 'CustomerScreens' })}>
         Explorar conexões
       </MCButton>
@@ -83,7 +84,6 @@ export default function ConnectionsList({ navigation }) {
         data={vendors}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        style={styles.container}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -96,6 +96,8 @@ export default function ConnectionsList({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    width: "100%",
   },
   placeholderContainer: {
     display: 'flex',
@@ -110,12 +112,12 @@ const styles = StyleSheet.create({
     color: Colors.DarkGray
   },
   item: {
-    backgroundColor: '#F3F3F3',
-    position: 'relative',
+    backgroundColor: "#F3F3F3",
     padding: 15,
     borderRadius: 8,
-    marginVertical: 8,
-    width: '100%',
+    marginTop: 10,
+    marginHorizontal: 14,
+    position: 'relative',
     display: 'flex',
     flexDirection: 'row'
   },

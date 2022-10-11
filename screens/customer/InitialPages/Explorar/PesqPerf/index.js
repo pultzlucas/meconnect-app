@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
     color: Colors.DarkGray
   },
   item: {
-    backgroundColor: '#F3F3F3',
-    position: 'relative',
+    backgroundColor: "#F3F3F3",
     padding: 15,
     borderRadius: 8,
-    marginVertical: 8,
-    width: '100%',
+    marginTop: 10,
+    marginHorizontal: 14,
+    position: 'relative',
     display: 'flex',
     flexDirection: 'row'
   },

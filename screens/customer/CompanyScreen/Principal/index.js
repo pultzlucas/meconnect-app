@@ -1,3 +1,6 @@
+
+
+
 import { useEffect, useState, RefreshControl } from "react";
 import {
   View,
@@ -13,9 +16,10 @@ import { Api, Colors } from "meconnect-sdk";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from "../../../../components/Splash";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 
 
-export default function Prin({ route }) {
+export default function Principal({ route }) {
   const [vendor, setVendor] = useState({})
   const [connected, setConnected] = useState(false)
   const [customerId, setCustomerId] = useState(null)
@@ -27,6 +31,25 @@ export default function Prin({ route }) {
     const { data } = await Api.db.vendors.get(vendor_id)
     return data
   }
+
+  useEffect(() => {
+    setLoadingConnections(true)
+    getVendor().then(vendor => {
+      setVendor(vendor)
+      setLoadingConnections(false)
+    })
+  }, [connected])
+
+  useEffect(() => {
+    setShowSplash(true)
+    AsyncStorage.getItem('@CustomerId').then(async id => {
+      setCustomerId(id)
+      const { data } = await Api.db.connections.isConnected(id, vendor_id)
+      setShowSplash(false)
+      setConnected(data.connected)
+    })
+  }, [])
+
 
   async function connect() {
     setLoadingConnections(true)
@@ -52,30 +75,14 @@ export default function Prin({ route }) {
     }
   }
 
-  useEffect(() => {
-    setLoadingConnections(true)
-    getVendor().then(vendor => {
-      setVendor(vendor)
-      setLoadingConnections(false)
-    })
-  }, [connected])
-
-  useEffect(() => {
-    setShowSplash(true)
-    AsyncStorage.getItem('@CustomerId').then(async id => {
-      setCustomerId(id)
-      const { data } = await Api.db.connections.isConnected(id, vendor_id)
-      setShowSplash(false)
-      setConnected(data.connected)
-    })
-  }, [])
-
   return (
     <ScrollView>
       <View style={styles.container}>
         {/* Fotos */}
-        <Image style={styles.banner} source={{ uri: vendor.banner_url }} />
-        <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
+        <View style={styles.header}>
+          <Image style={styles.banner} source={{ uri: vendor.banner_url }} />
+          <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
+        </View>
 
         {/* Cabeçalho */}
         <Text style={styles.titulo}>{vendor.commercial}</Text>
@@ -93,12 +100,13 @@ export default function Prin({ route }) {
           <Text style={styles.customersConnectedTotal}>{vendor.customers_connected}</Text>
         </View>
 
-
-        {/* CNPJ */}
-        <Text style={styles.cnpj}>CNPJ: {vendor.cnpj}</Text>
-
-        {/* Infos */}
         <Text style={styles.bio}>{vendor.bio}</Text>
+
+        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} />
+        <VendorProfileTopic title={'Email'} info={vendor.email} />
+        <VendorProfileTopic title={'Tel'} info={vendor.tel} />
+        <VendorProfileTopic title={'CEP'} info={vendor.cep} />
+
       </View>
       <Splash show={showSplash} />
     </ScrollView>
@@ -110,6 +118,29 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     color: Colors.Black,
+    paddingBottom: 20,
+  },
+  header: {
+    height: 140,
+    width: '100%',
+    position: 'relative',
+    marginBottom: 70,
+  },
+  banner: {
+    width: "100%",
+    height: '100%',
+  },
+  logo: {
+    position: 'absolute',
+    bottom: -70,
+    left: '50%',
+    transform: [{ translateX: -75 }],
+    borderColor: "#ffffff",
+    width: 140,
+    height: 140,
+    borderRadius: 100,
+    borderWidth: 5,
+    borderColor: '#eee',
   },
   customersConnected: {
     position: 'relative',
@@ -131,22 +162,7 @@ const styles = StyleSheet.create({
     margin: 'auto',
     flex: 1,
   },
-  banner: {
-    width: "100%",
-    height: "23%",
-    marginBottom: -100,
-  },
-  logo: {
-    borderWidth: 2,
-    borderColor: "#ffffff",
-    width: 160,
-    height: 160,
-    marginBottom: 5,
-    borderRadius: 200,
-    borderWidth: 5,
-    borderColor: '#eee',
-    borderStyle: 'solid',
-  },
+
   titulo: {
     fontSize: 30,
     fontWeight: "bold",
@@ -161,7 +177,6 @@ const styles = StyleSheet.create({
   },
   cnpj: {
     borderColor: "#EEEEEE",
-    // borderWidth: 7,
     borderBottomWidth: 7,
     borderTopWidth: 7,
     color: Colors.Black,
@@ -175,7 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: Colors.Black,
     width: '100%',
-    marginBottom: 200,
     padding: 10,
   },
 });

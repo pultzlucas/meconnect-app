@@ -13,6 +13,7 @@ import { Api, Colors } from "meconnect-sdk";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Splash from "../../../../components/Splash";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 
 
 export default function Principal({ route }) {
@@ -64,11 +65,13 @@ export default function Principal({ route }) {
           <Text style={styles.customersConnectedTotal}>{vendor.customers_connected}</Text>
         </View>
 
-        {/* CNPJ */}
-        <Text style={styles.cnpj}>CNPJ: {vendor.cnpj}</Text>
-
-        {/* Infos */}
         <Text style={styles.bio}>{vendor.bio}</Text>
+
+        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj}/>
+        <VendorProfileTopic title={'Email'} info={vendor.email}/>
+        <VendorProfileTopic title={'Tel'} info={vendor.tel}/>
+        <VendorProfileTopic title={'CEP'} info={vendor.cep}/>
+
       </View>
       <Splash show={showSplash} />
     </ScrollView>
@@ -80,6 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     color: Colors.Black,
+    paddingBottom: 20,
   },
   header: {
     height: 140,
@@ -138,7 +142,6 @@ const styles = StyleSheet.create({
   },
   cnpj: {
     borderColor: "#EEEEEE",
-    // borderWidth: 7,
     borderBottomWidth: 7,
     borderTopWidth: 7,
     color: Colors.Black,
@@ -152,7 +155,6 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: Colors.Black,
     width: '100%',
-    marginBottom: 100,
     padding: 10,
   },
 });

@@ -20,10 +20,14 @@ import HeaderOption from "../../../../components/HeaderOption";
 import OptionMenu from "react-native-option-menu";
 import logout from "../../../../logout-action";
 import { useIsFocused } from "@react-navigation/native";
+import { BottomSheet } from "react-native-btr";
+import HorizontalLine from "../../../../components/HorizontalLine";
+import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 
 export default function Principal({ navigation, route: { params: { vendorId } } }) {
   const [vendor, setVendor] = useState('')
   const isFocused = useIsFocused();
+  const [visible, setVisible] = useState(false);
 
   function getVendorInfo() {
     Api.db.vendors.get(vendorId).then(({ data }) => {
@@ -37,6 +41,10 @@ export default function Principal({ navigation, route: { params: { vendorId } } 
     getVendorInfo()
   }, [isFocused])
 
+  const toggleBottomNavigationView = () => {
+    setVisible(!visible);
+  };
+
   return (
     <ScrollView>
       <StatusBar></StatusBar>
@@ -45,13 +53,14 @@ export default function Principal({ navigation, route: { params: { vendorId } } 
           <HeaderOption onClick={() => { navigation.navigate('VendorProfileEdit') }}>
             <MaterialCommunityIcons name="pencil" size={24} color={'white'}></MaterialCommunityIcons>
           </HeaderOption>
-          <HeaderOption>
-            <OptionMenu
+          <HeaderOption onClick={toggleBottomNavigationView}>
+            {/* <OptionMenu
               customButton={<Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>}
               destructiveIndex={0}
               options={["Logout", 'Cancel']}
               actions={[logout]}
-            />
+            /> */}
+            <Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>
           </HeaderOption>
         </MCHeader>
 
@@ -70,12 +79,42 @@ export default function Principal({ navigation, route: { params: { vendorId } } 
           <Text style={styles.customersConnectedTotal}>{vendor.customers_connected}</Text>
         </View>
 
-
-        {/* CNPJ */}
-        <Text style={styles.cnpj}>CNPJ: {vendor.cnpj}</Text>
-
-        {/* Infos */}
         <Text style={styles.bio}>{vendor.bio}</Text>
+
+        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj}/>
+        <VendorProfileTopic title={'Email'} info={vendor.email}/>
+        <VendorProfileTopic title={'Tel'} info={vendor.tel}/>
+        <VendorProfileTopic title={'CEP'} info={vendor.cep}/>
+
+
+        <BottomSheet
+          visible={visible}
+          onBackButtonPress={toggleBottomNavigationView}
+          onBackdropPress={toggleBottomNavigationView}
+        >
+          <View style={styles.bottomNavigationView}>
+            <View style={styles.tabIcon}></View>
+            <ScrollView>
+              <View style={styles.sheetOptionTextContainer}>
+                <Text style={styles.sheetOptionText}>
+                  <Text>{vendor.name}</Text>
+                </Text>
+                <Text style={styles.sheetOptionText}>
+                  <Text>{vendor.email}</Text>
+                </Text>
+              </View>
+
+              <HorizontalLine width={'100%'} marginVertical={0} color={Colors.DarkGray} />
+
+              <Pressable
+                style={styles.sheetOptionTextContainer}
+                onPress={logout}
+                android_ripple={{ color: Colors.DarkOrange }}>
+                <Text style={styles.sheetOptionText}>Logout</Text>
+              </Pressable>
+            </ScrollView>
+          </View>
+        </BottomSheet>
       </View>
     </ScrollView >
   );
@@ -86,6 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     color: Colors.Black,
+    paddingBottom: 20,
   },
   header: {
     height: 140,
@@ -158,5 +198,31 @@ const styles = StyleSheet.create({
     color: Colors.Black,
     width: '100%',
     padding: 10,
+  },
+
+  /* BottomSheet */
+  bottomNavigationView: {
+    backgroundColor: '#fff',
+    width: '100%',
+    height: 250,
+    borderTopStartRadius: 20,
+    borderTopEndRadius: 20,
+  },
+  sheetOptionTextContainer: {
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+  },
+  sheetOptionText: {
+    fontSize: 16,
+    marginVertical: 10
+  },
+  tabIcon: {
+    width: 40,
+    height: 10,
+    marginTop: 6,
+    backgroundColor: Colors.DarkGray,
+    borderRadius: 20,
+    marginLeft: 'auto',
+    marginRight: 'auto',
   },
 });
