@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Entypo from "react-native-vector-icons/Entypo";
 import { useIsFocused } from '@react-navigation/native';
+import Product from '../../../../components/Product';
 
 export default function Conection({ navigation, route: { params: { vendorId } } }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -27,15 +28,19 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
     getProducts()
   }, [refreshing, isFocused])
 
+  function removeProdFromList(prodId) {
+    setProducts(products.filter(prod => prod.id !== prodId))
+  }
 
-  const renderItem = ({ item: { description, photo_url, price } }) => {
-    return <View style={styles.item}>
-      <Image style={styles.prod} source={{ uri: photo_url }} />
-      <Text style={styles.desc} numberOfLines={1}>
-        {description}
-      </Text>
-      <Text style={styles.val}>R${price},00</Text>
-    </View>
+  const renderItem = ({ item: { id, description, photo_url, price } }) => {
+    return <Product
+      id={id}
+      description={description}
+      photo_url={photo_url}
+      price={price}
+      onRemove={removeProdFromList}
+      options={true}
+    />
   };
 
   const wait = (timeout) => {
@@ -78,28 +83,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  prod: {
-    width: "100%",
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  item: {
-    backgroundColor: "#F3F3F3",
-    alignItems: 'center',
-    padding: 15,
-    borderRadius: 8,
-    marginHorizontal: 16,
-    marginBottom: 10
-  },
-  desc: {
-    fontSize: 15,
-    marginTop: 10,
-    marginBottom: 0,
-  },
-  val: {
-    fontSize: 15,
-    fontWeight: "bold",
-    paddingTop: 6,
-  },
+
 });

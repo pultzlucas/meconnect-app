@@ -1,12 +1,33 @@
 import { ResizeMode, Video } from "expo-av"
 import { Image, StyleSheet, Text, View } from "react-native"
 import formatDateString from "../format-date-string"
-import { Colors } from 'meconnect-sdk'
+import { Api, Colors } from 'meconnect-sdk'
+import Entypo from "react-native-vector-icons/Entypo";
+import OptionMenu from "react-native-option-menu";
+import { ToastAndroid } from "react-native";
 
-export default function Post({ title, content, media_url, created_at, media_type }) {
+export default function Post({ id, title, content, media_url, created_at, media_type, onRemove, options = false }) {
+
+    async function deletePost() {
+        const { status } = await Api.db.posts.delete(id)
+        if (status === 200) {
+            onRemove(id)
+            ToastAndroid.show('Post foi deletado', ToastAndroid.SHORT);
+        }
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.date}>{formatDateString(created_at)}</Text>
+            <View style={styles.postHeader}>
+                <Text style={styles.date}>{formatDateString(created_at)}</Text>
+                {options && <OptionMenu
+                    customButton={<Entypo name="dots-three-vertical" size={16} color={Colors.Black}></Entypo>}
+                    destructiveIndex={1}
+                    options={["Delete", "Cancel"]}
+                    actions={[deletePost]}>
+                </OptionMenu>}
+                
+            </View>
             <Text style={styles.title}>{title}</Text>
             {
                 media_type === 'image' && media_url ? <Image style={styles.media} source={{ uri: media_url }} /> : <></>
@@ -36,6 +57,11 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginVertical: 8,
         marginHorizontal: 16,
+    },
+    postHeader: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     title: {
         fontSize: 20,

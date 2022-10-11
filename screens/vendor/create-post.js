@@ -67,15 +67,17 @@ export default function CreatePost({ navigation }) {
             content
         })
 
-        let saveMedia = 200
-
+        const resData = data
+        
+        let saveMedia = 0
+        
         if (imageUrl) {
-            const { status } = await Api.db.posts.setImage(data.post.id, imageUrl)
+            const { data, status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
             saveMedia = status
         }
 
         if (videoUrl) {
-            const { status } = await Api.db.posts.setVideo(data.post.id, videoUrl)
+            const { status } = await Api.db.posts.setVideo(resData.post.id, videoUrl)
             saveMedia = status
         }
 

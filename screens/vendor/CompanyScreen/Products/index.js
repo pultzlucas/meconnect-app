@@ -66,6 +66,7 @@ export default function Products({ route }) {
       {/* <Search title={"Pesquisar produto"} /> */}
       <FlatList
         data={products}
+        style={{marginTop: 10}}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />

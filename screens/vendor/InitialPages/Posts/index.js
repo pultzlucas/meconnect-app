@@ -26,13 +26,20 @@ export default function Posts({ navigation }) {
     })
   }, [refreshing, useIsFocused()])
 
-  const renderItem = ({ item: { title, content, media_url, created_at, media_type } }) => {
+  function removePostFromList(postId) {
+    setPosts(posts.filter(post => post.id !== postId))
+  }
+
+  const renderItem = ({ item: { id, title, content, media_url, created_at, media_type } }) => {
     return <Post
+      id={id}
       title={title}
       content={content}
       media_url={media_url}
       media_type={media_type}
       created_at={created_at}
+      onRemove={removePostFromList}
+      options={true}
     />
   };
 
@@ -70,6 +77,7 @@ export default function Posts({ navigation }) {
         data={posts}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        rende
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

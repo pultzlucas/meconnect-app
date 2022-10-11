@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
+import { useIsFocused } from "@react-navigation/native"
 import { Api, Colors } from "meconnect-sdk"
 import { useEffect } from "react"
 import { ActivityIndicator, StyleSheet, View } from "react-native"
@@ -13,7 +14,7 @@ export default function InitPages({ navigation }) {
                 navigation.navigate("EscolherConta")
             }
         })
-    }, [])
+    }, [useIsFocused()])
 
 
     return (

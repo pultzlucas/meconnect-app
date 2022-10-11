@@ -13,18 +13,24 @@ import {
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { Api, Colors } from "meconnect-sdk";
 import { useCallback } from "react";
+import formatDateString from '../format-date-string'
 
 function Noti() {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
 
-  const renderItem = ({ item }) => (
-    <View style={styles.item} key={item.id}>
-      <Text style={styles.type}>{item.type.replace('_', ' ').toUpperCase()}</Text>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.desc}>{item.subtitle}</Text>
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    return (
+      <View style={styles.item} key={item.id}>
+        <View style={styles.itemHeader}>
+          <Text style={styles.date}>{formatDateString(item.created_at)}</Text>
+          <Text style={styles.type}>{item.type.replace('_', ' ').toUpperCase()}</Text>
+        </View>
+        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.desc}>{item.subtitle}</Text>
+      </View>
+    )
+  }
 
   const [notifications, setNotifications] = useState([])
 
@@ -41,8 +47,6 @@ function Noti() {
       setIsLoading(false)
     })
   }, [refreshing])
-
-  // Scroll down refreshing Refreshing
 
   const wait = (timeout) => {
     return new Promise(resolve => setTimeout(resolve, timeout));
@@ -61,7 +65,7 @@ function Noti() {
         data={notifications}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{marginBottom: 70}}
+        style={{ marginBottom: 70 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -80,7 +84,9 @@ const styles = StyleSheet.create({
   },
   item: {
     backgroundColor: "#F3F3F3",
-    padding: 15,
+    paddingHorizontal: 14,
+    paddingTop: 10,
+    paddingBottom: 20,
     borderRadius: 8,
     marginVertical: 8,
     marginHorizontal: 16,
@@ -95,8 +101,8 @@ const styles = StyleSheet.create({
     color: "#333333",
   },
   type: {
-    color: "#333333",
-    fontSize: 13,
+    color: Colors.Black,
+    fontSize: 12,
     textAlign: "right",
     fontWeight: "bold",
     paddingBottom: 0,
@@ -104,6 +110,12 @@ const styles = StyleSheet.create({
   date: {
     fontSize: 12,
     textAlign: "right",
+    color: Colors.DarkGray
+  },
+  itemHeader:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between'
   },
 });
 

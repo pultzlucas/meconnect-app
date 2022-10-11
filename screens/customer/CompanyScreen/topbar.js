@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
+  BackHandler,
   StatusBar,
 } from "react-native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -12,8 +13,16 @@ import { Colors } from "meconnect-sdk";
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function TopBar({ route }) {
+export default function TopBar({ navigation, route }) {
   const { vendor_id } = route.params
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.goBack()
+    })
+    return () => backHandler.remove();
+  }, [])
+
   return (
     <Tab.Navigator
       activeColor="#F5803E"
