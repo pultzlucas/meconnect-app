@@ -1,8 +1,8 @@
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, Text, Button, Pressable, Touchable, TouchableHighlight } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, Text, Button, Pressable, Touchable, TouchableHighlight, ActivityIndicator } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
 import ConnectionsList from "../../../../components/CardCone";
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BottomSheet } from 'react-native-btr';
 import { Api, Colors } from 'meconnect-sdk';
 import HorizontalLine from '../../../../components/HorizontalLine';
@@ -10,14 +10,32 @@ import Entypo from "react-native-vector-icons/Entypo";
 
 import logout from "../../../../logout-action";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useIsFocused } from '@react-navigation/native';
+import MCButton from '../../../../components/MCButton';
+import { FlatList } from 'react-native-gesture-handler';
+import VendorProfile from '../../../../components/VendorProfile';
 
 export default function Conection({ navigation }) {
   const [customer, setCustomer] = useState('')
   const [visible, setVisible] = useState(false);
 
-  const toggleBottomNavigationView = () => {
-    setVisible(!visible);
-  };
+  const isFocused = useIsFocused();
+
+  const [vendors, setVendors] = useState([])
+  const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function fetchVendors() {
+    const { data: connections } = await Api.db.customers.getConnections(await AsyncStorage.getItem('@CustomerId'))
+    let vendors = []
+
+    for (let conn of connections) {
+      const { data: vendor } = await Api.db.vendors.get(conn.vendor_id)
+      vendors.push(vendor)
+    }
+
+    return vendors
+  }
 
   useEffect(() => {
     AsyncStorage.getItem('@CustomerId').then(id => {
@@ -27,6 +45,52 @@ export default function Conection({ navigation }) {
     })
   }, [])
 
+  useEffect(() => {
+    setIsLoading(true)
+    setVendors([])
+    fetchVendors().then(vendors => {
+      setVendors(vendors)
+      setIsLoading(false)
+    })
+  }, [refreshing, isFocused])
+
+  const wait = (timeout) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  }
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(500).then(() => setRefreshing(false));
+  }, []);
+
+  const toggleBottomNavigationView = () => {
+    setVisible(!visible);
+  };
+
+  const renderItem = ({ item: { commercial, description, photo_url, banner_url, id } }) => (
+    <VendorProfile
+      id={id}
+      commercial={commercial}
+      description={description}
+      photo_url={photo_url}
+      banner_url={banner_url}
+      navigation={navigation}
+    />
+  );
+
+
+  const Placeholder = () => (
+    <View style={styles.placeholderContainer}>
+      <Text style={styles.placeholder}>Você não possui nenhuma conexão</Text>
+      <MCButton
+        style={styles.placeholderBtn}
+        size={'medium'}
+        onClick={() => navigation.navigate('Explorar', { screen: 'CustomerScreens' })}>
+        Explorar conexões
+      </MCButton>
+    </View>
+  )
+
   return (
     <View style={styles.container}>
       <StatusBar />
@@ -35,7 +99,22 @@ export default function Conection({ navigation }) {
           <Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>
         </HeaderOption>
       </MCHeader>
-      <ConnectionsList navigation={navigation} />
+
+      {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+
+      {(vendors.length === 0 && !isLoading) && <Placeholder />}
+
+      <FlatList
+        data={vendors}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+        style={{paddingTop: 10}}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        } />
 
       <BottomSheet
         visible={visible}
@@ -54,7 +133,7 @@ export default function Conection({ navigation }) {
               </Text>
             </View>
 
-            <HorizontalLine width={'100%'} marginVertical={0} color={Colors.DarkGray}/>
+            <HorizontalLine width={'100%'} marginVertical={0} color={Colors.DarkGray} />
 
             <Pressable
               style={styles.sheetOptionTextContainer}
@@ -66,7 +145,7 @@ export default function Conection({ navigation }) {
         </View>
       </BottomSheet>
 
-    </View>
+    </View >
   );
 }
 

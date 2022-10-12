@@ -45,7 +45,6 @@ export default function RegistreEmpresa({ navigation }) {
         onInput={value => setCnpj(value)}
         placeholder="CNPJ"
         keyboardType='numeric'
-        value={'13785287000154'}
       />
       <MCInput
         style={styles.input}

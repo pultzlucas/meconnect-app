@@ -10,7 +10,7 @@ import {
   ScrollView,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { Api } from "meconnect-sdk";
+import { Api, Colors } from "meconnect-sdk";
 
 export default function Products({ route }) {
   const [products, setProducts] = useState([])
@@ -60,13 +60,16 @@ export default function Products({ route }) {
     getProducts().then(prods => setProducts(prods))
   }, []);
 
-  // Body
+  const Placeholder = () => (
+    <Text style={styles.placeholderText}>Este perfil ainda não publicou nenhum produto</Text>
+  )
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* <Search title={"Pesquisar produto"} /> */}
+      {(products.length === 0) && <Placeholder />}
       <FlatList
         data={products}
-        style={{marginTop: 10}}
+        style={{ marginTop: 10 }}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
       />
@@ -78,6 +81,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     flex: 1,
+  },
+  placeholderText: {
+    color: Colors.DarkGray,
+    textAlign: 'center',
+    marginTop: 20,
   },
   prod: {
     width: "100%",

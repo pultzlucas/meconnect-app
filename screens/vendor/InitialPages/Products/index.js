@@ -8,6 +8,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Entypo from "react-native-vector-icons/Entypo";
 import { useIsFocused } from '@react-navigation/native';
 import Product from '../../../../components/Product';
+import MCButton from '../../../../components/MCButton';
 
 export default function Conection({ navigation, route: { params: { vendorId } } }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -52,6 +53,13 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
     wait(500).then(() => setRefreshing(false));
   }, []);
 
+  const Placeholder = () => (
+    <View style={styles.placeholderContainer}>
+        <Text style={styles.placeholderText}>Você ainda não publicou nenhum produto</Text>
+        <MCButton style={styles.placeholderBtn} onClick={() => navigation.navigate('VendorCreateProduct')}>Publicar um produto</MCButton>
+      </View>
+  )
+
   return (
     <View style={styles.container}>
       <StatusBar></StatusBar>
@@ -63,10 +71,13 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 
+      {(products.length === 0 && !isLoading) && <Placeholder />}
+      
       <FlatList
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
+        style={{paddingTop: 10,}}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -83,5 +94,16 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-
+  placeholderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  placeholderText: {
+    color: Colors.DarkGray
+  },
+  placeholderBtn: {
+    marginTop: 10,
+    width: 200,
+  },
 });

@@ -1,10 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { TextElement } from 'react-native-elements/dist/text/Text';
 import { Api } from 'meconnect-sdk';
 import { useState } from 'react';
 import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function RegistreCliente({ navigation }) {
@@ -13,11 +14,15 @@ export default function RegistreCliente({ navigation }) {
   const [email, setEmail] = useState(null)
   const [senha2, setSenha2] = useState(null)
 
+  const [loading, setLoading] = useState(false)
+
   async function register() {
     if (senha !== senha2) {
       console.log('Senha de confirmação incorreta')
       return
     }
+
+    setLoading(true)
 
     const { data, status } = await Api.db.customers.create({
       name: nome,
@@ -28,12 +33,15 @@ export default function RegistreCliente({ navigation }) {
 
     if (status === 200) {
       await Api.token.set(data.token)
-      console.log('Conta cliente criada com sucesso')
-      navigation.navigate("CustomerScreens")
-      return
-    }
+      await AsyncStorage.setItem('@CustomerId', String(data.customer.id))
+      await AsyncStorage.setItem('@UserType', 'customer')
 
-    console.log(data)
+      setLoading(false)
+      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      navigation.popToTop()
+      navigation.replace("CustomerScreens")
+    }
+    
   }
 
   return (
@@ -68,7 +76,7 @@ export default function RegistreCliente({ navigation }) {
         secureTextEntry={true}
       />
 
-      <MCButton style={styles.btn} size='medium' onClick={register}>Registrar</MCButton>
+      <MCButton style={styles.btn} size='medium' isLoading={loading} onClick={register}>Registrar</MCButton>
     </View>
 
   );

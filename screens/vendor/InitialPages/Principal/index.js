@@ -24,16 +24,18 @@ import { BottomSheet } from "react-native-btr";
 import HorizontalLine from "../../../../components/HorizontalLine";
 import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 
-export default function Principal({ navigation, route: { params: { vendorId } } }) {
+export default function Principal({ navigation }) {
   const [vendor, setVendor] = useState('')
   const isFocused = useIsFocused();
   const [visible, setVisible] = useState(false);
 
   function getVendorInfo() {
-    Api.db.vendors.get(vendorId).then(({ data }) => {
-      if (data) {
+    AsyncStorage.getItem('@VendorId').then(vendorId => {
+      console.log(vendorId)
+      Api.db.vendors.get(vendorId).then(({ data }) => {
+        console.log(data)
         setVendor(data)
-      }
+      })
     })
   }
 
@@ -54,12 +56,6 @@ export default function Principal({ navigation, route: { params: { vendorId } } 
             <MaterialCommunityIcons name="pencil" size={24} color={'white'}></MaterialCommunityIcons>
           </HeaderOption>
           <HeaderOption onClick={toggleBottomNavigationView}>
-            {/* <OptionMenu
-              customButton={<Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>}
-              destructiveIndex={0}
-              options={["Logout", 'Cancel']}
-              actions={[logout]}
-            /> */}
             <Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>
           </HeaderOption>
         </MCHeader>
@@ -81,10 +77,10 @@ export default function Principal({ navigation, route: { params: { vendorId } } 
 
         <Text style={styles.bio}>{vendor.bio}</Text>
 
-        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj}/>
-        <VendorProfileTopic title={'Email'} info={vendor.email}/>
-        <VendorProfileTopic title={'Tel'} info={vendor.tel}/>
-        <VendorProfileTopic title={'CEP'} info={vendor.cep}/>
+        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} />
+        <VendorProfileTopic title={'Email'} info={vendor.email} />
+        <VendorProfileTopic title={'Tel'} info={vendor.tel} />
+        <VendorProfileTopic title={'CEP'} info={vendor.cep} />
 
 
         <BottomSheet

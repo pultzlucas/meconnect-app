@@ -3,6 +3,7 @@ import {
   View,
   FlatList,
   StyleSheet,
+  Text,
 } from "react-native";
 
 import { Api, Colors } from "meconnect-sdk";
@@ -31,26 +32,13 @@ export default function Posts({ route }) {
     getPosts().then(posts => setPosts(posts))
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const Placeholder = () => (
+      <Text style={styles.placeholderText}>Este perfil ainda não publicou nenhum post</Text>
+  )
 
   return (
     <View style={styles.container}>
-      {/* <TextInput
-        style={styles.searchInput}
-        onChangeText={query => {
-          if (!query) {
-            getPosts().then(posts => setPosts(posts))
-          }
-
-          setSearchQuery(query)
-
-          const postsFiltered = posts.filter(post => post.title.includes(searchQuery))
-          setPosts(postsFiltered)
-        }}
-        value={searchQuery}
-        placeholder='Procurar postagens'
-      /> */}
-
+      {(posts.length === 0) && <Placeholder />}
       <FlatList
         data={posts}
         renderItem={renderItem}
@@ -75,6 +63,11 @@ const styles = StyleSheet.create({
     elevation: 3,
     fontSize: 18,
     color: '#333'
+  },
+  placeholderText: {
+    color: Colors.DarkGray,
+    textAlign: 'center',
+    marginTop: 20,
   },
 });
 

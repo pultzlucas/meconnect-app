@@ -91,8 +91,8 @@ export default function Principal({ route }) {
         {/* Conectar */}
         {
           connected ?
-            <MCButton style={styles.btn} isLoading={loadingConnections} children={"Desconectar"} onClick={disconnect} /> :
-            <MCButton style={styles.btn} isLoading={loadingConnections} children={"Conectar"} onClick={connect} />
+            <MCButton style={styles.btn} isLoading={loadingConnections} noElevation children={"Desconectar"} onClick={disconnect} /> :
+            <MCButton style={styles.btn} isLoading={loadingConnections} noElevation children={"Conectar"} onClick={connect} />
         }
 
         <View style={styles.customersConnected}>
@@ -135,12 +135,11 @@ const styles = StyleSheet.create({
     bottom: -70,
     left: '50%',
     transform: [{ translateX: -75 }],
-    borderColor: "#ffffff",
+    borderColor: "#f3f3f3",
     width: 140,
     height: 140,
     borderRadius: 100,
-    borderWidth: 5,
-    borderColor: '#eee',
+    borderWidth: 8,
   },
   customersConnected: {
     position: 'relative',

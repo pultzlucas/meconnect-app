@@ -68,13 +68,15 @@ export default function Login({ navigation }) {
       if (data.user_type === 'customer') {
         console.log('customer account entered')
         AsyncStorage.setItem('@CustomerId', String(data.id))
-        navigation.navigate("CustomerScreens")
+        navigation.popToTop()
+        navigation.replace("CustomerScreens")
       }
 
       if (data.user_type === 'vendor') {
         console.log('vendor account entered')
         AsyncStorage.setItem('@VendorId', String(data.id))
-        navigation.navigate("VendorScreens")
+        navigation.popToTop()
+        navigation.replace("VendorScreens")
       }
 
       return

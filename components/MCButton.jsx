@@ -1,7 +1,7 @@
 import { Colors } from "meconnect-sdk"
 import { ActivityIndicator, Button, Pressable, StyleSheet, Text, TouchableOpacity } from "react-native"
 
-function MCButton({ styleType = 'primary', size = 'medium', onClick, children, style, isLoading = false }) {
+function MCButton({ styleType = 'primary', size = 'medium', onClick, children, style, isLoading = false, noElevation = false }) {
   const styleTypeString = styleType.charAt(0).toUpperCase() + styleType.slice(1)
   const sizeString = size.charAt(0).toUpperCase() + size.slice(1)
   return (
@@ -13,6 +13,7 @@ function MCButton({ styleType = 'primary', size = 'medium', onClick, children, s
         },
         styles[`button${styleTypeString}`],
         styles[`button${sizeString}`],
+        {elevation: noElevation ? 0 : 3},
         { ...style }
       ]}
     >
@@ -37,7 +38,6 @@ const styles = StyleSheet.create({
   buttonPrimary: {
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 3,
     borderWidth: 1,
     borderColor: Colors.LightGray,
     backgroundColor: Colors.DarkOrange,

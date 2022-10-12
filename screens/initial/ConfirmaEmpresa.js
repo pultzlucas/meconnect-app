@@ -1,10 +1,11 @@
-import { StyleSheet, TextInput, View, ScrollView, StatusBar } from 'react-native';
+import { StyleSheet, TextInput, View, ScrollView, StatusBar, ToastAndroid } from 'react-native';
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { useEffect, useState } from 'react';
 import { Api, Colors } from 'meconnect-sdk';
 import MCButton from '../../components/MCButton'
 import MCInput from '../../components/MCInput'
 import MCTextarea from '../../components/MCTextarea'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function RegistreCliente({ route, navigation }) {
@@ -17,6 +18,8 @@ export default function RegistreCliente({ route, navigation }) {
 
   const { params } = route;
 
+  const [loading, setLoading] = useState(false)
+
   useEffect(() => {
     setDescription(params.description)
     setName(params.name)
@@ -27,7 +30,8 @@ export default function RegistreCliente({ route, navigation }) {
   }, [])
 
   async function entrar() {
-    const res = await Api.db.vendors.create({
+    setLoading(true)
+    const { data, status } = await Api.db.vendors.create({
       cep,
       cnpj: params.cnpj,
       commercial,
@@ -39,16 +43,20 @@ export default function RegistreCliente({ route, navigation }) {
       device_token: 'asd'
     })
 
-    if (res.status === 200) {
-      console.log(res.data.message)
-      Api.token.set(res.data.token)
-      AsyncStorage.setItem('@VendorId', String(data.id))
-      
-      console.log('vendor account entered')
-      navigation.navigate("VendorScreens")
-    }
+    if (status === 200) {
+      await Api.token.set(data.token)
+      await AsyncStorage.setItem('@VendorId', String(data.id))
+      await AsyncStorage.removeItem('@CustomerId')
+      await AsyncStorage.setItem('@UserType', 'vendor')
 
-    console.log(res)
+      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      setLoading(false)
+      navigation.popToTop()
+      navigation.replace("VendorScreens")
+    } else {
+      setLoading(false)
+      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+    }
   }
 
   return (
@@ -96,7 +104,7 @@ export default function RegistreCliente({ route, navigation }) {
 
         </View>
 
-        <MCButton onInput={text => setDescription(text)} style={styles.btn} onClick={entrar}>Registrar</MCButton>
+        <MCButton onInput={text => setDescription(text)} style={styles.btn} isLoading={loading} onClick={entrar}>Registrar</MCButton>
       </View>
     </ScrollView>
   );

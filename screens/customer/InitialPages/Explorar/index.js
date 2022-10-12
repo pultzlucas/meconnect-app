@@ -1,22 +1,7 @@
-import React from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
-import "react-native-gesture-handler";
+import ExploreScreen from "../../../../components/ExploreScreen";
 
-import TopSearch from "../../../../components/TopSearch";
-import MyTabs from "./topBar";
-
-export default function Exploration() {
+export default function Explore() {
   return (
-    <View style={styles.container}>
-      <MyTabs />
-      <StatusBar/>
-    </View>
+    <ExploreScreen></ExploreScreen>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    flex: 1,
-  },
-});

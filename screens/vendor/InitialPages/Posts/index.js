@@ -6,8 +6,6 @@ import { Api, Colors } from 'meconnect-sdk';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Entypo from "react-native-vector-icons/Entypo";
-import { ResizeMode, Video } from 'expo-av';
-import formatDateString from '../../../../format-date-string';
 import Post from '../../../../components/Post';
 import MCButton from '../../../../components/MCButton';
 import { useIsFocused } from '@react-navigation/native';
