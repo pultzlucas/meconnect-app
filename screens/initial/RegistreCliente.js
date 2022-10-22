@@ -5,7 +5,7 @@ import { Api } from 'meconnect-sdk';
 import { useState } from 'react';
 import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store'
 
 
 export default function RegistreCliente({ navigation }) {
@@ -18,7 +18,7 @@ export default function RegistreCliente({ navigation }) {
 
   async function register() {
     if (senha !== senha2) {
-      console.log('Senha de confirmação incorreta')
+      ToastAndroid.show('Senha de confirmação incorreta', ToastAndroid.SHORT);
       return
     }
 
@@ -33,13 +33,16 @@ export default function RegistreCliente({ navigation }) {
 
     if (status === 200) {
       await Api.token.set(data.token)
-      await AsyncStorage.setItem('@CustomerId', String(data.customer.id))
-      await AsyncStorage.setItem('@UserType', 'customer')
+      await SecureStore.setItemAsync('CustomerId', String(data.customer.id))
+      await SecureStore.setItemAsync('UserType', 'customer')
 
       setLoading(false)
       ToastAndroid.show(data.message, ToastAndroid.SHORT);
       navigation.popToTop()
       navigation.replace("CustomerScreens")
+    } else {
+      setLoading(false)
+      ToastAndroid.show(data.message, ToastAndroid.SHORT);
     }
     
   }

@@ -1,19 +1,18 @@
 import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, Text, Button, Pressable, Touchable, TouchableHighlight, ActivityIndicator } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
-import ConnectionsList from "../../../../components/CardCone";
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { BottomSheet } from 'react-native-btr';
 import { Api, Colors } from 'meconnect-sdk';
 import HorizontalLine from '../../../../components/HorizontalLine';
 import Entypo from "react-native-vector-icons/Entypo";
 
-import logout from "../../../../logout-action";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import logout from "../../../../src/logout-action";
 import { useIsFocused } from '@react-navigation/native';
 import MCButton from '../../../../components/MCButton';
 import { FlatList } from 'react-native-gesture-handler';
 import VendorProfile from '../../../../components/VendorProfile';
+import * as SecureStore from 'expo-secure-store'
 
 export default function Conection({ navigation }) {
   const [customer, setCustomer] = useState('')
@@ -26,7 +25,7 @@ export default function Conection({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
 
   async function fetchVendors() {
-    const { data: connections } = await Api.db.customers.getConnections(await AsyncStorage.getItem('@CustomerId'))
+    const { data: connections } = await Api.db.customers.getConnections(await SecureStore.getItemAsync('CustomerId'))
     let vendors = []
 
     for (let conn of connections) {
@@ -38,7 +37,7 @@ export default function Conection({ navigation }) {
   }
 
   useEffect(() => {
-    AsyncStorage.getItem('@CustomerId').then(id => {
+    SecureStore.getItemAsync('CustomerId').then(id => {
       Api.db.customers.get(id).then(({ data }) => {
         setCustomer(data)
       })
@@ -81,7 +80,7 @@ export default function Conection({ navigation }) {
 
   const Placeholder = () => (
     <View style={styles.placeholderContainer}>
-      <Text style={styles.placeholder}>Você não possui nenhuma conexão</Text>
+      <Text style={styles.placeholderText}>Você não possui nenhuma conexão</Text>
       <MCButton
         style={styles.placeholderBtn}
         size={'medium'}
@@ -139,7 +138,7 @@ export default function Conection({ navigation }) {
               style={styles.sheetOptionTextContainer}
               onPress={logout}
               android_ripple={{ color: Colors.DarkOrange }}>
-              <Text style={styles.sheetOptionText}>Logout</Text>
+              <Text style={styles.sheetOptionText}>Sair</Text>
             </Pressable>
           </ScrollView>
         </View>
@@ -178,4 +177,16 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
   },
+  placeholderContainer: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  placeholderText: {
+    color: Colors.DarkGray,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  placeholderBtn: {
+    marginTop: 20,
+  },  
 });

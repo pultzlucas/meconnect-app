@@ -11,6 +11,7 @@ import { Api, Colors, Media } from "meconnect-sdk";
 import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Splash from "../../components/Splash";
+import * as SecureStore from 'expo-secure-store'
 
 export default function CreateProduct({ navigation }) {
     const [description, setDescription] = useState('')
@@ -48,13 +49,13 @@ export default function CreateProduct({ navigation }) {
         }
 
         const { data, status: saveData } = await Api.db.products.create({
-            vendor_id: await AsyncStorage.getItem('@VendorId'),
+            vendor_id: await SecureStore.getItemAsync('VendorId'),
             description,
             price
         })
 
         const {status: saveImage} = await Api.db.products.setPhoto(data.product.id, imageUrl)
-        
+
         if(saveData === 200 && saveImage === 200) {
             ToastAndroid.show('Produto foi publicado', ToastAndroid.SHORT)
             navigation.navigate('VendorScreens')
@@ -119,8 +120,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 180,
-        height: 180,
+        width: 240,
+        height: 240,
         borderWidth: 2,
         borderColor: Colors.LightGray,
         borderRadius: 10,
@@ -129,5 +130,6 @@ const styles = StyleSheet.create({
     prodImg: {
         width: '100%',
         height: '100%',
+        borderRadius: 8,
     },
 })

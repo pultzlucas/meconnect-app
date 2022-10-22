@@ -5,7 +5,7 @@ import { Api, Colors } from 'meconnect-sdk';
 import MCButton from '../../components/MCButton'
 import MCInput from '../../components/MCInput'
 import MCTextarea from '../../components/MCTextarea'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store'
 
 
 export default function RegistreCliente({ route, navigation }) {
@@ -23,7 +23,7 @@ export default function RegistreCliente({ route, navigation }) {
   useEffect(() => {
     setDescription(params.description)
     setName(params.name)
-    setCommercial(params.commercial)
+    setCommercial(params.name)
     setTel(params.tel)
     setCep(params.cep)
     setEmail(params.email)
@@ -45,9 +45,9 @@ export default function RegistreCliente({ route, navigation }) {
 
     if (status === 200) {
       await Api.token.set(data.token)
-      await AsyncStorage.setItem('@VendorId', String(data.id))
-      await AsyncStorage.removeItem('@CustomerId')
-      await AsyncStorage.setItem('@UserType', 'vendor')
+      await SecureStore.setItemAsync('VendorId', String(data.vendor.id))
+      await SecureStore.deleteItemAsync('CustomerId')
+      await SecureStore.setItemAsync('UserType', 'vendor')
 
       ToastAndroid.show(data.message, ToastAndroid.SHORT);
       setLoading(false)
@@ -71,16 +71,17 @@ export default function RegistreCliente({ route, navigation }) {
           <MCInput
             onInput={text => setName(text)}
             value={name}
-            label="Nome fantasia"
+            label="Nome comercial"
+            editable={false}
           />
-
-          <MCTextarea on label="Slogan">{description}</MCTextarea>
 
           <MCInput
             onInput={text => setCommercial(text)}
             value={commercial}
-            label="Nome comercial"
+            label="Nome fantasia"
           />
+
+          <MCTextarea on label="Descrição">{description}</MCTextarea>
 
           <MCInput
             onInput={text => setEmail(text)}

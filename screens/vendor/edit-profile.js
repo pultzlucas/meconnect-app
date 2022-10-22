@@ -1,4 +1,4 @@
-import { Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native"
+import { Alert, Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, ToastAndroid, View } from "react-native"
 
 import MCHeader from '../../components/MCHeader'
 import MCInput from '../../components/MCInput'
@@ -6,12 +6,11 @@ import HeaderOption from '../../components/HeaderOption'
 
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { Input } from "react-native-elements";
 import { useEffect, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Api, Media } from "meconnect-sdk";
 import MCTextarea from "../../components/MCTextarea";
 import Splash from "../../components/Splash";
+import * as SecureStore from 'expo-secure-store'
 
 export default function EditProfile({ navigation }) {
     const [vendorId, setVendorId] = useState('')
@@ -32,9 +31,11 @@ export default function EditProfile({ navigation }) {
 
     const [showSplash, setShowSplash] = useState(false)
 
+    const [hasChanges, setHasChanges] = useState(false)
+
     useEffect(() => {
         setShowSplash(true)
-        AsyncStorage.getItem('@VendorId').then(async vendorIdRes => {
+        SecureStore.getItemAsync('VendorId').then(async vendorIdRes => {
             setVendorId(vendorIdRes)
             Api.db.vendors.get(vendorIdRes).then(({ data }) => {
                 setInitialVendor(data)
@@ -60,17 +61,18 @@ export default function EditProfile({ navigation }) {
             aspect: [3, 3]
         })
 
-        if(!newPhoto.uri) return
+        if (!newPhoto.uri) return
         setVendorPhotoUrl(newPhoto.uri)
     }
-    
+
     async function updateVendorBanner() {
         const newPhoto = await Media.pickImage({
             aspect: [3, 1]
         })
-        if(!newPhoto.uri) return
+        if (!newPhoto.uri) return
         setVendorBannerUrl(newPhoto.uri)
     }
+
 
     async function saveChanges() {
         setShowSplash(true)
@@ -83,18 +85,43 @@ export default function EditProfile({ navigation }) {
             bio: vendorBio,
         })
 
-        let saveBanner = vendorBannerUrl === initialVendor.banner_url 
-        ? 200
-        : (await Api.db.vendors.setProfileBanner(vendorId, vendorBannerUrl)).status
+        let saveBanner = vendorBannerUrl === initialVendor.banner_url
+            ? 200
+            : (await Api.db.vendors.setProfileBanner(vendorId, vendorBannerUrl)).status
 
-        let savePhoto = vendorPhotoUrl === initialVendor.photo_url 
-        ? 200
-        : (await Api.db.vendors.setProfilePhoto(vendorId, vendorPhotoUrl)).status
-        
+        let savePhoto = vendorPhotoUrl === initialVendor.photo_url
+            ? 200
+            : (await Api.db.vendors.setProfilePhoto(vendorId, vendorPhotoUrl)).status
+
         if ([saveData, saveBanner, savePhoto].every(status => status === 200)) {
             ToastAndroid.show(data.message, ToastAndroid.SHORT);
             navigation.navigate('VendorScreens', { 'reload': true })
             setShowSplash(false)
+        }
+    }
+
+    function exitEdition() {
+        if (hasChanges) {
+            Alert.alert(
+                "Tem certeza que deseja descartar as alterações?",
+                false,
+                [
+                    {
+                        text: "Sim",
+                        onPress: () => navigation.navigate('VendorScreens'),
+                        style: "default",
+                    },
+                    {
+                        text: "Não",
+                        style: "cancel",
+                    },
+                ],
+                {
+                    cancelable: true,
+                }
+            )
+        } else {
+            navigation.navigate('VendorScreens')
         }
     }
 
@@ -107,7 +134,7 @@ export default function EditProfile({ navigation }) {
                     <HeaderOption onClick={saveChanges}>
                         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Salvar</Text>
                     </HeaderOption>
-                    <HeaderOption onClick={() => navigation.navigate('VendorScreens')}>
+                    <HeaderOption onClick={exitEdition}>
                         <Ionicons name="close" color={'white'} size={26}></Ionicons>
                     </HeaderOption>
                 </MCHeader>
@@ -125,13 +152,13 @@ export default function EditProfile({ navigation }) {
 
                     <View style={styles.form}>
                         <MCInput label={'Nome'} editable={false} value={vendorName}></MCInput>
+                        <MCInput label={'Fantasia'} onInput={text => { setVendorCommercial(text); setHasChanges(true) }} value={vendorCommercial}></MCInput>
+                        <MCInput label={'Descrição'} onInput={text => { setVendorSlogan(text); setHasChanges(true) }} value={vendorSlogan}></MCInput>
                         <MCInput label={'CNPJ'} editable={false} value={vendorCnpj}></MCInput>
-                        <MCInput label={'Fantasia'} onInput={text => setVendorCommercial(text)} value={vendorCommercial}></MCInput>
-                        <MCInput label={'Slogan'} onInput={text => setVendorSlogan(text)} value={vendorSlogan}></MCInput>
                         <MCInput label={'Email'} editable={false} value={vendorEmail}></MCInput>
-                        <MCInput label={'Telefone'} onInput={text => setVendorTel(text)} value={vendorTel}></MCInput>
-                        <MCInput label={'CEP'} onInput={text => setVendorCep(text)} value={vendorCep}></MCInput>
-                        <MCTextarea label={'Bio'} onInput={text => setVendorBio(text)}>{vendorBio}</MCTextarea>
+                        <MCInput label={'Telefone'} onInput={text => { setVendorTel(text); setHasChanges(true) }} value={vendorTel}></MCInput>
+                        <MCInput label={'CEP'} onInput={text => { setVendorCep(text); setHasChanges(true) }} value={vendorCep}></MCInput>
+                        <MCTextarea label={'Bio'} onInput={text => { setVendorBio(text); setHasChanges(true) }}>{vendorBio}</MCTextarea>
                     </View>
                     <Splash show={showSplash} />
                 </View>

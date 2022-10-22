@@ -1,9 +1,8 @@
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
 import { useCallback, useEffect, useState } from 'react';
 import { Api, Colors } from 'meconnect-sdk';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Entypo from "react-native-vector-icons/Entypo";
 import { useIsFocused } from '@react-navigation/native';
@@ -18,7 +17,6 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   const isFocused = useIsFocused();
 
   async function getProducts() {
-    // console.log('Products: ' + vendorId)
     setIsLoading(true)
     const { data } = await Api.db.vendors.getProducts(vendorId)
     setProducts(data)
@@ -34,14 +32,16 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   }
 
   const renderItem = ({ item: { id, description, photo_url, price } }) => {
-    return <Product
-      id={id}
-      description={description}
-      photo_url={photo_url}
-      price={price}
-      onRemove={removeProdFromList}
-      options={true}
-    />
+    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { productId: id })}>
+      <Product
+        id={id}
+        description={description}
+        photo_url={photo_url}
+        price={price}
+        onRemove={removeProdFromList}
+        options={true}
+      />
+    </TouchableOpacity>
   };
 
   const wait = (timeout) => {
@@ -55,9 +55,9 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
 
   const Placeholder = () => (
     <View style={styles.placeholderContainer}>
-        <Text style={styles.placeholderText}>Você ainda não publicou nenhum produto</Text>
-        <MCButton style={styles.placeholderBtn} onClick={() => navigation.navigate('VendorCreateProduct')}>Publicar um produto</MCButton>
-      </View>
+      <Text style={styles.placeholderText}>Você ainda não publicou nenhum produto</Text>
+      <MCButton style={styles.placeholderBtn} onClick={() => navigation.navigate('VendorCreateProduct')}>Publicar um produto</MCButton>
+    </View>
   )
 
   return (
@@ -72,12 +72,12 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 
       {(products.length === 0 && !isLoading) && <Placeholder />}
-      
+
       <FlatList
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{paddingTop: 10,}}
+        style={{ paddingTop: 10, }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

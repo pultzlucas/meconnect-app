@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, Image, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, Image, ActivityIndicator, Pressable, TouchableOpacity } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
 import { useCallback, useEffect, useState } from 'react';
@@ -9,6 +9,7 @@ import Entypo from "react-native-vector-icons/Entypo";
 import Post from '../../../../components/Post';
 import MCButton from '../../../../components/MCButton';
 import { useIsFocused } from '@react-navigation/native';
+import * as SecureStore from 'expo-secure-store'
 
 export default function Posts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -17,7 +18,7 @@ export default function Posts({ navigation }) {
 
   useEffect(() => {
     setIsLoading(true)
-    AsyncStorage.getItem('@VendorId').then(async vendorId => {
+    SecureStore.getItemAsync('VendorId').then(async vendorId => {
       const { data } = await Api.db.vendors.getPosts(vendorId)
       setPosts(data)
       setIsLoading(false)
@@ -29,16 +30,18 @@ export default function Posts({ navigation }) {
   }
 
   const renderItem = ({ item: { id, title, content, media_url, created_at, media_type } }) => {
-    return <Post
-      id={id}
-      title={title}
-      content={content}
-      media_url={media_url}
-      media_type={media_type}
-      created_at={created_at}
-      onRemove={removePostFromList}
-      options={true}
-    />
+    return <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { postId: id })}>
+      <Post
+        id={id}
+        title={title}
+        content={content}
+        media_url={media_url}
+        media_type={media_type}
+        created_at={created_at}
+        onRemove={removePostFromList}
+        options={true}
+      />
+    </TouchableOpacity>
   };
 
   const wait = (timeout) => {

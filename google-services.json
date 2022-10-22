@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "943445239122",
+    "project_id": "meconnect-56ff1",
+    "storage_bucket": "meconnect-56ff1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943445239122:android:528a44a5c8c9150e99068b",
+        "android_client_info": {
+          "package_name": "com.meconnect.meconnect"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "943445239122-2gcsu2sec8hkued1epk17gl1354i1vo1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCD3UfZUTUv_5lmFZr1M2Zad_q383BNwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "943445239122-2gcsu2sec8hkued1epk17gl1354i1vo1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

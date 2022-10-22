@@ -6,35 +6,48 @@ import {
   Image,
   ScrollView,
   StatusBar,
-  Button,
   Pressable,
 } from "react-native";
 import MCHeader from "../../../../components/MCHeader";
+import MCButton from "../../../../components/MCButton";
 import { Api, Colors } from "meconnect-sdk";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Splash from "../../../../components/Splash";
+import * as SecureStore from 'expo-secure-store'
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import HeaderOption from "../../../../components/HeaderOption";
-import OptionMenu from "react-native-option-menu";
-import logout from "../../../../logout-action";
+import logout from "../../../../src/logout-action";
 import { useIsFocused } from "@react-navigation/native";
 import { BottomSheet } from "react-native-btr";
 import HorizontalLine from "../../../../components/HorizontalLine";
 import VendorProfileTopic from "../../../../components/VendorProfileTopic";
+import Splash from "../../../../components/Splash"
+import * as Network from 'expo-network';
 
 export default function Principal({ navigation }) {
   const [vendor, setVendor] = useState('')
   const isFocused = useIsFocused();
   const [visible, setVisible] = useState(false);
+  const [showSplash, setShowSplash] = useState(false)
+
+  const [fetchDataError, setFetchDataError] = useState('')
 
   function getVendorInfo() {
-    AsyncStorage.getItem('@VendorId').then(vendorId => {
-      console.log(vendorId)
+    setShowSplash(true)
+    setFetchDataError('')
+
+    SecureStore.getItemAsync('VendorId').then(async vendorId => {
       Api.db.vendors.get(vendorId).then(({ data }) => {
-        console.log(data)
+        setShowSplash(false)
         setVendor(data)
+      }).catch(err => {
+        Network.getNetworkStateAsync().then(({ isConnected }) => {
+          if (isConnected)
+            setFetchDataError('Erro interno ao buscar os dados. Tente novamente mais tarde')
+          else
+            setFetchDataError('Sem conexão com a internet')
+        })
       })
     })
   }
@@ -60,57 +73,61 @@ export default function Principal({ navigation }) {
           </HeaderOption>
         </MCHeader>
 
-        {/* Fotos */}
-        <View style={styles.header}>
-          <Image style={styles.banner} source={{ uri: vendor.banner_url }} />
-          <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
-        </View>
+        <View>
 
-        {/* Cabeçalho */}
-        <Text style={styles.titulo}>{vendor.commercial}</Text>
-        <Text style={styles.desc} >{vendor.description}</Text>
-
-        <View style={styles.customersConnected}>
-          <MaterialCommunityIcons name="connection" size={20} style={styles.customersConnectedTitle} color={Colors.DarkGray} />
-          <Text style={styles.customersConnectedTotal}>{vendor.customers_connected}</Text>
-        </View>
-
-        <Text style={styles.bio}>{vendor.bio}</Text>
-
-        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} />
-        <VendorProfileTopic title={'Email'} info={vendor.email} />
-        <VendorProfileTopic title={'Tel'} info={vendor.tel} />
-        <VendorProfileTopic title={'CEP'} info={vendor.cep} />
-
-
-        <BottomSheet
-          visible={visible}
-          onBackButtonPress={toggleBottomNavigationView}
-          onBackdropPress={toggleBottomNavigationView}
-        >
-          <View style={styles.bottomNavigationView}>
-            <View style={styles.tabIcon}></View>
-            <ScrollView>
-              <View style={styles.sheetOptionTextContainer}>
-                <Text style={styles.sheetOptionText}>
-                  <Text>{vendor.name}</Text>
-                </Text>
-                <Text style={styles.sheetOptionText}>
-                  <Text>{vendor.email}</Text>
-                </Text>
-              </View>
-
-              <HorizontalLine width={'100%'} marginVertical={0} color={Colors.DarkGray} />
-
-              <Pressable
-                style={styles.sheetOptionTextContainer}
-                onPress={logout}
-                android_ripple={{ color: Colors.DarkOrange }}>
-                <Text style={styles.sheetOptionText}>Logout</Text>
-              </Pressable>
-            </ScrollView>
+          <View style={styles.header}>
+            <Image style={styles.banner} source={{ uri: vendor.banner_url }} />
+            <Image style={styles.logo} source={{ uri: vendor.photo_url }} />
           </View>
-        </BottomSheet>
+
+          <Text style={styles.titulo}>{vendor.commercial}</Text>
+          <Text style={styles.desc} >{vendor.description}</Text>
+
+          <View style={styles.customersConnected}>
+            <MaterialCommunityIcons name="connection" size={20} style={styles.customersConnectedTitle} color={Colors.DarkGray} />
+            <Text style={styles.customersConnectedTotal}>{vendor.connections}</Text>
+          </View>
+
+          <Text style={styles.bio}>{vendor.bio}</Text>
+
+          <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} style={styles.vendorInfo}/>
+          <VendorProfileTopic title={'Email'} info={vendor.email} style={styles.vendorInfo}/>
+          <VendorProfileTopic title={'Tel'} info={vendor.tel} style={styles.vendorInfo}/>
+          <VendorProfileTopic title={'CEP'} info={vendor.cep} style={styles.vendorInfo}/>
+
+          <Splash show={showSplash} message={fetchDataError} btn={
+            <MCButton onClick={getVendorInfo}>Tentar novamente</MCButton>
+          } />
+
+          <BottomSheet
+            visible={visible}
+            onBackButtonPress={toggleBottomNavigationView}
+            onBackdropPress={toggleBottomNavigationView}
+          >
+            <View style={styles.bottomNavigationView}>
+              <View style={styles.tabIcon}></View>
+              <ScrollView>
+                <View style={styles.sheetOptionTextContainer}>
+                  <Text style={styles.sheetOptionText}>
+                    <Text>{vendor.name}</Text>
+                  </Text>
+                  <Text style={styles.sheetOptionText}>
+                    <Text>{vendor.email}</Text>
+                  </Text>
+                </View>
+
+                <HorizontalLine width={'100%'} marginVertical={0} color={Colors.DarkGray} />
+
+                <Pressable
+                  style={styles.sheetOptionTextContainer}
+                  onPress={logout}
+                  android_ripple={{ color: Colors.DarkOrange }}>
+                  <Text style={styles.sheetOptionText}>Sair</Text>
+                </Pressable>
+              </ScrollView>
+            </View>
+          </BottomSheet>
+        </View>
       </View>
     </ScrollView >
   );
@@ -119,8 +136,6 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFFFFF",
     flex: 1,
-    alignItems: "center",
-    color: Colors.Black,
     paddingBottom: 20,
   },
   header: {
@@ -150,6 +165,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    alignSelf: 'center',
     borderColor: '#ddd',
     borderWidth: 2,
     borderRadius: 10,
@@ -167,6 +183,7 @@ const styles = StyleSheet.create({
   },
 
   titulo: {
+    textAlign: 'center',
     fontSize: 30,
     fontWeight: "bold",
     marginBottom: "1%",
@@ -194,6 +211,10 @@ const styles = StyleSheet.create({
     color: Colors.Black,
     width: '100%',
     padding: 10,
+  },
+  vendorInfo: {
+    display: 'flex',
+    alignSelf: 'center',
   },
 
   /* BottomSheet */

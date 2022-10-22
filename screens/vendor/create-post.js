@@ -10,16 +10,15 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { Api, Colors, Media } from "meconnect-sdk"
 import { Pressable } from "react-native"
 import { useRef, useState } from "react"
-import AsyncStorage from "@react-native-async-storage/async-storage"
+import * as SecureStore from 'expo-secure-store'
 import Splash from "../../components/Splash"
 import { ResizeMode, Video } from "expo-av"
 
 export default function CreatePost({ navigation }) {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
-    const [imageUrl, setImageUrl] = useState('')
-    const [videoUrl, setVideoUrl] = useState('')
-    const [videoDimension, setVideoDimension] = useState({ w: 0, h: 0 })
+    const [imageUrl, setImageUrl] = useState(null)
+    const [videoUrl, setVideoUrl] = useState(null)
 
     const [showSplash, setShowSplash] = useState(false)
     const video = useRef(null);
@@ -39,11 +38,6 @@ export default function CreatePost({ navigation }) {
 
         setVideoUrl(video.uri)
         setImageUrl('')
-
-        setVideoDimension({
-            w: video.width,
-            h: video.height
-        })
     }
 
     async function publishPost() {
@@ -62,7 +56,7 @@ export default function CreatePost({ navigation }) {
         }
 
         const { data, status: saveData } = await Api.db.posts.create({
-            vendor_id: await AsyncStorage.getItem('@VendorId'),
+            vendor_id: await SecureStore.getItemAsync('VendorId'),
             title,
             content
         })
@@ -72,7 +66,7 @@ export default function CreatePost({ navigation }) {
         let saveMedia = 0
         
         if (imageUrl) {
-            const { data, status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
+            const { status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
             saveMedia = status
         }
 
@@ -81,11 +75,17 @@ export default function CreatePost({ navigation }) {
             saveMedia = status
         }
 
-        if (saveData === 200 && saveMedia === 200) {
+
+        if (saveData === 200 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
             ToastAndroid.show('Post foi publicado', ToastAndroid.SHORT)
             navigation.navigate('VendorScreens')
             setShowSplash(false)
+        } else {
+            setShowSplash(false)
+            ToastAndroid.show('Ocorreu um erro interno ao publicar o post', ToastAndroid.SHORT)
         }
+        
+        
 
     }
 

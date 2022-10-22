@@ -1,11 +1,15 @@
 import { Colors } from "meconnect-sdk";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { View } from "react-native";
 
-export default function Splash({ show = false }) {
+export default function Splash({ show = false, message = '', btn = <></> }) {
     return show ?
         <View style={styles.container}>
-            <ActivityIndicator style={styles.spinner} color={Colors.DarkOrange} size={'large'} />
+            {!message && <ActivityIndicator style={styles.spinner} color={Colors.DarkOrange} size={'large'} />}
+            <Text style={styles.message}>{message}</Text>
+            <View style={styles.btn}>
+                {message && btn}
+            </View>
         </View> :
         ''
 }
@@ -16,9 +20,22 @@ const styles = StyleSheet.create({
         height: '100%',
         position: 'absolute',
         backgroundColor: '#fff',
+        display: 'flex',
+        alignItems: 'center',
     },
 
     spinner: {
         marginTop: 20,
-    }
+    },
+    message: {
+        color: Colors.DarkOrange,
+        fontWeight: 'bold',
+        fontSize: 18,
+        textAlign: 'center',
+        marginTop: 20,
+    },
+    btn: {
+        marginTop: 20,
+    },
+
 })

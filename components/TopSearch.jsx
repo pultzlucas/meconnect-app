@@ -9,12 +9,12 @@ export default function TopSearch({ onChangeText }) {
       <Searchbar
         style={{
           position: 'relative',
-          padding: 0,
           backgroundColor: "#F3F3F3",
-          borderRadius: 10,
+          borderRadius: 20,
           marginLeft: 15,
           marginRight: 15,
           marginTop: 10,
+          height: 40,
         }}
         placeholder="Pesquisar"
         onChangeText={onChangeText}

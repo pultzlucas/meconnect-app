@@ -1,8 +1,8 @@
 import { Pressable, StyleSheet } from "react-native";
 
-export default function HeaderOption({ children, onClick }) {
+export default function HeaderOption({ children, onClick, noMargin }) {
     return (
-        <Pressable style={styles.btn} onPress={onClick}>
+        <Pressable style={{ marginLeft: noMargin ? 0 : 15 }} onPress={onClick}>
             {children}
         </Pressable>
     )

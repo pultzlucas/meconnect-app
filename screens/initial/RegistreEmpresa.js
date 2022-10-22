@@ -14,6 +14,7 @@ export default function RegistreEmpresa({ navigation }) {
   function register() {
     requestCnpj()
       .then(cnpjInfo => {
+        console.log(cnpjInfo)
         cnpjInfo.password = senha
         navigation.navigate("ConfirmaEmpresa", cnpjInfo)
       })

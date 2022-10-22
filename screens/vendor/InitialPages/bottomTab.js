@@ -7,13 +7,14 @@ import FontAwesome from "react-native-vector-icons/FontAwesome";
 
 import Posts from "./Posts";
 import Products from "./Products";
-import Exploration from "./Explorar";
+import Explore from "../../ExploreScreen";
 import Principal from "./Principal";
 
 import { Api, Colors } from "meconnect-sdk";
 
 import { Alert, Image, NativeModules } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from 'expo-secure-store'
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,7 +25,7 @@ export default function Routes() {
   useEffect(() => {
     console.log(vendorId)
     if(!vendorId) {
-      AsyncStorage.getItem('@VendorId').then(id => {
+      SecureStore.getItemAsync('VendorId').then(id => {
         setVendorId(id)
       })
     }
@@ -35,7 +36,7 @@ export default function Routes() {
       {vendorId &&
         <Tab.Navigator
           initialRouteName="Exploração"
-          activeColor="#F5803E"
+          activeColor={Colors.DarkOrange}
           inactiveColor="#999"
           barStyle={{
             backgroundColor: "#f5f5f5",
@@ -80,7 +81,7 @@ export default function Routes() {
 
           <Tab.Screen
             name="Explorar"
-            component={Exploration}
+            component={Explore}
             options={{
               tabBarIcon: ({ color }) => (
                 <Ionicons name="compass" size={25} color={color} />

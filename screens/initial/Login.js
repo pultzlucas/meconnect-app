@@ -6,79 +6,40 @@ import { Api } from 'meconnect-sdk';
 import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
 
-import { registerForPushNotificationsAsync } from '../../notification-token'
-
-import * as Notifications from 'expo-notifications';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: true,
-  }),
-});
+import * as SecureStore from 'expo-secure-store'
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState(null)
   const [password, setPassword] = useState(null)
   const [loading, setLoading] = useState(false)
 
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
-  useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      AsyncStorage.setItem('@MCON_NOTIFICATION_TOKEN', token)
-    });
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
-
   async function login() {
     setLoading(true)
-    const { data, status } = await Api.login({
+
+    const { data, status } = await Api.auth.login({
       email: email,
       password: password,
-      device_token: await AsyncStorage.getItem('@MCON_NOTIFICATION_TOKEN')
+      device_token: await SecureStore.getItemAsync('DeviceToken')
     })
 
-    AsyncStorage.multiRemove(['@CustomerId', '@VendorId', '@UserType'])
-
     if (status === 200) {
-      ToastAndroid.show('Login efetuado com sucesso', ToastAndroid.SHORT);
-
       await Api.token.set(data.token)
-
-      AsyncStorage.setItem('@UserType', data.user_type)
+      await SecureStore.setItemAsync('UserType', data.user_type)
 
       if (data.user_type === 'customer') {
-        console.log('customer account entered')
-        AsyncStorage.setItem('@CustomerId', String(data.id))
+        await SecureStore.setItemAsync('CustomerId', String(data.id))
         navigation.popToTop()
         navigation.replace("CustomerScreens")
       }
 
       if (data.user_type === 'vendor') {
         console.log('vendor account entered')
-        AsyncStorage.setItem('@VendorId', String(data.id))
+        SecureStore.setItemAsync('VendorId', String(data.id))
         navigation.popToTop()
         navigation.replace("VendorScreens")
       }
-
+      
+      ToastAndroid.show('Login efetuado com sucesso', ToastAndroid.SHORT);
       return
     }
 

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "App",
+    "name": "MeConnect",
     "slug": "App",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -24,13 +24,30 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.meconnect.meconnect",
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/logo.png"
     },
     "notification": {
-      "icon": "./assets/favicon.png"
-    }
+      "icon": "./assets/logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "54874654-96ae-4c8e-9e40-3d4ca30d4a19"
+      }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/logo.png",
+          "color": "#ffffff"
+        }
+      ]
+    ]
   }
 }

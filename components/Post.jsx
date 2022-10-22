@@ -1,10 +1,10 @@
 import { ResizeMode, Video } from "expo-av"
 import { Image, StyleSheet, Text, View } from "react-native"
-import formatDateString from "../format-date-string"
 import { Api, Colors } from 'meconnect-sdk'
 import Entypo from "react-native-vector-icons/Entypo";
 import OptionMenu from "react-native-option-menu";
 import { ToastAndroid } from "react-native";
+import Date from "./Date";
 
 export default function Post({ id, title, content, media_url, created_at, media_type, onRemove, options = false }) {
 
@@ -16,17 +16,26 @@ export default function Post({ id, title, content, media_url, created_at, media_
         }
     }
 
+    function reduceContent(content) {
+        if (content.length > 100) {
+            const contentCutted = String(content).split('').slice(0, 100)
+            return contentCutted.join('') + '...'
+        }
+
+        return content
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.postHeader}>
-                <Text style={styles.date}>{formatDateString(created_at)}</Text>
+                <Date style={styles.date} date={created_at} />
                 {options && <OptionMenu
                     customButton={<Entypo name="dots-three-vertical" size={16} color={Colors.Black}></Entypo>}
-                    destructiveIndex={1}
+                    // destructiveIndex={1}
                     options={["Delete", "Cancel"]}
                     actions={[deletePost]}>
                 </OptionMenu>}
-                
+
             </View>
             <Text style={styles.title}>{title}</Text>
             {
@@ -43,7 +52,7 @@ export default function Post({ id, title, content, media_url, created_at, media_
                         isLooping
                     /> : <></>
             }
-            <Text style={styles.desc}>{content}</Text>
+            <Text style={styles.desc}>{reduceContent(content)}</Text>
         </View>
     )
 }
@@ -64,13 +73,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     title: {
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "bold",
     },
     desc: {
-        fontSize: 17,
+        fontSize: 14,
         color: "#333333",
         marginTop: 10,
+        lineHeight: 20,
     },
     date: {
         fontSize: 12,

@@ -4,13 +4,10 @@ import "react-native-gesture-handler";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import Conection from "./Conexoes";
-import Exploration from "./Explorar";
+import Explore from "../../ExploreScreen";
 import Notification from "./Notificacoes";
 
 import { Api, Colors } from "meconnect-sdk";
-
-import { Alert, NativeModules } from "react-native";
-import logout from "../../../logout-action";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -37,7 +34,7 @@ export default function Routes({ route }) {
 
       <Tab.Screen
         name="Explorar"
-        component={Exploration}
+        component={Explore}
         options={{
           tabBarIcon: ({ color }) => (
             <Ionicons name="compass" size={25} color={color} />
@@ -54,22 +51,6 @@ export default function Routes({ route }) {
           ),
         }}
       />
-
-      {/* <Tab.Screen
-        name="Logout"
-        component={''}
-        listeners={{
-          tabPress: e => {
-            e.preventDefault()
-            logout()
-          }
-        }}
-        options={{
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="log-out" size={25} color={color} />
-          ),
-        }}
-      /> */}
     </Tab.Navigator>
   );
 }

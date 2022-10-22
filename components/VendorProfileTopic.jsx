@@ -2,9 +2,9 @@ import { Colors } from "meconnect-sdk"
 import { StyleSheet, Text, View } from "react-native"
 
 
-export default function VendorProfileTopic({ title, info }) {
+export default function VendorProfileTopic({ title, info, style }) {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {...style}]}>
             <Text style={styles.title}>{title}</Text>
             <Text style={styles.info}>{info}</Text>
         </View>
