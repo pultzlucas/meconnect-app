@@ -10,19 +10,39 @@ import Post from '../../../../components/Post';
 import MCButton from '../../../../components/MCButton';
 import { useIsFocused } from '@react-navigation/native';
 import * as SecureStore from 'expo-secure-store'
+import Splash from '../../../../components/Splash';
+import getFetchDataErrorMessage from '../../../../src/get-fetch-data-error-msg';
 
 export default function Posts({ navigation }) {
-  const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
-  const [posts, setPosts] = useState([])
+  const [posts, setPosts] = useState(null)
+  const [fetchDataError, setFetchDataError] = useState('')
+
+  const [isLoading, setIsLoading] = useState(false)
+  const [showSplash, setShowSplash] = useState(false)
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
+
+  function getPosts() {
+    SecureStore.getItemAsync('VendorId').then(vendorId => {
+      setShowPlaceholder(false)
+      setIsLoading(true)
+      setShowSplash(false)
+      Api.db.vendors.getPosts(vendorId).then(({ data }) => {
+        if (data.length === 0) setShowPlaceholder(true)
+        setIsLoading(false)
+        setPosts(data)
+      })
+        .catch(async err => {
+          setFetchDataError(await getFetchDataErrorMessage())
+          setShowSplash(true)
+          setIsLoading(false)
+          setShowPlaceholder(false)
+        })
+    })
+  }
 
   useEffect(() => {
-    setIsLoading(true)
-    SecureStore.getItemAsync('VendorId').then(async vendorId => {
-      const { data } = await Api.db.vendors.getPosts(vendorId)
-      setPosts(data)
-      setIsLoading(false)
-    })
+    getPosts()
   }, [refreshing, useIsFocused()])
 
   function removePostFromList(postId) {
@@ -69,10 +89,9 @@ export default function Posts({ navigation }) {
           <Entypo name="plus" size={30} color={'white'}></Entypo>
         </HeaderOption>
       </MCHeader>
-
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 
-      {(posts.length === 0 && !isLoading) && <Placeholder />}
+      {showPlaceholder && <Placeholder />}
 
       <FlatList
         data={posts}
@@ -86,6 +105,10 @@ export default function Posts({ navigation }) {
           />
         }
       />
+
+      <Splash show={showSplash} message={fetchDataError} btn={
+        <MCButton onClick={getPosts}>Tentar novamente</MCButton>
+      } />
     </SafeAreaView>
   );
 }

@@ -8,24 +8,38 @@ import Entypo from "react-native-vector-icons/Entypo";
 import { useIsFocused } from '@react-navigation/native';
 import Product from '../../../../components/Product';
 import MCButton from '../../../../components/MCButton';
+import getFetchDataErrorMessage from '../../../../src/get-fetch-data-error-msg';
+import Splash from '../../../../components/Splash';
 
 export default function Conection({ navigation, route: { params: { vendorId } } }) {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState([])
 
-  const isFocused = useIsFocused();
+  const [showSplash, setShowSplash] = useState(false)
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
+  const [fetchDataError, setFetchDataError] = useState('')
 
   async function getProducts() {
     setIsLoading(true)
-    const { data } = await Api.db.vendors.getProducts(vendorId)
-    setProducts(data)
-    setIsLoading(false)
+    setShowPlaceholder(false)
+    
+    Api.db.vendors.getProducts(vendorId).then(({ data: products }) => {
+      setShowSplash(false)
+      if(products.length === 0) setShowPlaceholder(true)
+      setProducts(products)
+      setIsLoading(false)
+    }).catch(async () => {
+      setFetchDataError(await getFetchDataErrorMessage())
+      setShowSplash(true)
+      setIsLoading(false)
+      setShowPlaceholder(false)
+    })
   }
 
   useEffect(() => {
     getProducts()
-  }, [refreshing, isFocused])
+  }, [refreshing, useIsFocused()])
 
   function removeProdFromList(prodId) {
     setProducts(products.filter(prod => prod.id !== prodId))
@@ -71,7 +85,7 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 
-      {(products.length === 0 && !isLoading) && <Placeholder />}
+      {showPlaceholder && <Placeholder />}
 
       <FlatList
         data={products}
@@ -85,6 +99,11 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
           />
         }
       />
+
+      <Splash show={showSplash} message={fetchDataError} btn={
+        <MCButton onClick={getProducts}>Tentar novamente</MCButton>
+      } />
+
     </View>
   );
 }

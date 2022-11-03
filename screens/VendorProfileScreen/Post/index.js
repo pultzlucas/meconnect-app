@@ -27,6 +27,7 @@ export default function Posts({ navigation, route }) {
   );
 
   const [posts, setPosts] = useState([]);
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
 
   async function getPosts() {
     const posts = await Api.db.vendors.getPosts(route.params.vendor_id);
@@ -34,13 +35,24 @@ export default function Posts({ navigation, route }) {
   }
 
   useEffect(() => {
-    getPosts().then(posts => setPosts(posts))
+    setShowPlaceholder(false)
+    getPosts().then(posts => {
+      if(posts.length === 0) {
+        setShowPlaceholder(true)
+      }
+      setPosts(posts)
+    })
   }, []);
 
-  const [searchQuery, setSearchQuery] = useState('')
+  const Placeholder = () => {
+    return (
+        <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum post</Text>
+    )
+  }
 
   return (
     <View style={styles.container}>
+       {showPlaceholder && <Placeholder/>}
       <FlatList
         data={posts}
         renderItem={renderItem}
@@ -54,6 +66,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     flex: 1,
+  },
+  placeholder: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: Colors.DarkGray
   },
   searchInput: {
     position: "relative",

@@ -28,6 +28,8 @@ export default function Conection({ navigation }) {
     const { data: connections } = await Api.db.customers.getConnections(await SecureStore.getItemAsync('CustomerId'))
     let vendors = []
 
+    console.log(connections)
+
     for (let conn of connections) {
       const { data: vendor } = await Api.db.vendors.get(conn.vendor_id)
       vendors.push(vendor)

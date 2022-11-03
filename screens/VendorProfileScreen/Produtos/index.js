@@ -10,36 +10,12 @@ import {
   ScrollView,
 } from "react-native";
 import { Searchbar } from "react-native-paper";
-import { Api } from "meconnect-sdk";
+import { Api, Colors } from "meconnect-sdk";
 import { Pressable } from "react-native";
 
 export default function Prods({ navigation, route }) {
   const [products, setProducts] = useState([])
-
-  // Barra de Pesquisa
-  function Search({ title }) {
-    const [searchQuery, setSearchQuery] = React.useState("");
-    const onChangeSearch = (query) => setSearchQuery(query);
-    return (
-      <Searchbar
-        style={{
-          position: "relative",
-          padding: 0,
-          backgroundColor: "#F3F3F3",
-          borderRadius: 10,
-          marginLeft: 15,
-          marginRight: 15,
-          marginTop: 10,
-          marginBottom: 10,
-        }}
-        placeholder={title}
-        onChangeText={onChangeSearch}
-        value={searchQuery}
-      />
-    );
-  }
-
-  // FlatList
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
 
   const renderItem = ({ item: { id, photo_url, description, price } }) => {
     return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { productId: id })}>
@@ -55,17 +31,32 @@ export default function Prods({ navigation, route }) {
   }
 
   async function getProducts() {
-    const products = await Api.db.vendors.getProducts(route.params.vendor_id);
-    return products.data
+    const {data} = await Api.db.vendors.getProducts(route.params.vendor_id);
+    return data
   }
-
+  
   useEffect(() => {
-    getProducts().then(prods => setProducts(prods))
+    setShowPlaceholder(false)
+    getProducts().then(prods => {
+      if(prods.length == 0) {
+        setShowPlaceholder(true)
+      }
+      setProducts(prods)
+    })
   }, []);
 
-  // Body
+  const Placeholder = () => {
+    return (
+        <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum produto</Text>
+    )
+  }
+  
+  
   return (
     <SafeAreaView style={styles.container}>
+
+      {showPlaceholder && <Placeholder/>}
+
       <FlatList
         data={products}
         style={{ marginTop: 10 }}
@@ -80,6 +71,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
     flex: 1,
+  },
+  placeholder: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: Colors.DarkGray
   },
   prod: {
     width: "100%",

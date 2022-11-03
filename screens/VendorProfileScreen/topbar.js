@@ -18,7 +18,7 @@ export default function VendorProfileScreen({ navigation, route }) {
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.replace('CustomerScreens')
+      navigation.replace(userType === 'customer' ? 'CustomerScreens' : 'VendorScreens')
     })
     return () => backHandler.remove();
   }, [])
@@ -44,9 +44,7 @@ export default function VendorProfileScreen({ navigation, route }) {
       
     >
       <Tab.Screen name="Principal" component={Prin} initialParams={{ vendor_id, userType }} />
-
       <Tab.Screen name="Posts" component={Post} initialParams={{ vendor_id }} />
-
       <Tab.Screen name="Produtos" component={Prods} initialParams={{ vendor_id }} />
     </Tab.Navigator>
   );
