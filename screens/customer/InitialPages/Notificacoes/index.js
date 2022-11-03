@@ -13,14 +13,20 @@ export default function Notification() {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [notifications, setNotifications] = useState([])
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
 
   useEffect(() => {
     setIsLoading(true)
     setNotifications([])
+    setShowPlaceholder(false)
+    
     SecureStore.getItemAsync('CustomerId').then(customerId => {
-      Api.db.customers.getNotifications(customerId).then(({ data }) => {
-        setNotifications(data)
+      Api.db.customers.getNotifications(customerId).then(({ data, status }) => {
         setIsLoading(false)
+        if(data.length === 0) setShowPlaceholder(true)
+        if(status === 200) {
+          setNotifications(data)
+        }
       })
     })
   }, [refreshing, useIsFocused()])
@@ -56,7 +62,7 @@ export default function Notification() {
       <MCHeader title={"Notificações"}></MCHeader>
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
-      {(notifications.length === 0 && !isLoading) && <Placeholder />}
+      {(showPlaceholder && notifications.length === 0) && <Placeholder />}
 
       <FlatList
         data={notifications}

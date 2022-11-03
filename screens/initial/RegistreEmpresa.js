@@ -21,7 +21,7 @@ export default function RegistreEmpresa({ navigation }) {
   }
 
   async function requestCnpj() {
-    const res = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj}`)
+    const res = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj.match(/\d/g).join("")}`)
     const { email, nome: name, fantasia: commercial, cep, telefone: tel, atividade_principal } = await res.json()
     return {
       cnpj,
