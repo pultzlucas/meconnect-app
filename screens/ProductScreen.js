@@ -8,7 +8,7 @@ import Price from "../components/Price";
 import HeaderOption from "../components/HeaderOption";
 import HorizontalLine from "../components/HorizontalLine";
 
-export default function ProductScreen({ navigation, route: { params: { productId } } }) {
+export default function ProductScreen({ navigation, route: { params: { id: productId } } }) {
     const [product, setProduct] = useState({
         price: 0,
         description: '...'

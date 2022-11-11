@@ -46,22 +46,22 @@ export default function Posts({ navigation }) {
   }, [refreshing, useIsFocused()])
 
   function removePostFromList(postId) {
-    setPosts(posts.filter(post => post.id !== postId))
+    const postsFiltered = posts.filter(post => post.id !== postId)
+    setPosts(postsFiltered)
+    if (postsFiltered.length === 0) setShowPlaceholder(true)
   }
 
   const renderItem = ({ item: { id, title, content, media_url, created_at, media_type } }) => {
-    return <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { postId: id })}>
-      <Post
-        id={id}
-        title={title}
-        content={content}
-        media_url={media_url}
-        media_type={media_type}
-        created_at={created_at}
-        onRemove={removePostFromList}
-        options={true}
-      />
-    </TouchableOpacity>
+    return <Post
+      id={id}
+      title={title}
+      content={content}
+      media_url={media_url}
+      media_type={media_type}
+      created_at={created_at}
+      onRemove={removePostFromList}
+      options={true}
+    />
   };
 
   const wait = (timeout) => {

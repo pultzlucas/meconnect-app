@@ -1,4 +1,4 @@
-import { Image, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid } from "react-native"
+import { Image, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity } from "react-native"
 import { View } from "react-native";
 
 import MCHeader from '../../components/MCHeader'
@@ -54,8 +54,12 @@ export default function CreateProduct({ navigation }) {
             price
         })
 
-        const {status: saveImage} = await Api.db.products.setPhoto(data.product.id, imageUrl)
-
+        console.log(data)
+        
+        
+        const {status: saveImage, data: msg} = await Api.db.products.setPhoto(data.product.id, imageUrl)
+        console.log(saveImage, msg)
+        
         if(saveData === 200 && saveImage === 200) {
             ToastAndroid.show('Produto foi publicado', ToastAndroid.SHORT)
             navigation.navigate('VendorScreens')
@@ -82,14 +86,14 @@ export default function CreateProduct({ navigation }) {
                 <View style={styles.prodImagePickerContainer}>
                     <Text style={styles.imagePickerTitle}>Foto</Text>
                     <Text>Escolha um arquivo de imagem</Text>
-                    <Pressable style={styles.prodImagePickerBtn} onPress={pickProductImage}>
+                    <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickProductImage}>
                         {
                             !imageUrl
                                 ? <FontAwesome name="camera" size={40}></FontAwesome>
                                 : <Image style={styles.prodImg} source={{ uri: imageUrl }} />
                         }
 
-                    </Pressable>
+                    </TouchableOpacity>
                 </View>
                 <Splash show={showSplash}/>
             </View>

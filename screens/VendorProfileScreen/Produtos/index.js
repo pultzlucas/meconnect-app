@@ -18,7 +18,7 @@ export default function Prods({ navigation, route }) {
   const [showPlaceholder, setShowPlaceholder] = useState(false)
 
   const renderItem = ({ item: { id, photo_url, description, price } }) => {
-    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { productId: id })}>
+    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
       <View style={styles.item}>
         <Image style={styles.prod} source={{ uri: photo_url }} />
         <Text style={styles.desc} numberOfLines={1}>

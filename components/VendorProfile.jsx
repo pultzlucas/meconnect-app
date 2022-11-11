@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
     item: {
         padding: 15,
         borderRadius: 8,
-        marginHorizontal: 14,
         position: 'relative',
         display: 'flex',
         flexDirection: 'row',

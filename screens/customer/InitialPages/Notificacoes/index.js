@@ -9,7 +9,7 @@ import Date from "../../../../components/Date";
 import Price from "../../../../components/Price";
 import { useIsFocused } from "@react-navigation/native";
 
-export default function Notification() {
+export default function Notification({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [notifications, setNotifications] = useState([])
@@ -19,12 +19,12 @@ export default function Notification() {
     setIsLoading(true)
     setNotifications([])
     setShowPlaceholder(false)
-    
+
     SecureStore.getItemAsync('CustomerId').then(customerId => {
       Api.db.customers.getNotifications(customerId).then(({ data, status }) => {
         setIsLoading(false)
-        if(data.length === 0) setShowPlaceholder(true)
-        if(status === 200) {
+        if (data.length === 0) setShowPlaceholder(true)
+        if (status === 200) {
           setNotifications(data)
         }
       })
@@ -40,15 +40,24 @@ export default function Notification() {
     wait(500).then(() => setRefreshing(false));
   }, []);
 
+  function redirectToScreen(event, redirectId) {
+    const screen = event === 'new_post' ? 'PostScreen' : 'ProductScreen'
+    navigation.navigate(screen, {
+      id: redirectId
+    })
+  }
 
-  const renderItem = ({ item: { created_at, event, message, vendor } }) => {
+
+  const renderItem = ({ item: { created_at, event, redirect_id,  message, vendor } }) => {
     return (
-      <NotificationComponent
-        created_at={created_at}
-        event={event}
-        message={message}
-        vendor={vendor}
-      />
+      <TouchableOpacity onPress={() => redirectToScreen(event, redirect_id)}>
+        <NotificationComponent
+          created_at={created_at}
+          event={event}
+          message={message}
+          vendor={vendor}
+        />
+      </TouchableOpacity>
     )
   }
   const Placeholder = () => (

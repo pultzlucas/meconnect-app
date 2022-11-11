@@ -42,7 +42,9 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   }, [refreshing, useIsFocused()])
 
   function removeProdFromList(prodId) {
-    setProducts(products.filter(prod => prod.id !== prodId))
+    const prodsFiltered = products.filter(prod => prod.id !== prodId)
+    setProducts(prodsFiltered)
+    if(prodsFiltered.length === 0) setShowPlaceholder(true)
   }
 
   const renderItem = ({ item: { id, description, photo_url, price } }) => {

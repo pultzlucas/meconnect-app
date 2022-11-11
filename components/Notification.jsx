@@ -5,16 +5,14 @@ import { Colors } from "meconnect-sdk"
 
 export default function VendorProfile({ id, created_at, event, message, vendor }) {
     return (
-        <TouchableOpacity>
-            <View style={styles.item} key={id}>
-                <View style={styles.vendorContainer}>
-                    <Image style={styles.image} source={{ uri: vendor.photo_url }} />
-                    <Text style={styles.title}>{vendor.commercial}</Text>
-                    <Text style={styles.created_at}>{String(created_at).replace('T', ' ').replace('.000000Z', '').replace(/-/g, '/')}</Text>
-                </View>
-                <Text style={styles.desc}>{message}</Text>
+        <View style={styles.item} key={id}>
+            <View style={styles.vendorContainer}>
+                <Image style={styles.image} source={{ uri: vendor.photo_url }} />
+                <Text style={styles.title}>{vendor.commercial}</Text>
+                <Text style={styles.created_at}>{String(created_at).replace('T', ' ').replace('.000000Z', '').replace(/-/g, '/')}</Text>
             </View>
-        </TouchableOpacity>
+            <Text style={styles.desc}>{message}</Text>
+        </View>
     )
 }
 
@@ -25,8 +23,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 20,
         borderRadius: 8,
-        marginVertical: 8,
-        marginHorizontal: 16,
+        marginVertical: 5,
+        marginHorizontal: 12,
     },
     vendorContainer: {
         display: 'flex',

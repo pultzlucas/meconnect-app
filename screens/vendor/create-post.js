@@ -1,4 +1,4 @@
-import { SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid, View, Image, ScrollView } from "react-native"
+import { SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid, View, Image, ScrollView, TouchableOpacity } from "react-native"
 
 import MCHeader from '../../components/MCHeader'
 import MCInput from '../../components/MCInput'
@@ -84,9 +84,6 @@ export default function CreatePost({ navigation }) {
             setShowSplash(false)
             ToastAndroid.show('Ocorreu um erro interno ao publicar o post', ToastAndroid.SHORT)
         }
-        
-        
-
     }
 
     return (
@@ -110,12 +107,12 @@ export default function CreatePost({ navigation }) {
                         <Text style={styles.imagePickerTitle}>Mídia</Text>
                         <Text>Escolha um arquivo de mídia</Text>
                         <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 20 }}>
-                            <Pressable style={styles.prodImagePickerBtn} onPress={pickPostImage}>
+                            <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickPostImage}>
                                 <Ionicons name="image" size={40}></Ionicons>
-                            </Pressable>
-                            <Pressable style={styles.prodImagePickerBtn} onPress={pickPostVideo}>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickPostVideo}>
                                 <Entypo name="folder-video" size={40}></Entypo>
-                            </Pressable>
+                            </TouchableOpacity>
                         </View>
                         {
                             imageUrl && <Image style={styles.media} source={{ uri: imageUrl }}></Image>

@@ -26,16 +26,7 @@ export default function Conection({ navigation }) {
 
   async function fetchVendors() {
     const { data: connections } = await Api.db.customers.getConnections(await SecureStore.getItemAsync('CustomerId'))
-    let vendors = []
-
-    console.log(connections)
-
-    for (let conn of connections) {
-      const { data: vendor } = await Api.db.vendors.get(conn.vendor_id)
-      vendors.push(vendor)
-    }
-
-    return vendors
+    return connections
   }
 
   useEffect(() => {
@@ -70,6 +61,7 @@ export default function Conection({ navigation }) {
 
   const renderItem = ({ item: { commercial, description, photo_url, banner_url, id } }) => (
     <VendorProfile
+      key={id}
       id={id}
       commercial={commercial}
       description={description}

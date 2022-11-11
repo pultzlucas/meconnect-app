@@ -11,11 +11,10 @@ import {
 
 import { Api, Colors } from "meconnect-sdk";
 import Post from '../../../components/Post'
-import { Pressable } from "react-native";
 
 export default function Posts({ navigation, route }) {
   const renderItem = ({ item: { id, title, content, media_url, created_at, media_type } }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { postId: id })}>
+    <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { id })}>
       <Post
         title={title}
         content={content}
