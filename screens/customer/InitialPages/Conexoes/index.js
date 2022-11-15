@@ -59,10 +59,11 @@ export default function Conection({ navigation }) {
     setVisible(!visible);
   };
 
-  const renderItem = ({ item: { commercial, description, photo_url, banner_url, id } }) => (
+  const renderItem = ({ item: { commercial, description, photo_url, banner_url, vendor_id, notify } }) => (
     <VendorProfile
-      key={id}
-      id={id}
+      key={vendor_id}
+      id={vendor_id}
+      notify={notify}
       commercial={commercial}
       description={description}
       photo_url={photo_url}
@@ -100,7 +101,7 @@ export default function Conection({ navigation }) {
       <FlatList
         data={vendors}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.vendor_id}
         style={{paddingTop: 10}}
         refreshControl={
           <RefreshControl

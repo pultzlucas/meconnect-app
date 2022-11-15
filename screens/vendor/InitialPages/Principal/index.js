@@ -37,9 +37,12 @@ export default function Principal({ navigation }) {
     setShowSplash(false)
 
     SecureStore.getItemAsync('VendorId').then(async vendorId => {
-      Api.db.vendors.get(vendorId).then(({ data }) => {
+      Api.db.vendors.get(vendorId).then(({ data: vendor }) => {
+        vendor.cnpj = vendor.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+        vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
+        
+        setVendor(vendor)
         setShowSplash(false)
-        setVendor(data)
       }).catch(async () => {
         setFetchDataError(await getFetchDataErrorMessage())
       })

@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { TextElement } from 'react-native-elements/dist/text/Text';
 import { useState } from 'react';
@@ -14,15 +14,23 @@ export default function RegistreEmpresa({ navigation }) {
   function register() {
     requestCnpj()
       .then(cnpjInfo => {
-        console.log(cnpjInfo)
         cnpjInfo.password = senha
         navigation.navigate("ConfirmaEmpresa", cnpjInfo)
+      })
+      .catch(err => {
+        ToastAndroid.show(err, ToastAndroid.SHORT)
       })
   }
 
   async function requestCnpj() {
     const res = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj.match(/\d/g).join("")}`)
-    const { email, nome: name, fantasia: commercial, cep, telefone: tel, atividade_principal } = await res.json()
+    const json = await res.json()
+
+    if(json.status === 'ERROR') {
+      throw json.message
+    }
+
+    const { email, nome: name, fantasia: commercial, cep, telefone: tel, atividade_principal } = json
     return {
       cnpj,
       email,
@@ -45,21 +53,20 @@ export default function RegistreEmpresa({ navigation }) {
         style={styles.input}
         onInput={value => setCnpj(value)}
         placeholder="CNPJ"
-        keyboardType='numeric'
+        type='numeric'
+        maxLength={14}
       />
       <MCInput
         style={styles.input}
         onInput={value => setSenha(value)}
         placeholder="Sua Senha"
         secureTextEntry={true}
-        // value={'L5@1sp5ltz'}
       />
       <MCInput
         style={styles.input}
         onInput={value => setSenha2(value)}
         placeholder="Repita a Senha"
         secureTextEntry={true}
-        // value={'L5@1sp5ltz'}
       />
 
       <MCButton style={styles.btn} size='medium' onClick={register}>Registrar</MCButton>

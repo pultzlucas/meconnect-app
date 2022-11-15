@@ -93,7 +93,7 @@ export default function RegistreCliente({ route, navigation }) {
             onInput={text => setTel(text)}
             value={tel}
             label="Telefone"
-            keyboardType='phone-pad'
+            type='numeric'
           />
 
           <MCInput

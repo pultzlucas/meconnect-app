@@ -14,7 +14,7 @@ function MCButton({ styleType = 'primary', size = 'medium', onClick, children, s
         styles[`button${styleTypeString}`],
         styles[`button${sizeString}`],
         {elevation: noElevation ? 0 : 3},
-        { ...style }
+        { ...style },
       ]}
     >
       {isLoading && <ActivityIndicator size='small' color="white" />}

@@ -1,11 +1,12 @@
-import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as SecureStore from 'expo-secure-store'
+import Feather from "react-native-vector-icons/Feather";
+import { Colors } from "meconnect-sdk";
 
-export default function VendorProfile({ commercial, description, photo_url, banner_url, id, navigation }) {
+export default function VendorProfile({ commercial, description, photo_url, banner_url, id, notify, navigation }) {
     return (
         <TouchableOpacity onPress={() => {
-            SecureStore.getItemAsync('UserType').then(userType => {  
+            SecureStore.getItemAsync('UserType').then(userType => {
                 navigation.navigate('VendorProfileScreen', { userType, vendor_id: id })
             })
         }}>
@@ -18,6 +19,11 @@ export default function VendorProfile({ commercial, description, photo_url, bann
                 <View style={styles.imageContainer}>
                     <Image style={styles.image} source={{ uri: photo_url }} />
                 </View>
+                {
+                    (!notify && notify !== undefined) && <View style={styles.isNotifing}>
+                        <Feather name={'bell-off'} color={Colors.LightGray} size={16}></Feather>
+                    </View>
+                }
             </View>
         </TouchableOpacity>
     )
@@ -34,6 +40,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         position: 'relative',
         marginTop: 30,
+    },
+    isNotifing: {
+        position: 'absolute',
+        right: 30,
+        bottom: 26,
     },
     imageContainer: {
         position: 'absolute',

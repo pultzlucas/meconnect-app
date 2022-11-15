@@ -40,17 +40,21 @@ export default function Principal({ route, navigation }) {
   useEffect(() => {
     setLoadingConnections(true)
     getVendor().then(vendor => {
+      // formating data
+      vendor.cnpj = vendor.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
+      vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
+
       setVendor(vendor)
       setLoadingConnections(false)
     })
   }, [connected])
-  
+
   useEffect(() => {
     setShowSplash(true)
     SecureStore.getItemAsync('CustomerId').then(async id => {
       setCustomerId(id)
       setLoadingNotifyChanging(true)
-    
+
       const { data } = await Api.db.connections.getInfo(id, vendor_id)
 
       setConnected(data.connected)
@@ -70,7 +74,6 @@ export default function Principal({ route, navigation }) {
       vendor_id: vendor_id
     })
 
-    console.log(data)
     setConnectionId(data.connection.id)
 
     if (status === 200) {
@@ -92,14 +95,14 @@ export default function Principal({ route, navigation }) {
       setNotify(false)
     }
   }
-  
+
   async function changeNotifyState() {
     setLoadingNotifyChanging(true)
     const { data, status } = await Api.db.connections.update(connectionId, {
       notify: !notify ? 1 : 0
     })
 
-    if(status === 200 && data.updated) {
+    if (status === 200 && data.updated) {
       setNotify(!notify)
       ToastAndroid.show(!notify ? 'Notificações ativadas' : 'Notificações desativadas', ToastAndroid.SHORT);
     }
@@ -132,14 +135,14 @@ export default function Principal({ route, navigation }) {
         {
           userType === 'customer' && (
             connected ?
-              <View style={{ display: 'flex', flexDirection: 'row' }}>
-                <MCButton style={{ marginRight: 5, padding: 10 }} isLoading={loadingConnections} noElevation children={"Desconectar"} onClick={disconnect} />
+              <View style={{ display: 'flex', flexDirection: 'row', marginTop: 10 }}>
+                <MCButton isLoading={loadingConnections} noElevation children={"Desconectar"} onClick={disconnect} />
                 <Pressable style={styles.notifyBtn} onPress={changeNotifyState}>
                   {!loadingNotifyChanging && <Feather name={notify ? 'bell' : 'bell-off'} color={'white'} size={22}></Feather>}
                   {loadingNotifyChanging && <ActivityIndicator size='small' color="white" />}
                 </Pressable>
               </View> :
-              <MCButton isLoading={loadingConnections} noElevation children={"Conectar"} onClick={connect} />
+              <MCButton style={{ marginTop: 10 }} isLoading={loadingConnections} noElevation children={"Conectar"} onClick={connect} />
           )
         }
 
@@ -223,18 +226,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.LightGray,
     borderRadius: 10,
     padding: 10,
+    marginLeft: 5,
+    display: 'flex',
+    justifyContent: 'center',
   },
   titulo: {
     fontSize: 30,
     fontWeight: "bold",
-    marginBottom: "1%",
+    textAlign: 'center',
+    marginBottom: 10,
   },
   desc: {
     textAlign: "center",
     fontSize: 17,
-    marginBottom: "4%",
     marginLeft: 20,
     marginRight: 20,
+    marginBottom: 10,
   },
   cnpj: {
     borderColor: "#EEEEEE",
@@ -248,6 +255,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bio: {
+    marginTop: 10,
     fontSize: 17,
     color: Colors.Black,
     width: '100%',

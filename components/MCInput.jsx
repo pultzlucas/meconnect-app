@@ -2,7 +2,7 @@ import { Colors } from "meconnect-sdk";
 import React from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native"
 
-export default function MCInput({ type = 'text', placeholder, onInput, value, label, style, secureTextEntry, editable = true }) {
+export default function MCInput({ type = 'text', placeholder, onInput, value, label, style, secureTextEntry, editable = true, maxLength }) {
     return (
         <View>
             {label && <Text style={styles.label}>{label}</Text>}
@@ -15,6 +15,7 @@ export default function MCInput({ type = 'text', placeholder, onInput, value, la
                 editable={editable}
                 secureTextEntry={secureTextEntry}
                 selectionColor='#FFCCA0'
+                maxLength={maxLength}
             />
         </View>
     )
