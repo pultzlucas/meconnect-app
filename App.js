@@ -24,6 +24,8 @@ import { registerForPushNotificationsAsync } from './src/notification-token';
 import ProductScreen from './screens/ProductScreen';
 import PostScreen from './screens/PostScreen';
 
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 
 const Stack = createNativeStackNavigator();
 

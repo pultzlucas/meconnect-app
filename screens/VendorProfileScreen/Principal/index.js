@@ -6,7 +6,9 @@ import {
   Image,
   ScrollView,
   StatusBar,
-  Pressable
+  Pressable,
+  ToastAndroid,
+  ActivityIndicator
 } from "react-native";
 import MCButton from "../../../components/MCButton";
 import VendorProfileTopic from "../../../components/VendorProfileTopic";
@@ -16,6 +18,7 @@ import { Api, Colors } from "meconnect-sdk";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Feather from "react-native-vector-icons/Feather";
 import * as SecureStore from 'expo-secure-store'
 
 export default function Principal({ route, navigation }) {
@@ -25,6 +28,9 @@ export default function Principal({ route, navigation }) {
   const [showSplash, setShowSplash] = useState(false)
   const [loadingConnections, setLoadingConnections] = useState(false)
   const { vendor_id, userType } = route.params
+  const [notify, setNotify] = useState(true)
+  const [connectionId, setConnectionId] = useState(null)
+  const [loadingNotifyChanging, setLoadingNotifyChanging] = useState(false)
 
   async function getVendor() {
     const { data } = await Api.db.vendors.get(vendor_id)
@@ -38,27 +44,39 @@ export default function Principal({ route, navigation }) {
       setLoadingConnections(false)
     })
   }, [connected])
-
+  
   useEffect(() => {
     setShowSplash(true)
     SecureStore.getItemAsync('CustomerId').then(async id => {
       setCustomerId(id)
-      const { data } = await Api.db.connections.isConnected(id, vendor_id)
-      setShowSplash(false)
+      setLoadingNotifyChanging(true)
+    
+      const { data } = await Api.db.connections.getInfo(id, vendor_id)
+
       setConnected(data.connected)
+      setNotify(data.notify)
+      setConnectionId(data.id)
+
+      setShowSplash(false)
+      setLoadingNotifyChanging(false)
     })
   }, [])
 
 
   async function connect() {
     setLoadingConnections(true)
-    const { status } = await Api.db.connections.connect({
+    const { data, status } = await Api.db.connections.connect({
       customer_id: customerId,
       vendor_id: vendor_id
     })
 
+    console.log(data)
+    setConnectionId(data.connection.id)
+
     if (status === 200) {
       setConnected(true)
+      setNotify(true)
+      ToastAndroid.show(data.message, ToastAndroid.SHORT);
     }
   }
 
@@ -71,8 +89,24 @@ export default function Principal({ route, navigation }) {
 
     if (status === 200) {
       setConnected(false)
+      setNotify(false)
     }
   }
+  
+  async function changeNotifyState() {
+    setLoadingNotifyChanging(true)
+    const { data, status } = await Api.db.connections.update(connectionId, {
+      notify: !notify ? 1 : 0
+    })
+
+    if(status === 200 && data.updated) {
+      setNotify(!notify)
+      ToastAndroid.show(!notify ? 'Notificações ativadas' : 'Notificações desativadas', ToastAndroid.SHORT);
+    }
+
+    setLoadingNotifyChanging(false)
+  }
+
 
   return (
     <ScrollView>
@@ -98,8 +132,14 @@ export default function Principal({ route, navigation }) {
         {
           userType === 'customer' && (
             connected ?
-              <MCButton style={styles.btn} isLoading={loadingConnections} noElevation children={"Desconectar"} onClick={disconnect} /> :
-              <MCButton style={styles.btn} isLoading={loadingConnections} noElevation children={"Conectar"} onClick={connect} />
+              <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <MCButton style={{ marginRight: 5, padding: 10 }} isLoading={loadingConnections} noElevation children={"Desconectar"} onClick={disconnect} />
+                <Pressable style={styles.notifyBtn} onPress={changeNotifyState}>
+                  {!loadingNotifyChanging && <Feather name={notify ? 'bell' : 'bell-off'} color={'white'} size={22}></Feather>}
+                  {loadingNotifyChanging && <ActivityIndicator size='small' color="white" />}
+                </Pressable>
+              </View> :
+              <MCButton isLoading={loadingConnections} noElevation children={"Conectar"} onClick={connect} />
           )
         }
 
@@ -179,7 +219,11 @@ const styles = StyleSheet.create({
     margin: 'auto',
     flex: 1,
   },
-
+  notifyBtn: {
+    backgroundColor: Colors.LightGray,
+    borderRadius: 10,
+    padding: 10,
+  },
   titulo: {
     fontSize: 30,
     fontWeight: "bold",

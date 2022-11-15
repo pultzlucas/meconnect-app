@@ -54,9 +54,6 @@ export default function CreateProduct({ navigation }) {
             price
         })
 
-        console.log(data)
-        
-        
         const {status: saveImage, data: msg} = await Api.db.products.setPhoto(data.product.id, imageUrl)
         console.log(saveImage, msg)
         
