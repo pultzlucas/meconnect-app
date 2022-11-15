@@ -38,10 +38,10 @@ Notifications.setNotificationHandler({
 });
 
 export default function App() {
-  useEffect(() => {
+  // useEffect(() => {
     // Api.config.setApiDomain('http://44.202.106.85/api')
-    Api.config.setApiDomain('http://192.168.15.177:80/api')
-  }, [])
+    // Api.config.setApiDomain('http://192.168.15.177:80/api')
+  // }, [])
 
   const notificationListener = useRef();
   const responseListener = useRef();
