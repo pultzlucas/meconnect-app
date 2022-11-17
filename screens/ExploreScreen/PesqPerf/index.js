@@ -1,6 +1,6 @@
 import { Api, Colors } from "meconnect-sdk";
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image } from "react-native";
+import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image, StatusBar } from "react-native";
 import TopSearch from "../../../components/TopSearch";
 import VendorProfile from "../../../components/VendorProfile";
 
@@ -39,6 +39,7 @@ export default function Perf({ navigation }) {
   
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={Colors.DarkOrange}/>
       <TopSearch onChangeText={txt => {
         setVendors([])
         setShowPlaceholder(false)

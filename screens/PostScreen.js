@@ -8,6 +8,7 @@ import Price from "../components/Price";
 import HeaderOption from "../components/HeaderOption";
 import HorizontalLine from "../components/HorizontalLine";
 import Date from "../components/Date";
+import { ResizeMode, Video } from "expo-av";
 
 export default function ProductScreen({ navigation, route: { params: { id: postId } } }) {
     const [post, setPost] = useState({
@@ -81,8 +82,6 @@ const styles = StyleSheet.create({
         width: 300,
         height: 300,
         borderRadius: 10,
-        // borderWidth: 2,
-        // borderColor: Colors.LightGray,
         marginTop: 10,
     },
     title: {

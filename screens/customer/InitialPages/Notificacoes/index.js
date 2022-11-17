@@ -67,7 +67,7 @@ export default function Notification({ navigation }) {
   )
   return (
     <View style={styles.container}>
-      <StatusBar />
+      <StatusBar backgroundColor={Colors.DarkOrange}/>
       <MCHeader title={"Notificações"}></MCHeader>
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}

@@ -112,7 +112,9 @@ export default function Principal({ route, navigation }) {
 
 
   return (
-    <ScrollView>
+    <ScrollView style={{
+      flex: 1,
+    }}>
       <View style={styles.container}>
         {/* Fotos */}
         <View style={styles.header}>

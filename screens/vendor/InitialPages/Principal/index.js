@@ -58,8 +58,10 @@ export default function Principal({ navigation }) {
   };
 
   return (
-    <ScrollView>
-      <StatusBar></StatusBar>
+    <ScrollView style={{
+      flex: 1,
+    }}>
+      <StatusBar backgroundColor={Colors.DarkOrange}/>
       <View style={styles.container}>
         <MCHeader title={'Perfil'}>
           <HeaderOption onClick={() => { navigation.navigate('VendorProfileEdit') }}>

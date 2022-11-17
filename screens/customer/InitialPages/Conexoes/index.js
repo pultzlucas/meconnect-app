@@ -87,7 +87,7 @@ export default function Conection({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar />
+      <StatusBar backgroundColor={Colors.DarkOrange}/>
       <MCHeader title={"Conexões"}>
         <HeaderOption onClick={toggleBottomNavigationView}>
           <Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>

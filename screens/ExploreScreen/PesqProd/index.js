@@ -1,6 +1,6 @@
 import { Api, Colors } from "meconnect-sdk";
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image, Pressable } from "react-native";
+import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image, Pressable, StatusBar } from "react-native";
 import TopSearch from "../../../components/TopSearch";
 
 export default function SearchProducts({ navigation }) {
@@ -8,7 +8,7 @@ export default function SearchProducts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const renderItem = ({ item }) => (
-    <Pressable onPress={() => navigation.navigate('ProductScreen', { productId: item.id})}>
+    <Pressable onPress={() => navigation.navigate('ProductScreen', { productId: item.id })}>
       <View style={styles.item}>
         <Image style={styles.prod} source={{ uri: item.photo_url }} />
         <Text style={styles.desc} numberOfLines={1}>
@@ -26,6 +26,8 @@ export default function SearchProducts({ navigation }) {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={Colors.DarkOrange} />
+
       <TopSearch onChangeText={txt => {
         setIsLoading(true)
         setProducts([])

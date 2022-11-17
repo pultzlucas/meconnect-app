@@ -37,10 +37,14 @@ export default function ProductScreen({ navigation, route: { params: { id: produ
                 <Text style={styles.description}>{product.description}</Text>
                 <Price style={styles.price} value={product.price} />
                 <MCButton style={styles.btn}>Ver mais</MCButton>
-                <HorizontalLine width={300} marginVertical={20} title={'detalhes'} />
-                <View style={styles.detailsContainer}>
-                    <Text style={styles.details}>{product.details}</Text>
-                </View>
+                {
+                    product.details && <>
+                        <HorizontalLine width={300} marginVertical={20} title={'DETALHES'} />
+                        <View style={styles.detailsContainer}>
+                            <Text style={styles.details}>{product.details}</Text>
+                        </View>
+                    </>
+                }
             </ScrollView>
         </View>
     );
