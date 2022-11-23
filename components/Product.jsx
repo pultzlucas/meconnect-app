@@ -9,10 +9,14 @@ import Price from "./Price";
 export default function Product({ id, description, photo_url, price, onRemove, options = false }) {
 
     async function deleteProduct() {
-        const { status } = await Api.db.products.delete(id)
-        if (status === 200) {
-            onRemove(id)
-            ToastAndroid.show('Produto foi deletado', ToastAndroid.SHORT);
+        try {
+            const { status } = await Api.db.products.delete(id)
+            if (status === 200) {
+                onRemove(id)
+                ToastAndroid.show('Produto foi deletado', ToastAndroid.SHORT);
+            }
+        } catch (error) {
+            ToastAndroid.show('Ocorreu um erro ao deletar o produto', ToastAndroid.LONG);
         }
     }
 

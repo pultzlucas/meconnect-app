@@ -55,7 +55,7 @@ export default function RegistreCliente({ route, navigation }) {
       navigation.replace("VendorScreens")
     } else {
       setLoading(false)
-      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      ToastAndroid.show(data.message, ToastAndroid.LONG);
     }
   }
 
@@ -81,7 +81,7 @@ export default function RegistreCliente({ route, navigation }) {
             label="Nome fantasia"
           />
 
-          <MCTextarea on label="Descrição">{description}</MCTextarea>
+          <MCTextarea label="Descrição" onInput={text => setDescription(text)}>{description}</MCTextarea>
 
           <MCInput
             onInput={text => setEmail(text)}

@@ -32,21 +32,18 @@ export default function Principal({ route, navigation }) {
   const [connectionId, setConnectionId] = useState(null)
   const [loadingNotifyChanging, setLoadingNotifyChanging] = useState(false)
 
-  async function getVendor() {
-    const { data } = await Api.db.vendors.get(vendor_id)
-    return data
-  }
-
   useEffect(() => {
     setLoadingConnections(true)
-    getVendor().then(vendor => {
+    Api.db.vendors.get(vendor_id).then(({ data: vendor }) => {
       // formating data
       vendor.cnpj = vendor.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
       vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
-
       setVendor(vendor)
       setLoadingConnections(false)
     })
+      .catch(err => {
+        ToastAndroid.show('Ocorreu um erro ao buscar os dados do perfil', ToastAndroid.LONG);
+      })
   }, [connected])
 
   useEffect(() => {
@@ -66,48 +63,63 @@ export default function Principal({ route, navigation }) {
     })
   }, [])
 
-
   async function connect() {
-    setLoadingConnections(true)
-    const { data, status } = await Api.db.connections.connect({
-      customer_id: customerId,
-      vendor_id: vendor_id
-    })
+    try {
+      setLoadingConnections(true)
+      const { data, status } = await Api.db.connections.connect({
+        customer_id: customerId,
+        vendor_id: vendor_id
+      })
 
-    setConnectionId(data.connection.id)
+      setConnectionId(data.connection.id)
 
-    if (status === 200) {
-      setConnected(true)
-      setNotify(true)
-      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      if (status === 200) {
+        setConnected(true)
+        setNotify(true)
+        ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      ToastAndroid.show('Ocorreu um erro ao se connectar à empresa', ToastAndroid.LONG);
     }
   }
 
   async function disconnect() {
-    setLoadingConnections(true)
-    const { status } = await Api.db.connections.disconnect({
-      customer_id: customerId,
-      vendor_id: vendor_id
-    })
+    try {
+      setLoadingConnections(true)
+      const { status } = await Api.db.connections.disconnect({
+        customer_id: customerId,
+        vendor_id: vendor_id
+      })
 
-    if (status === 200) {
-      setConnected(false)
-      setNotify(false)
+      if (status === 200) {
+        setConnected(false)
+        setNotify(false)
+      }
+    } catch (error) {
+      ToastAndroid.show('Ocorreu um erro ao se desconnectar da empresa', ToastAndroid.LONG);
     }
   }
 
   async function changeNotifyState() {
-    setLoadingNotifyChanging(true)
-    const { data, status } = await Api.db.connections.update(connectionId, {
-      notify: !notify ? 1 : 0
-    })
+    try {
+      setLoadingNotifyChanging(true)
+      const { data, status } = await Api.db.connections.update(connectionId, {
+        notify: !notify ? 1 : 0
+      })
 
-    if (status === 200 && data.updated) {
-      setNotify(!notify)
-      ToastAndroid.show(!notify ? 'Notificações ativadas' : 'Notificações desativadas', ToastAndroid.SHORT);
+      if (status === 200 && data.updated) {
+        setNotify(!notify)
+        ToastAndroid.show(!notify ? 'Notificações ativadas' : 'Notificações desativadas', ToastAndroid.SHORT);
+      }
+
+      setLoadingNotifyChanging(false)
+    } catch (error) {
+      ToastAndroid.show(
+        !notify ?
+          'Ocorreu um erro ao ativar as notificações' :
+          'Ocorreu um erro ao desativar as notificações',
+        ToastAndroid.LONG);
     }
-
-    setLoadingNotifyChanging(false)
   }
 
 

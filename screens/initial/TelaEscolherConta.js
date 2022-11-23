@@ -1,6 +1,6 @@
 
 import { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StatusBar, StyleSheet, View } from 'react-native';
 import { Button, Input, Text } from 'react-native-elements';
 import HorizontalLine from '../../components/HorizontalLine';
 import MCButton from '../../components/MCButton';
@@ -10,6 +10,7 @@ import * as SplashScreen from 'expo-splash-screen';
 export default function EscolherConta({ navigation }) {
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor={'white'}/>
       <Text style={styles.title}>Escolha seu tipo de Conta</Text>
 
       <MCButton

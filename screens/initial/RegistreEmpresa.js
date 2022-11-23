@@ -23,6 +23,18 @@ export default function RegistreEmpresa({ navigation }) {
   }
 
   async function requestCnpj() {
+    if(!cnpj) {
+      throw 'CNPJ inválido'
+    }
+    
+    if(!senha) {
+      throw 'Por favor insira a senha'
+    }
+
+    if(senha !== senha2) {
+      throw 'Senha de confirmação incorreta'
+    }
+
     const res = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj.match(/\d/g).join("")}`)
     const json = await res.json()
 

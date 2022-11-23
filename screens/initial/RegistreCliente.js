@@ -42,7 +42,7 @@ export default function RegistreCliente({ navigation }) {
       navigation.replace("CustomerScreens")
     } else {
       setLoading(false)
-      ToastAndroid.show(data.message, ToastAndroid.SHORT);
+      ToastAndroid.show(data.message, ToastAndroid.LONG);
     }
     
   }

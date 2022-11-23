@@ -2,12 +2,12 @@
   "expo": {
     "name": "MeConnect",
     "slug": "App",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/favicon.png",
+    "icon": "./assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#FFFFFF"
     },
@@ -22,7 +22,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/logo.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.meconnect.meconnect",
@@ -30,10 +30,10 @@
       "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/logo.png"
+      "favicon": "./assets/adaptive-icon.png"
     },
     "notification": {
-      "icon": "./assets/logo.png"
+      "icon": "./assets/adaptive-icon.png"
     },
     "extra": {
       "eas": {
@@ -44,7 +44,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/logo.png",
+          "icon": "./assets/adaptive-icon.png",
           "color": "#ffffff"
         }
       ]

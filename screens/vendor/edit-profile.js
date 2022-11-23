@@ -23,7 +23,7 @@ export default function EditProfile({ navigation }) {
     const [vendorCommercial, setVendorCommercial] = useState('')
     const [vendorCnpj, setVendorCnpj] = useState('')
 
-    const [vendorSlogan, setVendorSlogan] = useState('')
+    const [vendorDescription, setVendorDescription] = useState('')
     const [vendorEmail, setVendorEmail] = useState('')
     const [vendorTel, setVendorTel] = useState('')
     const [vendorCep, setVendorCep] = useState('')
@@ -45,7 +45,7 @@ export default function EditProfile({ navigation }) {
                 setVendorCnpj(data.cnpj)
                 setVendorPhotoUrl(data.photo_url)
                 setVendorBannerUrl(data.banner_url)
-                setVendorSlogan(data.description)
+                setVendorDescription(data.description)
                 setVendorEmail(data.email)
                 setVendorTel(data.tel)
                 setVendorCep(data.cep)
@@ -79,7 +79,7 @@ export default function EditProfile({ navigation }) {
 
         const { data, status: saveData } = await Api.db.vendors.update(vendorId, {
             commercial: vendorCommercial,
-            description: vendorSlogan,
+            description: vendorDescription,
             tel: vendorTel,
             cep: vendorCep,
             bio: vendorBio,
@@ -153,7 +153,7 @@ export default function EditProfile({ navigation }) {
                     <View style={styles.form}>
                         <MCInput label={'Nome'} editable={false} value={vendorName}></MCInput>
                         <MCInput label={'Fantasia'} onInput={text => { setVendorCommercial(text); setHasChanges(true) }} value={vendorCommercial}></MCInput>
-                        <MCInput label={'Descrição'} onInput={text => { setVendorSlogan(text); setHasChanges(true) }} value={vendorSlogan}></MCInput>
+                        <MCInput label={'Descrição'} onInput={text => { setVendorDescription(text); setHasChanges(true) }} value={vendorDescription}></MCInput>
                         <MCInput label={'CNPJ'} editable={false} value={vendorCnpj}></MCInput>
                         <MCInput label={'Email'} editable={false} value={vendorEmail}></MCInput>
                         <MCInput label={'Telefone'} onInput={text => { setVendorTel(text); setHasChanges(true) }} value={vendorTel}></MCInput>

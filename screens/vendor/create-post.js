@@ -55,34 +55,37 @@ export default function CreatePost({ navigation }) {
             return
         }
 
-        const { data, status: saveData } = await Api.db.posts.create({
-            vendor_id: await SecureStore.getItemAsync('VendorId'),
-            title,
-            content
-        })
+        try {
+            const { data, status: saveData } = await Api.db.posts.create({
+                vendor_id: await SecureStore.getItemAsync('VendorId'),
+                title,
+                content
+            })
 
-        const resData = data
-        
-        let saveMedia = 0
-        
-        if (imageUrl) {
-            const { status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
-            saveMedia = status
-        }
+            const resData = data
 
-        if (videoUrl) {
-            const { status } = await Api.db.posts.setVideo(resData.post.id, videoUrl)
-            saveMedia = status
-        }
+            let saveMedia = 0
 
+            if (imageUrl) {
+                const { status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
+                saveMedia = status
+            }
 
-        if (saveData === 200 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
-            ToastAndroid.show('Post foi publicado', ToastAndroid.SHORT)
-            navigation.navigate('VendorScreens')
-            setShowSplash(false)
-        } else {
-            setShowSplash(false)
-            ToastAndroid.show('Ocorreu um erro interno ao publicar o post', ToastAndroid.SHORT)
+            if (videoUrl) {
+                const { status } = await Api.db.posts.setVideo(resData.post.id, videoUrl)
+                saveMedia = status
+            }
+
+            if (saveData === 200 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
+                ToastAndroid.show('Post foi publicado', ToastAndroid.SHORT)
+                navigation.navigate('VendorScreens')
+                setShowSplash(false)
+            } else {
+                setShowSplash(false)
+                ToastAndroid.show('Ocorreu um erro ao publicar o post', ToastAndroid.LONG)
+            }
+        } catch (error) {
+            ToastAndroid.show('Ocorreu um erro ao publicar o post', ToastAndroid.LONG)
         }
     }
 

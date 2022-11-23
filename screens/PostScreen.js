@@ -1,6 +1,6 @@
 import { Api, Colors } from "meconnect-sdk";
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ActivityIndicator } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ActivityIndicator, ToastAndroid } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MCButton from "../components/MCButton";
 import MCHeader from "../components/MCHeader";
@@ -16,52 +16,61 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
     })
     const [isLoading, setIsLoading] = useState(false)
 
+    function error() {
+        ToastAndroid.show('Ocorreu um erro ao buscar os dados do post', ToastAndroid.LONG)
+        navigation.goBack()
+    }
 
     useEffect(() => {
         setIsLoading(true)
-        Api.db.posts.get(postId).then(({ data: post }) => {
+        Api.db.posts.get(postId).then(({ data: post, status }) => {
+            if (status !== 200) error()
             setPost(post)
             setIsLoading(false)
         })
+            .catch(() => error())
     }, [])
 
     return (
         <View style={styles.background}>
             <StatusBar></StatusBar>
-            <ScrollView contentContainerStyle={styles.container}>
-                <MCHeader>
-                    <HeaderOption noMargin onClick={() => navigation.goBack()}>
-                        <Ionicons style={styles.backBtn} name="arrow-back-outline" size={35} color={"#fff"} />
-                    </HeaderOption>
-                </MCHeader>
-                {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
-                {
-                    !isLoading &&
-                    <>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.title}>{post.title}</Text>
-                        </View>
-                        {
-                            post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} /> : <></>
-                        }
+            <MCHeader title={'Post'}>
+                <HeaderOption noMargin onClick={() => navigation.goBack()}>
+                <Ionicons name="close" color={'white'} size={26}></Ionicons>
+                </HeaderOption>
+            </MCHeader>
+            {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+            {
+                !isLoading && <ScrollView contentContainerStyle={styles.item}>
+                    {
+                        !isLoading &&
+                        <>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>{post.title}</Text>
+                            </View>
+                            {
+                                post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} /> : <></>
+                            }
 
-                        {
-                            post.media_type === 'video' && post.media_url ?
-                                <Video
-                                    style={styles.media}
-                                    source={{ uri: post.media_url }}
-                                    useNativeControls
-                                    resizeMode={ResizeMode.COVER}
-                                    isLooping
-                                /> : <></>
-                        }
-                        {post.content && <Text style={styles.content}>{post.content}</Text>}
-                        <View style={styles.textContainer}>
-                            <Date date={post.created_at} style={styles.createdAt}>{post.created_at}</Date>
-                        </View>
-                    </>
-                }
-            </ScrollView>
+                            {
+                                post.media_type === 'video' && post.media_url ?
+                                    <Video
+                                        style={styles.media}
+                                        source={{ uri: post.media_url }}
+                                        useNativeControls
+                                        resizeMode={ResizeMode.COVER}
+                                        isLooping
+                                    /> : <></>
+                            }
+                            {post.content && <Text style={styles.content}>{post.content}</Text>}
+                            <View style={styles.textContainer}>
+                                <Date date={post.created_at} style={styles.createdAt}>{post.created_at}</Date>
+                            </View>
+                        </>
+                    }
+                </ScrollView>
+            }
+
         </View>
     );
 }
@@ -73,10 +82,14 @@ const styles = StyleSheet.create({
         flex: 1,
         display: 'flex',
     },
-    container: {
+    item: {
+        backgroundColor: "#F3F3F3",
+        paddingHorizontal: 14,
+        paddingTop: 10,
         paddingBottom: 20,
-        display: 'flex',
-        alignItems: 'center',
+        borderRadius: 8,
+        marginVertical: 8,
+        marginHorizontal: 16,
     },
     media: {
         width: 300,
@@ -85,7 +98,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     title: {
-        marginTop: 20,
         fontSize: 18,
         fontWeight: 'bold',
     },

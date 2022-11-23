@@ -9,10 +9,14 @@ import Date from "./Date";
 export default function Post({ id, title, content, media_url, created_at, media_type, onRemove, options = false }) {
 
     async function deletePost() {
-        const { status } = await Api.db.posts.delete(id)
-        if (status === 200) {
-            onRemove(id)
-            ToastAndroid.show('Post foi deletado', ToastAndroid.SHORT);
+        try {
+            const { status } = await Api.db.posts.delete(id)
+            if (status === 200) {
+                onRemove(id)
+                ToastAndroid.show('Post foi deletado', ToastAndroid.SHORT);
+            }
+        } catch (error) {
+            ToastAndroid.show('Ocorreu um erro ao deletar o post', ToastAndroid.LONG);
         }
     }
 
@@ -21,7 +25,6 @@ export default function Post({ id, title, content, media_url, created_at, media_
             const contentCutted = String(content).split('').slice(0, 100)
             return contentCutted.join('') + '...'
         }
-
         return content
     }
 

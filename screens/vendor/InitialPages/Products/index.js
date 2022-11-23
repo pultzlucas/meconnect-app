@@ -48,7 +48,7 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   }
 
   const renderItem = ({ item: { id, description, photo_url, price } }) => {
-    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { productId: id })}>
+    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
       <Product
         id={id}
         description={description}

@@ -28,39 +28,44 @@ export default function CreateProduct({ navigation }) {
     }
 
     async function publishProduct() {
-        setShowSplash(true)
-        
-        if (!description) {
-            setShowSplash(false)
-            ToastAndroid.show('Por favor insira a descrição do produto', ToastAndroid.SHORT)
-            return
-        }
+        try {
+            setShowSplash(true)
 
-        if (!price) {
-            setShowSplash(false)
-            ToastAndroid.show('Por favor insira o preço do produto', ToastAndroid.SHORT)
-            return
-        }
-        
-        if (!imageUrl) {
-            setShowSplash(false)
-            ToastAndroid.show('Por favor insira a foto do produto', ToastAndroid.SHORT)
-            return
-        }
+            if (!description) {
+                setShowSplash(false)
+                ToastAndroid.show('Por favor insira a descrição do produto', ToastAndroid.SHORT)
+                return
+            }
 
-        const { data, status: saveData } = await Api.db.products.create({
-            vendor_id: await SecureStore.getItemAsync('VendorId'),
-            description,
-            price
-        })
+            if (!price) {
+                setShowSplash(false)
+                ToastAndroid.show('Por favor insira o preço do produto', ToastAndroid.SHORT)
+                return
+            }
 
-        const {status: saveImage, data: msg} = await Api.db.products.setPhoto(data.product.id, imageUrl)
-        console.log(saveImage, msg)
-        
-        if(saveData === 200 && saveImage === 200) {
-            ToastAndroid.show('Produto foi publicado', ToastAndroid.SHORT)
-            navigation.navigate('VendorScreens')
-            setShowSplash(false)
+            if (!imageUrl) {
+                setShowSplash(false)
+                ToastAndroid.show('Por favor insira a foto do produto', ToastAndroid.SHORT)
+                return
+            }
+
+            const { data, status: saveData } = await Api.db.products.create({
+                vendor_id: await SecureStore.getItemAsync('VendorId'),
+                description,
+                price: String(price).replace(/,/g, '.')
+            })
+
+            const { status: saveImage, data: msg } = await Api.db.products.setPhoto(data.product.id, imageUrl)
+
+            if (saveData === 200 && saveImage === 200) {
+                ToastAndroid.show('Produto foi publicado', ToastAndroid.SHORT)
+                navigation.navigate('VendorScreens')
+                setShowSplash(false)
+            } else {
+                ToastAndroid.show('Ocorreu im erro ao publicar o produto', ToastAndroid.LONG)
+            }
+        } catch (error) {
+            ToastAndroid.show('Ocorreu im erro ao publicar o produto', ToastAndroid.LONG)
         }
     }
 
@@ -92,7 +97,7 @@ export default function CreateProduct({ navigation }) {
 
                     </TouchableOpacity>
                 </View>
-                <Splash show={showSplash}/>
+                <Splash show={showSplash} />
             </View>
         </SafeAreaView>
     )
