@@ -60,7 +60,10 @@ export default function RegistreCliente({ route, navigation }) {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{
+      flex: 1,
+      backgroundColor: 'white'
+    }}>
       <View style={styles.container}>
 
         <Text style={styles.title}>

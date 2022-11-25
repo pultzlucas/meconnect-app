@@ -40,7 +40,6 @@ export default function Principal({ navigation }) {
       Api.db.vendors.get(vendorId).then(({ data: vendor }) => {
         vendor.cnpj = vendor.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
         vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
-        
         setVendor(vendor)
         setShowSplash(false)
       }).catch(async () => {
@@ -60,6 +59,7 @@ export default function Principal({ navigation }) {
   return (
     <ScrollView style={{
       flex: 1,
+      backgroundColor: 'white'
     }}>
       <StatusBar backgroundColor={Colors.DarkOrange}/>
       <View style={styles.container}>

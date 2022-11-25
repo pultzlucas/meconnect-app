@@ -77,7 +77,6 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
 
 const styles = StyleSheet.create({
     background: {
-        textAlign: 'center',
         backgroundColor: "#fff",
         flex: 1,
         display: 'flex',
@@ -89,30 +88,37 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         borderRadius: 8,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 20,
+        display: 'flex',
+        alignItems: 'center'
     },
     media: {
-        width: 300,
-        height: 300,
+        width: 340,
+        height: 340,
         borderRadius: 10,
         marginTop: 10,
+        marginLeft: 'auto',
+        marginRight: 'auto',
     },
     title: {
         fontSize: 18,
         fontWeight: 'bold',
+        marginVertical: 5,
     },
     createdAt: {
         color: Colors.DarkGray,
         textAlign: 'right',
+        width: 340,
         fontSize: 12,
-        marginTop: 20,
+        marginTop: 10,
+        paddingRight: 20,
     },
     textContainer: {
         width: 300,
     },
     content: {
         marginTop: 10,
-        width: 300,
+        width: 340,
         lineHeight: 20,
     }
 });
