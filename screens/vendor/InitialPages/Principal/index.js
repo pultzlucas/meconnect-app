@@ -7,6 +7,7 @@ import {
   ScrollView,
   StatusBar,
   Pressable,
+  ToastAndroid,
 } from "react-native";
 import MCHeader from "../../../../components/MCHeader";
 import MCButton from "../../../../components/MCButton";
@@ -23,15 +24,12 @@ import { BottomSheet } from "react-native-btr";
 import HorizontalLine from "../../../../components/HorizontalLine";
 import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 import Splash from "../../../../components/Splash"
-import getFetchDataErrorMessage from "../../../../src/get-fetch-data-error-msg";
 
 export default function Principal({ navigation }) {
   const [vendor, setVendor] = useState('')
   const isFocused = useIsFocused();
   const [visible, setVisible] = useState(false);
   const [showSplash, setShowSplash] = useState(false)
-
-  const [fetchDataError, setFetchDataError] = useState('')
 
   function getVendorInfo() {
     setShowSplash(false)
@@ -42,9 +40,11 @@ export default function Principal({ navigation }) {
         vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
         setVendor(vendor)
         setShowSplash(false)
-      }).catch(async () => {
-        setFetchDataError(await getFetchDataErrorMessage())
+      }).catch(() => {
+        ToastAndroid.show('Ocorreu um erro ao buscar os dados do perfil', ToastAndroid.LONG)
       })
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os dados do perfil', ToastAndroid.LONG)
     })
   }
 
@@ -92,9 +92,7 @@ export default function Principal({ navigation }) {
         <VendorProfileTopic title={'Tel'} info={vendor.tel} style={styles.vendorInfo} />
         <VendorProfileTopic title={'CEP'} info={vendor.cep} style={styles.vendorInfo} />
 
-        <Splash show={showSplash} message={fetchDataError} btn={
-          <MCButton onClick={getVendorInfo}>Tentar novamente</MCButton>
-        } />
+        <Splash show={showSplash}/>
 
         <BottomSheet
           visible={visible}

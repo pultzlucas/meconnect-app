@@ -2,11 +2,9 @@ import { Api, Colors } from "meconnect-sdk";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ToastAndroid } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import MCButton from "../components/MCButton";
 import MCHeader from "../components/MCHeader";
 import Price from "../components/Price";
 import HeaderOption from "../components/HeaderOption";
-import HorizontalLine from "../components/HorizontalLine";
 
 export default function ProductScreen({ navigation, route: { params: { id: productId } } }) {
     const [product, setProduct] = useState({

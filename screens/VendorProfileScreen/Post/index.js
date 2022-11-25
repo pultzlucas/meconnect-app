@@ -7,6 +7,7 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 
 import { Api, Colors } from "meconnect-sdk";
@@ -28,18 +29,15 @@ export default function Posts({ navigation, route }) {
   const [posts, setPosts] = useState([]);
   const [showPlaceholder, setShowPlaceholder] = useState(false)
 
-  async function getPosts() {
-    const posts = await Api.db.vendors.getPosts(route.params.vendor_id);
-    return posts.data
-  }
-
   useEffect(() => {
     setShowPlaceholder(false)
-    getPosts().then(posts => {
+    Api.db.vendors.getPosts(route.params.vendor_id).then(posts => {
       if(posts.length === 0) {
         setShowPlaceholder(true)
       }
       setPosts(posts)
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os posts', ToastAndroid.LONG)
     })
   }, []);
 

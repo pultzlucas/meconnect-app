@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, SafeAreaView, FlatList, Text, TouchableOpacity, ActivityIndicator, ToastAndroid } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
 import { useCallback, useEffect, useState } from 'react';
@@ -11,14 +11,13 @@ import MCButton from '../../../../components/MCButton';
 import getFetchDataErrorMessage from '../../../../src/get-fetch-data-error-msg';
 import Splash from '../../../../components/Splash';
 
-export default function Conection({ navigation, route: { params: { vendorId } } }) {
+export default function Products({ navigation, route: { params: { vendorId } } }) {  
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState([])
 
   const [showSplash, setShowSplash] = useState(false)
   const [showPlaceholder, setShowPlaceholder] = useState(false)
-  const [fetchDataError, setFetchDataError] = useState('')
 
   async function getProducts() {
     setIsLoading(true)
@@ -29,11 +28,8 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
       if (products.length === 0) setShowPlaceholder(true)
       setProducts(products)
       setIsLoading(false)
-    }).catch(async () => {
-      setFetchDataError(await getFetchDataErrorMessage())
-      setShowSplash(true)
-      setIsLoading(false)
-      setShowPlaceholder(false)
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os produtos', ToastAndroid.LONG)
     })
   }
 
@@ -103,10 +99,7 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
         }
       />
 
-      <Splash show={showSplash} message={fetchDataError} btn={
-        <MCButton onClick={getProducts}>Tentar novamente</MCButton>
-      } />
-
+      <Splash show={showSplash}/>
     </View>
   );
 }

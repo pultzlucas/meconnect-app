@@ -5,8 +5,6 @@ import NotificationComponent from "../../../../components/Notification";
 import { Api, Colors } from "meconnect-sdk";
 import { useCallback } from "react";
 import * as SecureStore from 'expo-secure-store'
-import Date from "../../../../components/Date";
-import Price from "../../../../components/Price";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function Notification({ navigation }) {
@@ -14,6 +12,10 @@ export default function Notification({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [notifications, setNotifications] = useState([])
   const [showPlaceholder, setShowPlaceholder] = useState(false)
+
+  function fetchDataError() {
+    ToastAndroid.show('Ocorreu um erro ao buscar as notificações', ToastAndroid.LONG)
+  }
 
   useEffect(() => {
     setIsLoading(true)
@@ -27,8 +29,8 @@ export default function Notification({ navigation }) {
         if (status === 200) {
           setNotifications(data)
         }
-      })
-    })
+      }).catch(fetchDataError)
+    }).catch(fetchDataError)
   }, [refreshing, useIsFocused()])
 
   const wait = (timeout) => {

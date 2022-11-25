@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   Pressable,
   TouchableOpacity,
+  ToastAndroid,
 } from "react-native";
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
@@ -25,12 +26,11 @@ import { useIsFocused } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import Splash from "../../../../components/Splash";
 import getFetchDataErrorMessage from "../../../../src/get-fetch-data-error-msg";
+import * as Network from 'expo-network';
 
 export default function Posts({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState(null);
-  const [fetchDataError, setFetchDataError] = useState("");
-
   const [isLoading, setIsLoading] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
   const [showPlaceholder, setShowPlaceholder] = useState(false);
@@ -47,14 +47,15 @@ export default function Posts({ navigation }) {
           setIsLoading(false);
           setPosts(data);
         })
-        .catch(async (err) => {
-          setFetchDataError(await getFetchDataErrorMessage());
-          setShowSplash(true);
-          setIsLoading(false);
-          setShowPlaceholder(false);
-        });
-    });
+        .catch(() => {
+          ToastAndroid.show('Ocorreu um erro ao buscar os posts', ToastAndroid.LONG)
+        })
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os posts', ToastAndroid.LONG)
+    })
   }
+
+
 
   useEffect(() => {
     getPosts();
@@ -137,11 +138,7 @@ export default function Posts({ navigation }) {
         }
       />
 
-      <Splash
-        show={showSplash}
-        message={fetchDataError}
-        btn={<MCButton onClick={getPosts}>Tentar novamente</MCButton>}
-      />
+      <Splash show={showSplash} />
     </SafeAreaView>
   );
 }

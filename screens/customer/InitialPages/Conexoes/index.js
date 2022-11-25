@@ -1,4 +1,4 @@
-import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, Text, Button, Pressable, Touchable, TouchableHighlight, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, RefreshControl, StatusBar, Text, Button, Pressable, Touchable, TouchableHighlight, ActivityIndicator, ToastAndroid } from 'react-native';
 import MCHeader from "../../../../components/MCHeader";
 import HeaderOption from "../../../../components/HeaderOption";
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -37,13 +37,21 @@ export default function Conection({ navigation }) {
     })
   }, [])
 
+  function fetchDataError() {
+    ToastAndroid.show('Ocorreu um erro ao buscar os dados do post', ToastAndroid.LONG)
+  }
+
   useEffect(() => {
     setIsLoading(true)
     setVendors([])
-    fetchVendors().then(vendors => {
-      setVendors(vendors)
-      setIsLoading(false)
+    SecureStore.getItemAsync('CustomerId').then(customerId => {
+      Api.db.customers.getConnections(customerId).then(vendors => {
+        setVendors(vendors)
+        setIsLoading(false)
+      })
+        .catch(fetchDataError)
     })
+      .catch(fetchDataError)
   }, [refreshing, isFocused])
 
   const wait = (timeout) => {
@@ -87,7 +95,7 @@ export default function Conection({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.DarkOrange}/>
+      <StatusBar backgroundColor={Colors.DarkOrange} />
       <MCHeader title={"Conexões"}>
         <HeaderOption onClick={toggleBottomNavigationView}>
           <Entypo name="dots-three-vertical" size={20} color={'white'}></Entypo>
@@ -102,7 +110,7 @@ export default function Conection({ navigation }) {
         data={vendors}
         renderItem={renderItem}
         keyExtractor={item => item.vendor_id}
-        style={{paddingTop: 10}}
+        style={{ paddingTop: 10 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -183,5 +191,5 @@ const styles = StyleSheet.create({
   },
   placeholderBtn: {
     marginTop: 20,
-  },  
+  },
 });

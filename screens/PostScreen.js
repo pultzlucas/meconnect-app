@@ -2,11 +2,8 @@ import { Api, Colors } from "meconnect-sdk";
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ActivityIndicator, ToastAndroid } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import MCButton from "../components/MCButton";
 import MCHeader from "../components/MCHeader";
-import Price from "../components/Price";
 import HeaderOption from "../components/HeaderOption";
-import HorizontalLine from "../components/HorizontalLine";
 import Date from "../components/Date";
 import { ResizeMode, Video } from "expo-av";
 
@@ -36,7 +33,7 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
             <StatusBar></StatusBar>
             <MCHeader title={'Post'}>
                 <HeaderOption noMargin onClick={() => navigation.goBack()}>
-                <Ionicons name="close" color={'white'} size={26}></Ionicons>
+                    <Ionicons name="close" color={'white'} size={26}></Ionicons>
                 </HeaderOption>
             </MCHeader>
             {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}

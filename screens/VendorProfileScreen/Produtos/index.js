@@ -1,61 +1,53 @@
 import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
-  Image,
   FlatList,
   TouchableOpacity,
-  View,
   Text,
   StyleSheet,
-  ScrollView,
+  ToastAndroid,
 } from "react-native";
-import { Searchbar } from "react-native-paper";
 import { Api, Colors } from "meconnect-sdk";
-import { Pressable } from "react-native";
+import Product from "../../../components/Product";
 
-export default function Prods({ navigation, route }) {
+export default function Products({ navigation, route }) {
   const [products, setProducts] = useState([])
   const [showPlaceholder, setShowPlaceholder] = useState(false)
 
   const renderItem = ({ item: { id, photo_url, description, price } }) => {
     return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
-      <View style={styles.item}>
-        <Image style={styles.prod} source={{ uri: photo_url }} />
-        <Text style={styles.desc} numberOfLines={1}>
-          {description}
-        </Text>
-        <Text style={styles.val}>R${price},00</Text>
-      </View>
+      <Product
+        id={id}
+        description={description}
+        photo_url={photo_url}
+        price={price}
+        onEdit={() => navigation.navigate('EditProduct', { id })}
+      />
     </TouchableOpacity>
 
   }
 
-  async function getProducts() {
-    const {data} = await Api.db.vendors.getProducts(route.params.vendor_id);
-    return data
-  }
-  
   useEffect(() => {
     setShowPlaceholder(false)
-    getProducts().then(prods => {
-      if(prods.length == 0) {
-        setShowPlaceholder(true)
-      }
+    Api.db.vendors.getProducts(route.params.vendor_id).then(prods => {
+      if (prods.length == 0) setShowPlaceholder(true)
       setProducts(prods)
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os produtos', ToastAndroid.LONG)
     })
   }, []);
 
   const Placeholder = () => {
     return (
-        <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum produto</Text>
+      <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum produto</Text>
     )
   }
-  
-  
+
+
   return (
     <SafeAreaView style={styles.container}>
 
-      {showPlaceholder && <Placeholder/>}
+      {showPlaceholder && <Placeholder />}
 
       <FlatList
         data={products}

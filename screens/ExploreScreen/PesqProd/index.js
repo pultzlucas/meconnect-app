@@ -1,42 +1,41 @@
 import { Api, Colors } from "meconnect-sdk";
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image, Pressable, StatusBar } from "react-native";
+import { View, Text, StyleSheet, FlatList, RefreshControl, ActivityIndicator, TouchableOpacity, Image, Pressable, StatusBar, ToastAndroid } from "react-native";
 import TopSearch from "../../../components/TopSearch";
+import Product from "../../../components/Product";
 
 export default function SearchProducts({ navigation }) {
   const [products, setProducts] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const renderItem = ({ item }) => (
-    <Pressable onPress={() => navigation.navigate('ProductScreen', { productId: item.id })}>
-      <View style={styles.item}>
-        <Image style={styles.prod} source={{ uri: item.photo_url }} />
-        <Text style={styles.desc} numberOfLines={1}>
-          {item.description}
-        </Text>
-        <Text style={styles.val}>R${item.price},00</Text>
-      </View>
-    </Pressable>
+  const renderItem = ({ item: { id, photo_url, description, price } }) => (
+    <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
+      <Product
+        id={id}
+        description={description}
+        photo_url={photo_url}
+        price={price}
+        onEdit={() => navigation.navigate('EditProduct', { id })}
+      />
+    </TouchableOpacity>
   );
 
-  async function fetchProducts(text) {
-    const { data } = await Api.db.products.getByDescription(text)
-    return data
+  function refreshList(txt) {
+    setIsLoading(true)
+    setProducts([])
+    Api.db.products.getByDescription(txt).then(prods => {
+      console.log(prods)
+      setProducts(prods)
+      setIsLoading(false)
+    }).catch(() => {
+      ToastAndroid.show('Ocorreu um erro ao buscar os produtos', ToastAndroid.LONG)
+    })
   }
 
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={Colors.DarkOrange} />
-
-      <TopSearch onChangeText={txt => {
-        setIsLoading(true)
-        setProducts([])
-        fetchProducts(txt).then(prods => {
-          console.log(prods)
-          setProducts(prods)
-          setIsLoading(false)
-        })
-      }} />
+      <TopSearch onChangeText={refreshList} />
 
       {(products.message || products.length === 0) && <Text style={styles.placeholder}>Nenhum produto encontrado</Text>}
 
