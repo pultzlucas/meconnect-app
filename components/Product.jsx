@@ -6,7 +6,7 @@ import OptionMenu from "react-native-option-menu";
 import Entypo from "react-native-vector-icons/Entypo";
 import Price from "./Price";
 
-export default function Product({ id, description, photo_url, price, onRemove, options = false }) {
+export default function Product({id, description, photo_url, price, onRemove, onEdit, options = false }) {
 
     async function deleteProduct() {
         try {
@@ -20,21 +20,22 @@ export default function Product({ id, description, photo_url, price, onRemove, o
         }
     }
 
+
     return (
         <View style={styles.container}>
             {options && <View style={styles.prodHeader}>
                 <OptionMenu
                     customButton={<Entypo name="dots-three-vertical" size={16} color={Colors.Black}></Entypo>}
                     destructiveIndex={1}
-                    options={["Delete", "Cancel"]}
-                    actions={[deleteProduct]}>
+                    options={["Editar", "Delete", "Cancel"]}
+                    actions={[onEdit, deleteProduct]}>
                 </OptionMenu>
             </View>}
             <Image style={styles.prodImg} source={{ uri: photo_url }} />
             <Text style={styles.desc} numberOfLines={1}>
                 {description}
             </Text>
-            <Price style={styles.val} value={price}/>
+            <Price style={styles.val} value={price} />
         </View>
     )
 }

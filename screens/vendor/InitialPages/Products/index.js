@@ -23,10 +23,10 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   async function getProducts() {
     setIsLoading(true)
     setShowPlaceholder(false)
-    
+
     Api.db.vendors.getProducts(vendorId).then(({ data: products }) => {
       setShowSplash(false)
-      if(products.length === 0) setShowPlaceholder(true)
+      if (products.length === 0) setShowPlaceholder(true)
       setProducts(products)
       setIsLoading(false)
     }).catch(async () => {
@@ -44,7 +44,7 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
   function removeProdFromList(prodId) {
     const prodsFiltered = products.filter(prod => prod.id !== prodId)
     setProducts(prodsFiltered)
-    if(prodsFiltered.length === 0) setShowPlaceholder(true)
+    if (prodsFiltered.length === 0) setShowPlaceholder(true)
   }
 
   const renderItem = ({ item: { id, description, photo_url, price } }) => {
@@ -54,8 +54,9 @@ export default function Conection({ navigation, route: { params: { vendorId } } 
         description={description}
         photo_url={photo_url}
         price={price}
-        onRemove={removeProdFromList}
         options={true}
+        onEdit={() => navigation.navigate('EditProduct', { id })}
+        onRemove={removeProdFromList}
       />
     </TouchableOpacity>
   };

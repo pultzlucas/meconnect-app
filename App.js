@@ -26,6 +26,7 @@ import PostScreen from './screens/PostScreen';
 
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import EditProduct from './screens/vendor/edit-product';
 
 const Stack = createNativeStackNavigator();
 
@@ -87,6 +88,7 @@ export default function App() {
         {/* Vendor Screens */}
         <Stack.Screen name="VendorScreens" component={VendorScreens} />
         <Stack.Screen name="VendorProfileEdit" component={EditProfile} />
+        <Stack.Screen name="EditProduct" component={EditProduct} />
         <Stack.Screen name="VendorCreatePost" component={CreatePost} />
         <Stack.Screen name="VendorCreateProduct" component={CreateProduct} />
 

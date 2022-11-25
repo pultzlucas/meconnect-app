@@ -27,7 +27,8 @@
       },
       "package": "com.meconnect.meconnect",
       "useNextNotificationsApi": true,
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/adaptive-icon.png"

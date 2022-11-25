@@ -34,7 +34,7 @@ export default function Post({ id, title, content, media_url, created_at, media_
                 <Date style={styles.date} date={created_at} />
                 {options && <OptionMenu
                     customButton={<Entypo name="dots-three-vertical" size={16} color={Colors.Black}></Entypo>}
-                    options={["Deletar post", "Cancelar"]}
+                    options={["Deletar", "Cancelar"]}
                     actions={[deletePost]}>
                 </OptionMenu>}
 
