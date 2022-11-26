@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import * as SecureStore from 'expo-secure-store'
 import { Colors } from "meconnect-sdk"
+import Date from "./Date"
 
 export default function VendorProfile({ id, created_at, event, message, vendor }) {
     return (
@@ -9,7 +10,7 @@ export default function VendorProfile({ id, created_at, event, message, vendor }
             <View style={styles.vendorContainer}>
                 <Image style={styles.image} source={{ uri: vendor.photo_url }} />
                 <Text style={styles.title}>{vendor.commercial}</Text>
-                <Text style={styles.created_at}>{String(created_at).replace('T', ' ').replace('.000000Z', '').replace(/-/g, '/')}</Text>
+                <Date style={styles.created_at} date={created_at} />
             </View>
             <Text style={styles.desc}>{message}</Text>
         </View>
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
     created_at: {
         fontSize: 12,
         color: Colors.DarkGray,
-        marginTop: 5,
         textAlign: 'right',
         flex: 1,
     },

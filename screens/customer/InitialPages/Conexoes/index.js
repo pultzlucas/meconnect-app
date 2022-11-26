@@ -45,7 +45,7 @@ export default function Conection({ navigation }) {
     setIsLoading(true)
     setVendors([])
     SecureStore.getItemAsync('CustomerId').then(customerId => {
-      Api.db.customers.getConnections(customerId).then(vendors => {
+      Api.db.customers.getConnections(customerId).then(({data: vendors}) => {
         setVendors(vendors)
         setIsLoading(false)
       })
