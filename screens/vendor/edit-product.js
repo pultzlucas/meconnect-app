@@ -1,4 +1,4 @@
-import { Alert, Image, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity } from "react-native"
+import { Alert, Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity } from "react-native"
 import { View } from "react-native";
 
 import MCHeader from '../../components/MCHeader'
@@ -26,7 +26,7 @@ export default function EditProduct({ navigation, route: { params: { id: product
         const { uri } = await Media.pickImage({
             aspect: [3, 3]
         })
-        if(uri) setImageUrl(uri)
+        if (uri) setImageUrl(uri)
     }
 
     function error() {
@@ -117,32 +117,34 @@ export default function EditProduct({ navigation, route: { params: { id: product
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar></StatusBar>
-            <MCHeader title={'Editar produto'}>
-                <HeaderOption onClick={updateProduct}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Salvar</Text>
-                </HeaderOption>
-                <HeaderOption onClick={exitEdition}>
-                    <Ionicons name="close" color={'white'} size={26}></Ionicons>
-                </HeaderOption>
-            </MCHeader>
+            <ScrollView contentContainerStyle={{paddingBottom: 10,}}>
+                <StatusBar></StatusBar>
+                <MCHeader title={'Editar produto'}>
+                    <HeaderOption onClick={updateProduct}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Salvar</Text>
+                    </HeaderOption>
+                    <HeaderOption onClick={exitEdition}>
+                        <Ionicons name="close" color={'white'} size={26}></Ionicons>
+                    </HeaderOption>
+                </MCHeader>
 
-            <View style={styles.form}>
-                <MCInput label={'Descrição'} onInput={text => { setDescription(text); setHasChanges(true) }} value={description}></MCInput>
-                <MCInput label={'Preço'} type='numeric' onInput={text => { setPrice(text); setHasChanges(true) }} value={price}></MCInput>
+                <View style={styles.form}>
+                    <MCInput label={'Descrição'} onInput={text => { setDescription(text); setHasChanges(true) }} value={description}></MCInput>
+                    <MCInput label={'Preço'} type='numeric' onInput={text => { setPrice(text); setHasChanges(true) }} value={price}></MCInput>
 
-                <View style={styles.prodImagePickerContainer}>
-                    <Text style={styles.imagePickerTitle}>Foto</Text>
-                    <Text>Escolha um arquivo de imagem</Text>
-                    <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickProductImage}>
-                        {
-                            imageUrl && <Image style={styles.prodImg} source={{ uri: imageUrl }} />
-                        }
-                    </TouchableOpacity>
+                    <View style={styles.prodImagePickerContainer}>
+                        <Text style={styles.imagePickerTitle}>Foto</Text>
+                        <Text>Escolha um arquivo de imagem</Text>
+                        <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickProductImage}>
+                            {
+                                imageUrl && <Image style={styles.prodImg} source={{ uri: imageUrl }} resizeMode='stretch' />
+                            }
+                        </TouchableOpacity>
+                    </View>
+                    <Splash show={showSplash} />
                 </View>
-                <Splash show={showSplash} />
-            </View>
-        </SafeAreaView>
+            </ScrollView>
+        </SafeAreaView >
     )
 }
 
@@ -169,8 +171,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 240,
-        height: 240,
+        width: 300,
+        height: 300,
         borderWidth: 2,
         borderColor: Colors.LightGray,
         borderRadius: 10,

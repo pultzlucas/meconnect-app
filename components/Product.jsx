@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native"
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 // import formatDateString from "../format-date-string"
 import { Api, Colors } from 'meconnect-sdk'
 import { ToastAndroid } from "react-native";
@@ -6,7 +6,7 @@ import OptionMenu from "react-native-option-menu";
 import Entypo from "react-native-vector-icons/Entypo";
 import Price from "./Price";
 
-export default function Product({id, description, photo_url, price, onRemove, onEdit, options = false }) {
+export default function Product({ id, description, photo_url, price, onRemove, onEdit, options = false }) {
 
     async function deleteProduct() {
         try {
@@ -25,13 +25,13 @@ export default function Product({id, description, photo_url, price, onRemove, on
         <View style={styles.container}>
             {options && <View style={styles.prodHeader}>
                 <OptionMenu
-                    customButton={<Entypo name="dots-three-vertical" size={16} color={Colors.Black}></Entypo>}
+                    customButton={<Entypo name="dots-three-horizontal" size={20} color={Colors.DarkGray}></Entypo>}
                     destructiveIndex={1}
                     options={["Editar", "Delete", "Cancel"]}
                     actions={[onEdit, deleteProduct]}>
                 </OptionMenu>
             </View>}
-            <Image style={styles.prodImg} source={{ uri: photo_url }} />
+            <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
             <Text style={styles.desc} numberOfLines={1}>
                 {description}
             </Text>
@@ -44,18 +44,21 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: "#F3F3F3",
         alignItems: 'center',
-        padding: 15,
+        paddingHorizontal: 12,
+        paddingTop: 8,
+        paddingBottom: 14,
         borderRadius: 8,
         marginHorizontal: 16,
         marginBottom: 10
     },
     prodHeader: {
         marginLeft: 'auto',
-        marginBottom: 10,
+        marginBottom: 6,
     },
     prodImg: {
+        width: 300,
+        height: 300,
         width: "100%",
-        height: 200,
         borderRadius: 8,
         marginBottom: 10,
     },

@@ -31,7 +31,7 @@ export default function Posts({ navigation, route }) {
 
   useEffect(() => {
     setShowPlaceholder(false)
-    Api.db.vendors.getPosts(route.params.vendor_id).then(posts => {
+    Api.db.vendors.getPosts(route.params.vendor_id).then(({data: posts}) => {
       if(posts.length === 0) {
         setShowPlaceholder(true)
       }

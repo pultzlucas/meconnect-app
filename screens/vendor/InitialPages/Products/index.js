@@ -90,7 +90,7 @@ export default function Products({ navigation, route: { params: { vendorId } } }
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{ paddingTop: 10, }}
+        style={{ paddingTop: 10}}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

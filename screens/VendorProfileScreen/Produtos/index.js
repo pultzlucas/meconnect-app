@@ -29,7 +29,7 @@ export default function Products({ navigation, route }) {
 
   useEffect(() => {
     setShowPlaceholder(false)
-    Api.db.vendors.getProducts(route.params.vendor_id).then(prods => {
+    Api.db.vendors.getProducts(route.params.vendor_id).then(({data: prods}) => {
       if (prods.length == 0) setShowPlaceholder(true)
       setProducts(prods)
     }).catch(() => {

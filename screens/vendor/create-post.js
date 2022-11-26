@@ -118,7 +118,7 @@ export default function CreatePost({ navigation }) {
                             </TouchableOpacity>
                         </View>
                         {
-                            imageUrl && <Image style={styles.media} source={{ uri: imageUrl }}></Image>
+                            imageUrl && <Image style={styles.media} source={{ uri: imageUrl }} resizeMode='stretch'></Image>
                         }
 
                         {
@@ -127,7 +127,7 @@ export default function CreatePost({ navigation }) {
                                 style={styles.media}
                                 source={{ uri: videoUrl }}
                                 useNativeControls
-                                resizeMode={ResizeMode.COVER}
+                                resizeMode={ResizeMode.STRETCH}
                                 isLooping
                             />
                         }

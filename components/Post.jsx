@@ -50,9 +50,10 @@ export default function Post({
             <OptionMenu
               customButton={
                 <Entypo
-                  name="dots-three-vertical"
+                  name="dots-three-horizontal"
                   size={20}
-                  color={Colors.Black}
+                  color={Colors.DarkGray}
+                  style={{marginTop: 2}}
                 ></Entypo>
               }
               options={["Deletar", "Cancelar"]}
@@ -119,6 +120,7 @@ const styles = StyleSheet.create({
     color: Colors.DarkGray,
     textAlign: "left",
     textAlign: "right",
+    marginTop: 6,
   },
   media: {
     width: 300,

@@ -38,7 +38,7 @@ export default function ProductScreen({ navigation, route: { params: { id: produ
                 </HeaderOption>
             </MCHeader>
             <ScrollView contentContainerStyle={styles.item}>
-                <Image style={styles.photo} source={{ uri: product.photo_url }} />
+                <Image style={styles.photo} source={{ uri: product.photo_url }} resizeMode='stretch'/>
                 <Text style={styles.description}>{product.description}</Text>
                 <Price style={styles.price} value={product.price} />
                 {/* <MCButton style={styles.btn}>Ver mais</MCButton> */}

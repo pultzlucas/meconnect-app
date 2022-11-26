@@ -1,4 +1,4 @@
-import { Image, Pressable, SafeAreaView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity } from "react-native"
+import { Image, Pressable, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, ToastAndroid, TouchableOpacity } from "react-native"
 import { View } from "react-native";
 
 import MCHeader from '../../components/MCHeader'
@@ -71,34 +71,36 @@ export default function CreateProduct({ navigation }) {
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar></StatusBar>
-            <MCHeader title={'Adicionar produto'}>
-                <HeaderOption onClick={publishProduct}>
-                    <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Publicar</Text>
-                </HeaderOption>
-                <HeaderOption onClick={() => navigation.navigate('VendorScreens')}>
-                    <Ionicons name="close" color={'white'} size={26}></Ionicons>
-                </HeaderOption>
-            </MCHeader>
+            <ScrollView contentContainerStyle={{paddingBottom: 10}}>
+                <StatusBar></StatusBar>
+                <MCHeader title={'Adicionar produto'}>
+                    <HeaderOption onClick={publishProduct}>
+                        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 16 }}>Publicar</Text>
+                    </HeaderOption>
+                    <HeaderOption onClick={() => navigation.navigate('VendorScreens')}>
+                        <Ionicons name="close" color={'white'} size={26}></Ionicons>
+                    </HeaderOption>
+                </MCHeader>
 
-            <View style={styles.form}>
-                <MCInput label={'Descrição'} onInput={text => setDescription(text)} value={description}></MCInput>
-                <MCInput label={'Preço'} type='numeric' onInput={text => setPrice(text)} value={price}></MCInput>
+                <View style={styles.form}>
+                    <MCInput label={'Descrição'} onInput={text => setDescription(text)} value={description}></MCInput>
+                    <MCInput label={'Preço'} type='numeric' onInput={text => setPrice(text)} value={price}></MCInput>
 
-                <View style={styles.prodImagePickerContainer}>
-                    <Text style={styles.imagePickerTitle}>Foto</Text>
-                    <Text>Escolha um arquivo de imagem</Text>
-                    <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickProductImage}>
-                        {
-                            !imageUrl
-                                ? <FontAwesome name="camera" size={40}></FontAwesome>
-                                : <Image style={styles.prodImg} source={{ uri: imageUrl }} />
-                        }
+                    <View style={styles.prodImagePickerContainer}>
+                        <Text style={styles.imagePickerTitle}>Foto</Text>
+                        <Text>Escolha um arquivo de imagem</Text>
+                        <TouchableOpacity style={styles.prodImagePickerBtn} onPress={pickProductImage}>
+                            {
+                                !imageUrl
+                                    ? <FontAwesome name="camera" size={40}></FontAwesome>
+                                    : <Image style={styles.prodImg} source={{ uri: imageUrl }} resizeMode='stretch' />
+                            }
 
-                    </TouchableOpacity>
+                        </TouchableOpacity>
+                    </View>
+                    <Splash show={showSplash} />
                 </View>
-                <Splash show={showSplash} />
-            </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -126,8 +128,8 @@ const styles = StyleSheet.create({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        width: 240,
-        height: 240,
+        width: 300,
+        height: 300,
         borderWidth: 2,
         borderColor: Colors.LightGray,
         borderRadius: 10,

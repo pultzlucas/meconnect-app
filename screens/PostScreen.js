@@ -46,7 +46,7 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
                                 <Text style={styles.title}>{post.title}</Text>
                             </View>
                             {
-                                post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} /> : <></>
+                                post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} resizeMode='stretch'/> : <></>
                             }
 
                             {
@@ -55,7 +55,7 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
                                         style={styles.media}
                                         source={{ uri: post.media_url }}
                                         useNativeControls
-                                        resizeMode={ResizeMode.COVER}
+                                        resizeMode={ResizeMode.STRETCH}
                                         isLooping
                                     /> : <></>
                             }
@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 20,
         borderRadius: 8,
-        marginVertical: 8,
-        marginHorizontal: 20,
+        marginTop: 10,
+        marginHorizontal: 10,
         display: 'flex',
-        alignItems: 'center'
+        alignItems: 'center',
     },
     media: {
-        width: 340,
-        height: 340,
+        width: 300,
+        height: 300,
         borderRadius: 10,
         marginTop: 10,
         marginLeft: 'auto',
@@ -108,14 +108,15 @@ const styles = StyleSheet.create({
         width: 340,
         fontSize: 12,
         marginTop: 10,
-        paddingRight: 20,
+        paddingRight: 30,
     },
     textContainer: {
-        width: 300,
+        width: '100%',
     },
     content: {
         marginTop: 10,
         width: 340,
         lineHeight: 20,
+        paddingHorizontal: 20,
     }
 });
