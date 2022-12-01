@@ -6,9 +6,10 @@ import MCButton from '../../components/MCButton'
 import MCInput from '../../components/MCInput'
 import MCTextarea from '../../components/MCTextarea'
 import * as SecureStore from 'expo-secure-store'
+import HorizontalLine from '../../components/HorizontalLine';
 
 
-export default function RegistreCliente({ route, navigation }) {
+export default function RegistreCliente({ route: { params: { vendor } }, navigation }) {
   const [description, setDescription] = useState('')
   const [name, setName] = useState('')
   const [commercial, setCommercial] = useState('')
@@ -16,47 +17,29 @@ export default function RegistreCliente({ route, navigation }) {
   const [cep, setCep] = useState('')
   const [email, setEmail] = useState('')
 
-  const { params } = route;
-
-  const [loading, setLoading] = useState(false)
-
   useEffect(() => {
-    setDescription(params.description)
-    setName(params.name)
-    setCommercial(params.name)
-    setTel(params.tel)
-    setCep(params.cep)
-    setEmail(params.email)
+    setDescription(vendor.description)
+    setName(vendor.name)
+    setCommercial(vendor.name)
+    setTel(vendor.tel)
+    setCep(vendor.cep)
+    setEmail(vendor.email)
   }, [])
 
   async function entrar() {
-    setLoading(true)
-    const { data, status } = await Api.db.vendors.create({
-      cep,
-      cnpj: params.cnpj,
-      commercial,
-      description,
-      email,
-      name,
-      password: params.password,
-      tel,
-      device_token: 'asd'
+    navigation.navigate('EmailVerificationCodeScreen', {
+      user: {
+        name,
+        description,
+        email,
+        password: vendor.password,
+        commercial,
+        tel,
+        cep,
+        cnpj: vendor.cnpj
+      },
+      userType: 'vendor'
     })
-
-    if (status === 200) {
-      await Api.token.set(data.token)
-      await SecureStore.setItemAsync('VendorId', String(data.vendor.id))
-      await SecureStore.deleteItemAsync('CustomerId')
-      await SecureStore.setItemAsync('UserType', 'vendor')
-
-      ToastAndroid.show(data.message, ToastAndroid.SHORT);
-      setLoading(false)
-      navigation.popToTop()
-      navigation.replace("VendorScreens")
-    } else {
-      setLoading(false)
-      ToastAndroid.show(data.message, ToastAndroid.LONG);
-    }
   }
 
   return (
@@ -72,9 +55,14 @@ export default function RegistreCliente({ route, navigation }) {
 
         <View style={styles.form}>
           <MCInput
-            onInput={text => setName(text)}
             value={name}
             label="Nome comercial"
+            editable={false}
+          />
+
+          <MCInput
+            value={email}
+            label="Email"
             editable={false}
           />
 
@@ -84,13 +72,9 @@ export default function RegistreCliente({ route, navigation }) {
             label="Nome fantasia"
           />
 
+
           <MCTextarea label="Descrição" onInput={text => setDescription(text)}>{description}</MCTextarea>
 
-          <MCInput
-            onInput={text => setEmail(text)}
-            value={email}
-            label="Email"
-          />
 
           <MCInput
             onInput={text => setTel(text)}
@@ -105,10 +89,9 @@ export default function RegistreCliente({ route, navigation }) {
             label="CEP"
           />
 
-
         </View>
 
-        <MCButton onInput={text => setDescription(text)} style={styles.btn} isLoading={loading} onClick={entrar}>Registrar</MCButton>
+        <MCButton onInput={text => setDescription(text)} style={styles.btn} onClick={entrar}>Registrar</MCButton>
       </View>
     </ScrollView>
   );

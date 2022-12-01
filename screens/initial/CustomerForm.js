@@ -1,3 +1,4 @@
+<<<<<<< HEAD:screens/initial/RegistreCliente.js
 import { StyleSheet, ToastAndroid, View, TouchableOpacity } from "react-native";
 import { Input, Button, Text, ThemeContext } from "react-native-elements";
 import { TextElement } from "react-native-elements/dist/text/Text";
@@ -45,6 +46,39 @@ export default function RegistreCliente({ navigation }) {
       setLoading(false);
       ToastAndroid.show(data.message, ToastAndroid.LONG);
     }
+=======
+import { StyleSheet, ToastAndroid, View } from 'react-native';
+import { Input, Button, Text, ThemeContext } from 'react-native-elements';
+import { TextElement } from 'react-native-elements/dist/text/Text';
+import { Api } from 'meconnect-sdk';
+import { useState } from 'react';
+import MCButton from '../../components/MCButton';
+import MCInput from '../../components/MCInput';
+
+
+export default function RegistreCustomerScreen({ navigation }) {
+  const [nome, setNome] = useState(null)
+  const [senha, setSenha] = useState(null)
+  const [email, setEmail] = useState(null)
+  const [senha2, setSenha2] = useState(null)
+
+  function openEmailVerificationScreen() {
+    if (senha !== senha2) {
+      ToastAndroid.show('Senha de confirmação incorreta', ToastAndroid.SHORT)
+      return
+    }
+
+    console.log('1')
+
+    navigation.navigate('EmailVerificationCodeScreen', {
+      user: {
+        name: nome,
+        password: senha,
+        email
+      },
+      userType: 'customer'
+    })
+>>>>>>> 9a60038 (add account verification via email):screens/initial/CustomerForm.js
   }
 
 const [hidePass1, setHidePass1] = useState(true);
@@ -79,6 +113,7 @@ const [hidePass2, setHidePass2] = useState(true);
         </TouchableOpacity>
       </View>
 
+<<<<<<< HEAD:screens/initial/RegistreCliente.js
       <View style={styles.inputArea}>
         <MCInput
           style={styles.input}
@@ -105,6 +140,9 @@ const [hidePass2, setHidePass2] = useState(true);
         {"\n"}- Possuir uma letra maiúcula; {"\n"}- Possir uma letra minúscula;{" "}
         {"\n"}- Possuir um número.
       </Text>
+=======
+      <MCButton style={styles.btn} size='medium' onClick={openEmailVerificationScreen}>Registrar</MCButton>
+>>>>>>> 9a60038 (add account verification via email):screens/initial/CustomerForm.js
     </View>
   );
 }

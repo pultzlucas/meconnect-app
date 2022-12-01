@@ -16,14 +16,21 @@ export default function RegistreEmpresa({ navigation }) {
 
   function register() {
     requestCnpj()
-      .then((cnpjInfo) => {
-        cnpjInfo.password = senha;
-        navigation.navigate("ConfirmaEmpresa", cnpjInfo);
+      .then(vendor => {
+        vendor.password = senha
+        navigation.navigate("ConfirmaEmpresa", { vendor })
       })
-      .catch((err) => {
-        ToastAndroid.show(err, ToastAndroid.SHORT);
-      });
+      .catch(err => {
+        console.log(err)
+        ToastAndroid.show('Ocorreu um erro ao verificar o CNPJ', ToastAndroid.SHORT)
+      })
   }
+
+  useEffect(() => {
+    setSenha('Luk5162020')
+    setSenha2('Luk5162020')
+    setCnpj('20612379000106')
+  }, [])
 
   async function requestCnpj() {
     if (!cnpj) {

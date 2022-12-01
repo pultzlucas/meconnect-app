@@ -1,7 +1,7 @@
 import { Colors } from "meconnect-sdk"
 import { ActivityIndicator, Button, Pressable, StyleSheet, Text, TouchableOpacity } from "react-native"
 
-function MCButton({ styleType = 'primary', size = 'medium', onClick, children, style, isLoading = false, noElevation = false }) {
+function MCButton({ styleType = 'primary', size = 'medium', onClick, children, style, isLoading = false, noElevation = false, disabled }) {
   const styleTypeString = styleType.charAt(0).toUpperCase() + styleType.slice(1)
   const sizeString = size.charAt(0).toUpperCase() + size.slice(1)
   return (
@@ -16,6 +16,7 @@ function MCButton({ styleType = 'primary', size = 'medium', onClick, children, s
         {elevation: noElevation ? 0 : 3},
         { ...style },
       ]}
+      disabled={disabled}
     >
       {isLoading && <ActivityIndicator size='small' color="white" />}
       {
