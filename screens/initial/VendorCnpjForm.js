@@ -1,7 +1,7 @@
-import { StyleSheet, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { Pressable, StyleSheet, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { Input, Button, Text, ThemeContext } from "react-native-elements";
 import { TextElement } from "react-native-elements/dist/text/Text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 
@@ -95,9 +95,9 @@ export default function RegistreEmpresa({ navigation }) {
           placeholder="Sua Senha"
           secureTextEntry={hidePass1}
         />
-        <TouchableOpacity onPress={() => setHidePass1(!hidePass1)}>
-          <Ionicons name="eye" color="#9f9f9" size={25} style={styles.icon} />
-        </TouchableOpacity>
+        <Pressable onPress={() => setHidePass1(!hidePass1)}>
+          <Ionicons name={hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
       </View>
 
       <View style={styles.inputArea}>
@@ -107,9 +107,9 @@ export default function RegistreEmpresa({ navigation }) {
           placeholder="Repita a Senha"
           secureTextEntry={hidePass2}
         />
-        <TouchableOpacity onPress={() => setHidePass2(!hidePass2)}>
-          <Ionicons name="eye" color="#9f9f9" size={25} style={styles.icon} />
-        </TouchableOpacity>
+        <Pressable onPress={() => setHidePass2(!hidePass2)}>
+          <Ionicons name={hidePass2 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
       </View>
 
       <MCButton style={styles.btn} size="medium" onClick={register}>
@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  inputArea:{
-    flexDirection:'row',
+  inputArea: {
+    flexDirection: 'row',
     alignItems: 'center'
-  },  
+  },
   icon: {
     position: 'absolute',
     right: 10,

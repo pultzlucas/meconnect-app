@@ -1,11 +1,7 @@
-
-import { useCallback, useEffect, useState } from 'react';
 import { StatusBar, StyleSheet, View } from 'react-native';
 import { Button, Input, Text } from 'react-native-elements';
 import HorizontalLine from '../../components/HorizontalLine';
 import MCButton from '../../components/MCButton';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 
 export default function EscolherConta({ navigation }) {
   return (

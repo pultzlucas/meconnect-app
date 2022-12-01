@@ -1,59 +1,11 @@
-<<<<<<< HEAD:screens/initial/RegistreCliente.js
-import { StyleSheet, ToastAndroid, View, TouchableOpacity } from "react-native";
-import { Input, Button, Text, ThemeContext } from "react-native-elements";
-import { TextElement } from "react-native-elements/dist/text/Text";
-import { Api, Colors } from "meconnect-sdk";
-import { useState } from "react";
-import MCButton from "../../components/MCButton";
-import MCInput from "../../components/MCInput";
-import * as SecureStore from "expo-secure-store";
-import Ionicons from "react-native-vector-icons/Ionicons";
-
-
-export default function RegistreCliente({ navigation }) {
-  const [nome, setNome] = useState(null);
-  const [senha, setSenha] = useState(null);
-  const [email, setEmail] = useState(null);
-  const [senha2, setSenha2] = useState(null);
-
-  const [loading, setLoading] = useState(false);
-
-  async function register() {
-    if (senha !== senha2) {
-      ToastAndroid.show("Senha de confirmação incorreta", ToastAndroid.SHORT);
-      return;
-    }
-
-    setLoading(true);
-
-    const { data, status } = await Api.db.customers.create({
-      name: nome,
-      password: senha,
-      email: email,
-      device_token: "asdasd",
-    });
-
-    if (status === 200) {
-      await Api.token.set(data.token);
-      await SecureStore.setItemAsync("CustomerId", String(data.customer.id));
-      await SecureStore.setItemAsync("UserType", "customer");
-
-      setLoading(false);
-      ToastAndroid.show(data.message, ToastAndroid.SHORT);
-      navigation.popToTop();
-      navigation.replace("CustomerScreens");
-    } else {
-      setLoading(false);
-      ToastAndroid.show(data.message, ToastAndroid.LONG);
-    }
-=======
-import { StyleSheet, ToastAndroid, View } from 'react-native';
+import { Pressable, StyleSheet, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import { Input, Button, Text, ThemeContext } from 'react-native-elements';
 import { TextElement } from 'react-native-elements/dist/text/Text';
-import { Api } from 'meconnect-sdk';
+import { Api, Colors } from 'meconnect-sdk';
 import { useState } from 'react';
 import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
+import Ionicons from "react-native-vector-icons/Ionicons";
 
 
 export default function RegistreCustomerScreen({ navigation }) {
@@ -61,6 +13,9 @@ export default function RegistreCustomerScreen({ navigation }) {
   const [senha, setSenha] = useState(null)
   const [email, setEmail] = useState(null)
   const [senha2, setSenha2] = useState(null)
+  
+  const [hidePass1, setHidePass1] = useState(true);
+  const [hidePass2, setHidePass2] = useState(true);
 
   function openEmailVerificationScreen() {
     if (senha !== senha2) {
@@ -78,12 +33,7 @@ export default function RegistreCustomerScreen({ navigation }) {
       },
       userType: 'customer'
     })
->>>>>>> 9a60038 (add account verification via email):screens/initial/CustomerForm.js
   }
-
-const [hidePass1, setHidePass1] = useState(true);
-const [hidePass2, setHidePass2] = useState(true);
-
 
   return (
     <View style={styles.container}>
@@ -108,12 +58,11 @@ const [hidePass2, setHidePass2] = useState(true);
           placeholder="Sua Senha"
           secureTextEntry={hidePass1}
         />
-        <TouchableOpacity onPress={() => setHidePass1(!hidePass1)}>
-          <Ionicons name="eye" color="#9f9f9" size={25} style={styles.icon}/>
-        </TouchableOpacity>
+        <Pressable onPress={() => setHidePass1(!hidePass1)}>
+        <Ionicons name={ hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
       </View>
 
-<<<<<<< HEAD:screens/initial/RegistreCliente.js
       <View style={styles.inputArea}>
         <MCInput
           style={styles.input}
@@ -121,16 +70,15 @@ const [hidePass2, setHidePass2] = useState(true);
           placeholder="Repita a Senha"
           secureTextEntry={hidePass2}
         />
-        <TouchableOpacity onPress={() => setHidePass2(!hidePass2)}>
-          <Ionicons name="eye" color="#9f9f9" size={25} style={styles.icon} />
-        </TouchableOpacity>
+        <Pressable onPress={() => setHidePass2(!hidePass2)}>
+          <Ionicons name={ hidePass2 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
       </View>
 
       <MCButton
         style={styles.btn}
         size="medium"
-        isLoading={loading}
-        onClick={register}
+        onClick={openEmailVerificationScreen}
       >
         Registrar
       </MCButton>
@@ -140,9 +88,6 @@ const [hidePass2, setHidePass2] = useState(true);
         {"\n"}- Possuir uma letra maiúcula; {"\n"}- Possir uma letra minúscula;{" "}
         {"\n"}- Possuir um número.
       </Text>
-=======
-      <MCButton style={styles.btn} size='medium' onClick={openEmailVerificationScreen}>Registrar</MCButton>
->>>>>>> 9a60038 (add account verification via email):screens/initial/CustomerForm.js
     </View>
   );
 }
