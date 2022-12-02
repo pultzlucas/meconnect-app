@@ -7,29 +7,45 @@ import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
 import Ionicons from "react-native-vector-icons/Ionicons";
 import PasswordRequirements from '../../components/PasswordRequirements';
+import passwordIsInvalid from '../../src/validate-password';
 
 
 export default function RegistreCustomerScreen({ navigation }) {
-  const [nome, setNome] = useState(null)
-  const [senha, setSenha] = useState(null)
-  const [email, setEmail] = useState(null)
-  const [senha2, setSenha2] = useState(null)
+  const [nome, setNome] = useState('')
+  const [senha, setSenha] = useState('')
+  const [email, setEmail] = useState('')
+  const [senha2, setSenha2] = useState('')
 
   const [hidePass1, setHidePass1] = useState(true);
   const [hidePass2, setHidePass2] = useState(true);
 
   function openEmailVerificationScreen() {
+    if(!nome) {
+      ToastAndroid.show('Digite seu nome', ToastAndroid.SHORT)
+      return
+    }
+
+    if(!email) {
+      ToastAndroid.show('Digite seu email', ToastAndroid.SHORT)
+      return
+    }
+
+    const message = passwordIsInvalid(senha)
+    if (message) {
+      ToastAndroid.show(message, ToastAndroid.LONG)
+      return
+    }
+
     if (senha !== senha2) {
       ToastAndroid.show('Senha de confirmação incorreta', ToastAndroid.SHORT)
       return
     }
 
-    console.log('1')
-
     navigation.navigate('EmailVerificationCodeScreen', {
       user: {
         name: nome,
         password: senha,
+    
         email
       },
       userType: 'customer'
@@ -38,7 +54,7 @@ export default function RegistreCustomerScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextElement style={{fontWeight: 'bold', fontSize: 18, marginBottom: 20}}>Registre Sua Conta Cliente</TextElement>
+      <TextElement style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 20 }}>Registre Sua Conta Cliente</TextElement>
 
       <MCInput
         style={styles.input}

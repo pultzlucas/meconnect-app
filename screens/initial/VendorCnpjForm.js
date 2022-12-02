@@ -1,13 +1,12 @@
 import { Pressable, StyleSheet, ToastAndroid, TouchableOpacity, View } from "react-native";
-import { Input, Button, Text, ThemeContext } from "react-native-elements";
 import { TextElement } from "react-native-elements/dist/text/Text";
 import { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import Entypo from "react-native-vector-icons/Entypo";
 import MCButton from "../../components/MCButton";
 import MCInput from "../../components/MCInput";
 import { Colors } from "meconnect-sdk";
 import PasswordRequirements from "../../components/PasswordRequirements";
+import passwordIsInvalid from "../../src/validate-password";
 
 export default function RegistreEmpresa({ navigation }) {
   const [cnpj, setCnpj] = useState("");
@@ -17,20 +16,20 @@ export default function RegistreEmpresa({ navigation }) {
   function register() {
     requestCnpj()
       .then(vendor => {
+        const message = passwordIsInvalid(senha)
+        if(message) throw message
+
+        if (senha !== senha2) {
+          throw "Senha de confirmação incorreta";
+        }
+        
         vendor.password = senha
         navigation.navigate("ConfirmaEmpresa", { vendor })
       })
       .catch(err => {
-        console.log(err)
-        ToastAndroid.show('Ocorreu um erro ao verificar o CNPJ', ToastAndroid.SHORT)
+        ToastAndroid.show(String(err), ToastAndroid.SHORT)
       })
   }
-
-  // useEffect(() => {
-  //   setSenha('Luk5162020')
-  //   setSenha2('Luk5162020')
-  //   setCnpj('20612379000106')
-  // }, [])
 
   async function requestCnpj() {
     if (!cnpj) {
@@ -41,36 +40,36 @@ export default function RegistreEmpresa({ navigation }) {
       throw "Por favor insira a senha";
     }
 
-    if (senha !== senha2) {
-      throw "Senha de confirmação incorreta";
+    try {
+      
+      const cnpj = cnpj.match(/\d/g).join("")
+      const res = await fetch(`https://receitaws.com.br/v1/cnpj/${cnpj}`);
+      const json = await res.json();
+  
+      if (json.status === "ERROR") {
+        throw json.message;
+      }
+  
+      const {
+        email,
+        nome: name,
+        fantasia: commercial,
+        cep,
+        telefone: tel,
+        atividade_principal,
+      } = json;
+      return {
+        cnpj,
+        email,
+        name,
+        commercial,
+        cep,
+        tel,
+        description: atividade_principal[0].text,
+      };
+    } catch (error) {
+      throw 'Ocorreu um erro ao verificar o CNPJ'
     }
-
-    const res = await fetch(
-      `https://receitaws.com.br/v1/cnpj/${cnpj.match(/\d/g).join("")}`
-    );
-    const json = await res.json();
-
-    if (json.status === "ERROR") {
-      throw json.message;
-    }
-
-    const {
-      email,
-      nome: name,
-      fantasia: commercial,
-      cep,
-      telefone: tel,
-      atividade_principal,
-    } = json;
-    return {
-      cnpj,
-      email,
-      name,
-      commercial,
-      cep,
-      tel,
-      description: atividade_principal[0].text,
-    };
   }
 
   const [hidePass1, setHidePass1] = useState(true);
@@ -89,6 +88,18 @@ export default function RegistreEmpresa({ navigation }) {
       />
 
      <PasswordRequirements style={styles.passRequirements}/>
+
+     <View style={styles.inputArea}>
+        <MCInput
+          style={styles.input}
+          onInput={(value) => setSenha(value)}
+          placeholder="Sua Senha"
+          secureTextEntry={hidePass1}
+        />
+        <Pressable onPress={() => setHidePass1(!hidePass1)}>
+          <Ionicons name={hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
+      </View>
 
       <View style={styles.inputArea}>
         <MCInput
