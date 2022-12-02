@@ -1,8 +1,8 @@
-import { StyleSheet, ToastAndroid, View } from "react-native";
+import { StyleSheet, ToastAndroid, View, Pressable } from "react-native";
 import { Input, Button, Text, ThemeContext } from "react-native-elements";
 import { TextElement } from "react-native-elements/dist/text/Text";
 import { useEffect, useRef, useState } from "react";
-import { Api } from "meconnect-sdk";
+import { Api, Colors } from "meconnect-sdk";
 import MCButton from "../../components/MCButton";
 import MCInput from "../../components/MCInput";
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -53,7 +53,7 @@ export default function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Text>Digite as credenciais para acessar sua conta</Text>
+      <Text style={styles.title}>Digite as credenciais para acessar sua conta</Text>
 
       <MCInput
         style={styles.input}
@@ -68,9 +68,9 @@ export default function Login({ navigation }) {
           placeholder="Sua Senha"
           secureTextEntry={hidePass}
         />
-        <TouchableOpacity onPress={() => setHidePass(!hidePass)}>
-          <Ionicons name="eye" color="#9f9f9" size={25} style={styles.icon} />
-        </TouchableOpacity>
+        <Pressable onPress={() => setHidePass(!hidePass)}>
+          <Ionicons name={hidePass ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+        </Pressable>
       </View>
 
       <MCButton
@@ -92,19 +92,26 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  inputArea:{
-    flexDirection:'row',
+  title: {
+    marginBottom: 10,
+    fontWeight: 'bold',
+    fontSize: 18,
+    width: 300,
+    textAlign: 'center'
+  },
+  inputArea: {
+    flexDirection: 'row',
     alignItems: 'center'
-  },  
+  },
   icon: {
     position: 'absolute',
     right: 10,
     bottom: -20
   },
   input: {
-    marginTop: 12,
+    marginTop: 10,
   },
   btn: {
-    marginTop: 12,
+    marginTop: 20,
   },
 });

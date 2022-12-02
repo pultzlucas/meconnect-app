@@ -6,6 +6,7 @@ import { useState } from 'react';
 import MCButton from '../../components/MCButton';
 import MCInput from '../../components/MCInput';
 import Ionicons from "react-native-vector-icons/Ionicons";
+import PasswordRequirements from '../../components/PasswordRequirements';
 
 
 export default function RegistreCustomerScreen({ navigation }) {
@@ -13,7 +14,7 @@ export default function RegistreCustomerScreen({ navigation }) {
   const [senha, setSenha] = useState(null)
   const [email, setEmail] = useState(null)
   const [senha2, setSenha2] = useState(null)
-  
+
   const [hidePass1, setHidePass1] = useState(true);
   const [hidePass2, setHidePass2] = useState(true);
 
@@ -37,7 +38,7 @@ export default function RegistreCustomerScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextElement h20>Registre Sua Conta Cliente</TextElement>
+      <TextElement style={{fontWeight: 'bold', fontSize: 18, marginBottom: 20}}>Registre Sua Conta Cliente</TextElement>
 
       <MCInput
         style={styles.input}
@@ -51,6 +52,8 @@ export default function RegistreCustomerScreen({ navigation }) {
         placeholder="Email"
       />
 
+      <PasswordRequirements style={styles.passRequirements} />
+
       <View style={styles.inputArea}>
         <MCInput
           style={styles.input}
@@ -59,7 +62,7 @@ export default function RegistreCustomerScreen({ navigation }) {
           secureTextEntry={hidePass1}
         />
         <Pressable onPress={() => setHidePass1(!hidePass1)}>
-        <Ionicons name={ hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+          <Ionicons name={hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
         </Pressable>
       </View>
 
@@ -71,7 +74,7 @@ export default function RegistreCustomerScreen({ navigation }) {
           secureTextEntry={hidePass2}
         />
         <Pressable onPress={() => setHidePass2(!hidePass2)}>
-          <Ionicons name={ hidePass2 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
+          <Ionicons name={hidePass2 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
         </Pressable>
       </View>
 
@@ -82,12 +85,6 @@ export default function RegistreCustomerScreen({ navigation }) {
       >
         Registrar
       </MCButton>
-
-      <Text style={styles.senha}>
-        Sua senha precisa: {"\n"}
-        {"\n"}- Possuir uma letra maiúcula; {"\n"}- Possir uma letra minúscula;{" "}
-        {"\n"}- Possuir um número.
-      </Text>
     </View>
   );
 }
@@ -99,10 +96,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  inputArea:{
-    flexDirection:'row',
+  inputArea: {
+    flexDirection: 'row',
     alignItems: 'center'
-  },  
+  },
   icon: {
     position: 'absolute',
     right: 10,
@@ -112,14 +109,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   btn: {
-    marginTop: 10,
+    marginTop: 20,
     marginBottom: 50,
   },
-  senha: {
-    textAlign: "center",
-    borderColor: Colors.LightGray,
-    borderWidth: 7,
-    borderRadius: 10,
-    padding: 9,
+  passRequirements: {
+    width: 320,
+    marginTop: 10,
   },
 });

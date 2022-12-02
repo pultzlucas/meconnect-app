@@ -3,11 +3,11 @@ import { Input, Button, Text, ThemeContext } from "react-native-elements";
 import { TextElement } from "react-native-elements/dist/text/Text";
 import { useEffect, useState } from "react";
 import Ionicons from "react-native-vector-icons/Ionicons";
-
-
+import Entypo from "react-native-vector-icons/Entypo";
 import MCButton from "../../components/MCButton";
 import MCInput from "../../components/MCInput";
 import { Colors } from "meconnect-sdk";
+import PasswordRequirements from "../../components/PasswordRequirements";
 
 export default function RegistreEmpresa({ navigation }) {
   const [cnpj, setCnpj] = useState("");
@@ -78,27 +78,17 @@ export default function RegistreEmpresa({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextElement h20>Registre Sua Conta Empresarial</TextElement>
+      <TextElement style={{ fontWeight: 'bold', fontSize: 18, marginBottom: 20 }}>Registre Sua Conta Empresarial</TextElement>
 
       <MCInput
         style={styles.input}
         onInput={(value) => setCnpj(value)}
-        placeholder="CNPJ"
+        placeholder="Digite seu CNPJ"
         type="numeric"
         maxLength={14}
       />
 
-      <View style={styles.inputArea}>
-        <MCInput
-          style={styles.input}
-          onInput={(value) => setSenha(value)}
-          placeholder="Sua Senha"
-          secureTextEntry={hidePass1}
-        />
-        <Pressable onPress={() => setHidePass1(!hidePass1)}>
-          <Ionicons name={hidePass1 ? 'eye-off' : 'eye'} color={Colors.DarkGray} size={25} style={styles.icon} />
-        </Pressable>
-      </View>
+     <PasswordRequirements style={styles.passRequirements}/>
 
       <View style={styles.inputArea}>
         <MCInput
@@ -116,11 +106,6 @@ export default function RegistreEmpresa({ navigation }) {
         Registrar
       </MCButton>
 
-      <Text style={styles.senha}>
-        Sua senha precisa: {"\n"}
-        {"\n"}- Possuir uma letra maiúcula; {"\n"}- Possir uma letra minúscula;{" "}
-        {"\n"}- Possuir um número.
-      </Text>
     </View>
   );
 }
@@ -144,14 +129,11 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   btn: {
-    marginTop: 10,
+    marginTop: 20,
     margin: 50,
   },
-  senha: {
-    textAlign: "center",
-    borderColor: Colors.LightGray,
-    borderWidth: 7,
-    borderRadius: 10,
-    padding: 9,
+  passRequirements: {
+    width: 320,
+    marginTop: 10,
   },
 });
