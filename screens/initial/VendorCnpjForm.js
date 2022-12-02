@@ -26,11 +26,11 @@ export default function RegistreEmpresa({ navigation }) {
       })
   }
 
-  useEffect(() => {
-    setSenha('Luk5162020')
-    setSenha2('Luk5162020')
-    setCnpj('20612379000106')
-  }, [])
+  // useEffect(() => {
+  //   setSenha('Luk5162020')
+  //   setSenha2('Luk5162020')
+  //   setCnpj('20612379000106')
+  // }, [])
 
   async function requestCnpj() {
     if (!cnpj) {
