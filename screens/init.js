@@ -36,7 +36,7 @@ export default function InitPages({ navigation }) {
         registerForPushNotificationsAsync().then(async token => {
             await SecureStore.setItemAsync('DeviceToken', token)
         });
-
+        
         // This listener is fired whenever a notification is received while the app is foregrounded
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
         });
