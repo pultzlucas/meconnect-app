@@ -10,7 +10,7 @@ export default function RegisterCustomerScreen({ navigation, route: { params: { 
             name,
             password,
             email,
-            device_token: 'asdasd'
+            device_token: await SecureStore.getItemAsync('DeviceToken')
         })
 
         if (status === 200) {

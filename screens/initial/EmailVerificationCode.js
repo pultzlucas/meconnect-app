@@ -19,7 +19,6 @@ export default function EmailVerificationCodeScreen({ navigation, route: { param
     }
 
     useEffect(() => {
-        console.log(user)
         sendEmailVerificationCode().catch((err) => {
             console.log(err)
             ToastAndroid.show('Ocorreu um erro ao enviar o código de verificação', ToastAndroid.LONG)
@@ -41,7 +40,7 @@ export default function EmailVerificationCodeScreen({ navigation, route: { param
         <View style={styles.container}>
             <Text style={styles.title}>Um código de confirmação de email foi enviado para <Text style={styles.email}>{user.email}</Text></Text>
             <MCInput style={styles.codeInput} placeholder={'Insira o código'} maxLength={6} type='numeric' onInput={txt => setInputCode(txt)} />
-            <MCButton style={styles.btn} onClick={confirmVerificationCode} isLoading={isLoading}>Ok</MCButton>
+            <MCButton style={styles.btn} onClick={confirmVerificationCode} disabled={isLoading} isLoading={isLoading}>Ok</MCButton>
             <MCButton style={styles.btn} onClick={sendEmailVerificationCode} styleType='secondary'>Reenviar código</MCButton>
         </View>
     )

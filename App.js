@@ -17,9 +17,6 @@ import { Api } from 'meconnect-sdk';
 import EditProfile from './screens/vendor/edit-profile';
 import CreatePost from './screens/vendor/create-post';
 import CreateProduct from './screens/vendor/create-product';
-import * as Notifications from 'expo-notifications';
-import * as SecureStore from 'expo-secure-store'
-import { registerForPushNotificationsAsync } from './src/notification-token';
 import ProductScreen from './screens/ProductScreen';
 import PostScreen from './screens/PostScreen';
 
@@ -33,44 +30,12 @@ import RegisterVendorScreen from './screens/initial/RegisterVendor';
 
 const Stack = createNativeStackNavigator();
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: true,
-  }),
-});
-
 export default function App() {
-  // useEffect(() => {
-  //   // Api.config.setApiDomain('http://44.202.106.85/api')
-  //   // Api.config.setApiDomain('http://192.168.15.177:80/api')
-  //   // Api.token.unset()
-  // }, [])
-
-  const notificationListener = useRef();
-  const responseListener = useRef();
-
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      SecureStore.setItemAsync('DeviceToken', token)
-    });
-
-    // This listener is fired whenever a notification is received while the app is foregrounded
-    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-      console.log(notification);
-    });
-
-    // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-      console.log(response);
-    });
-
-    return () => {
-      Notifications.removeNotificationSubscription(notificationListener.current);
-      Notifications.removeNotificationSubscription(responseListener.current);
-    };
-  }, []);
+    // Api.config.setApiDomain('http://44.202.106.85/api')
+    Api.config.setApiDomain('http://192.168.15.177:80/api')
+    // Api.token.unset()
+  }, [])
 
   return (
     <NavigationContainer>
