@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "943445239122",
-    "project_id": "meconnect-56ff1",
-    "storage_bucket": "meconnect-56ff1.appspot.com"
+    "project_number": "366936409573",
+    "project_id": "meconnect-f7e5a",
+    "storage_bucket": "meconnect-f7e5a.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:943445239122:android:528a44a5c8c9150e99068b",
+        "mobilesdk_app_id": "1:366936409573:android:a3a5929279f7a7a99e1b0c",
         "android_client_info": {
           "package_name": "com.meconnect.meconnect"
         }
       },
       "oauth_client": [
         {
-          "client_id": "943445239122-2gcsu2sec8hkued1epk17gl1354i1vo1.apps.googleusercontent.com",
+          "client_id": "366936409573-q7kpgaveeqhl6563u6aq4d5fnehvbhs0.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBCD3UfZUTUv_5lmFZr1M2Zad_q383BNwI"
+          "current_key": "AIzaSyADDQDS1dpySXx4SaF8sziJsHYEiB22oHg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "943445239122-2gcsu2sec8hkued1epk17gl1354i1vo1.apps.googleusercontent.com",
+              "client_id": "366936409573-q7kpgaveeqhl6563u6aq4d5fnehvbhs0.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
