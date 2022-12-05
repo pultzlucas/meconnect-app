@@ -1,5 +1,6 @@
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { ToastAndroid } from 'react-native';
 
 export async function registerForPushNotificationsAsync() {
     let token = '';
@@ -11,11 +12,10 @@ export async function registerForPushNotificationsAsync() {
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
-        alert('Failed to get push token for push notification!');
+        ToastAndroid.show('Failed to get push token for push notification!', ToastAndroid.LONG);
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      // alert(token)
     } else {
       alert('Must use physical device for Push Notifications');
     }
@@ -28,6 +28,6 @@ export async function registerForPushNotificationsAsync() {
         lightColor: '#FF231F7C',
       });
     }
-  
+
     return token;
   }

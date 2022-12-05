@@ -34,7 +34,9 @@ export default function InitPages({ navigation }) {
 
     useEffect(() => {
         registerForPushNotificationsAsync().then(async token => {
-            await SecureStore.setItemAsync('DeviceToken', token)
+            if(token) {
+                await SecureStore.setItemAsync('DeviceToken', token)
+            }
         });
         
         // This listener is fired whenever a notification is received while the app is foregrounded
