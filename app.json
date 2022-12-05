@@ -28,13 +28,14 @@
       "package": "com.meconnect.meconnect",
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
-      "versionCode": 8
+      "versionCode": 9
     },
     "web": {
       "favicon": "./assets/adaptive-icon.png"
     },
     "notification": {
-      "icon": "./assets/adaptive-icon.png"
+      "icon": "./assets/notification-icon.png",
+      "color": "#ee8172"
     },
     "extra": {
       "eas": {
@@ -45,7 +46,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/adaptive-icon.png",
+          "icon": "./assets/notification-icon.png",
           "color": "#ffffff"
         }
       ]
