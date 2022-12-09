@@ -5,8 +5,11 @@ import { ToastAndroid } from "react-native";
 import OptionMenu from "react-native-option-menu";
 import Entypo from "react-native-vector-icons/Entypo";
 import Price from "./Price";
+import { useEffect } from "react";
+import { useState } from "react";
 
-export default function Product({ id, description, photo_url, price, onRemove, onEdit, options = false }) {
+export default function Product({ id, description, photo_url, price, onRemove, onEdit, options = false, vendorId }) {
+    const [vendor, setVendor] = useState(null)
 
     async function deleteProduct() {
         try {
@@ -20,22 +23,45 @@ export default function Product({ id, description, photo_url, price, onRemove, o
         }
     }
 
+    useEffect(() => {
+        if (vendorId) {
+            Api.db.vendors.get(vendorId).then(({ data: vendor }) => {
+                console.log(vendor)
+                setVendor(vendor)
+            })
+        }
+    }, [])
+
 
     return (
-        <View style={styles.container}>
-            {options && <View style={styles.prodHeader}>
-                <OptionMenu
-                    customButton={<Entypo name="dots-three-horizontal" size={20} color={Colors.DarkGray}></Entypo>}
-                    destructiveIndex={1}
-                    options={["Editar", "Delete", "Cancel"]}
-                    actions={[onEdit, deleteProduct]}>
-                </OptionMenu>
-            </View>}
-            <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
-            <Text style={styles.desc} numberOfLines={1}>
-                {description}
-            </Text>
-            <Price style={styles.val} value={price} />
+
+        <View style={[styles.container, { height: (vendorId && !vendor) ? 300 : 'auto' }]}>
+            {
+                ((vendorId && vendor) || !vendorId) && <>
+                    {options && <View style={styles.prodHeader}>
+                        <OptionMenu
+                            customButton={<Entypo name="dots-three-horizontal" size={20} color={Colors.DarkGray}></Entypo>}
+                            destructiveIndex={1}
+                            options={["Editar", "Delete", "Cancel"]}
+                            actions={[onEdit, deleteProduct]}>
+                        </OptionMenu>
+                    </View>}
+
+                    {
+                        (!options && vendorId && vendor) && <View style={styles.vendorContainer}>
+                            <Image style={styles.image} source={{ uri: vendor.photo_url }} />
+                            <Text style={styles.title}>{vendor.commercial}</Text>
+                        </View>
+                    }
+
+                    <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
+                    <Text style={styles.desc} numberOfLines={1}>
+                        {description}
+                    </Text>
+                    <Price style={styles.val} value={price} />
+                </>
+            }
+
         </View>
     )
 }
@@ -71,5 +97,28 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: "bold",
         paddingTop: 6,
+    },
+    vendorContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10,
+        marginRight: 'auto'
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333333",
+    },
+    desc: {
+        fontSize: 14,
+        color: "#333333",
+        marginTop: 5,
+    },
+    image: {
+        width: 30,
+        height: 30,
+        borderRadius: 100,
+        marginRight: 10,
     },
 })

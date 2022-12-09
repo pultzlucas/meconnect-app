@@ -8,23 +8,26 @@ export default function SearchProducts({ navigation }) {
   const [products, setProducts] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
-  const renderItem = ({ item: { id, photo_url, description, price } }) => (
+  const [showPlaceholder, setShowPlaceholder] = useState(false)
+  const renderItem = ({ item: { id, photo_url, description, price, vendor_id } }) => (
     <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
       <Product
         id={id}
         description={description}
         photo_url={photo_url}
         price={price}
+        vendorId={vendor_id}
         onEdit={() => navigation.navigate('EditProduct', { id })}
       />
     </TouchableOpacity>
-  );
+  )
 
   function refreshList(txt) {
     setIsLoading(true)
     setProducts([])
-    Api.db.products.getByDescription(txt).then(prods => {
-      console.log(prods)
+    setShowPlaceholder(false)
+    Api.db.products.getByDescription(txt).then(({data: prods}) => {
+      if(prods.length === 0) setShowPlaceholder(true)
       setProducts(prods)
       setIsLoading(false)
     }).catch(() => {
@@ -37,7 +40,7 @@ export default function SearchProducts({ navigation }) {
       <StatusBar backgroundColor={Colors.DarkOrange} />
       <TopSearch onChangeText={refreshList} />
 
-      {(products.message || products.length === 0) && <Text style={styles.placeholder}>Nenhum produto encontrado</Text>}
+      {showPlaceholder && <Text style={styles.placeholder}>Nenhum produto encontrado</Text>}
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
 

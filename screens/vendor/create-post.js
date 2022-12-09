@@ -14,6 +14,8 @@ import * as SecureStore from 'expo-secure-store'
 import Splash from "../../components/Splash"
 import { ResizeMode, Video } from "expo-av"
 
+import * as FileSystem from 'expo-file-system';
+
 export default function CreatePost({ navigation }) {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
@@ -35,6 +37,13 @@ export default function CreatePost({ navigation }) {
         const video = await Media.pickVideo({
             aspect: [3, 3]
         })
+
+        const info = await FileSystem.getInfoAsync(video.uri)
+
+        if(info.size > 10000000) {
+            ToastAndroid.show('Arquivo de vídeo é muito grande para fazer o upload', ToastAndroid.LONG)
+            return
+        }
 
         setVideoUrl(video.uri)
         setImageUrl('')
