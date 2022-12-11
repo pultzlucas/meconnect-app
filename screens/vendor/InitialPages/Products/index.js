@@ -11,7 +11,7 @@ import MCButton from '../../../../components/MCButton';
 import getFetchDataErrorMessage from '../../../../src/get-fetch-data-error-msg';
 import Splash from '../../../../components/Splash';
 
-export default function Products({ navigation, route: { params: { vendorId } } }) {  
+export default function Products({ navigation, route: { params: { vendorId } } }) {
   const [isLoading, setIsLoading] = useState(false)
   const [refreshing, setRefreshing] = useState(false);
   const [products, setProducts] = useState([])
@@ -44,7 +44,7 @@ export default function Products({ navigation, route: { params: { vendorId } } }
   }
 
   const renderItem = ({ item: { id, description, photo_url, price } }) => {
-    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
+    return (
       <Product
         id={id}
         description={description}
@@ -53,8 +53,9 @@ export default function Products({ navigation, route: { params: { vendorId } } }
         options={true}
         onEdit={() => navigation.navigate('EditProduct', { id })}
         onRemove={removeProdFromList}
+        navigation={navigation}
       />
-    </TouchableOpacity>
+    )
   };
 
   const wait = (timeout) => {
@@ -90,7 +91,7 @@ export default function Products({ navigation, route: { params: { vendorId } } }
         data={products}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        style={{ paddingTop: 10}}
+        style={{ paddingTop: 10 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -99,7 +100,7 @@ export default function Products({ navigation, route: { params: { vendorId } } }
         }
       />
 
-      <Splash show={showSplash}/>
+      <Splash show={showSplash} />
     </View>
   );
 }

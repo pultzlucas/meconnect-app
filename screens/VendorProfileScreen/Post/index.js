@@ -14,16 +14,18 @@ import { Api, Colors } from "meconnect-sdk";
 import Post from '../../../components/Post'
 
 export default function Posts({ navigation, route }) {
-  const renderItem = ({ item: { id, title, content, media_url, created_at, media_type } }) => (
-    <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { id })}>
-      <Post
-        title={title}
-        content={content}
-        media_url={media_url}
-        media_type={media_type}
-        created_at={created_at}
-      />
-    </TouchableOpacity>
+  const renderItem = ({ item: { id, title, content, media_url, created_at, media_type, likes } }) => (
+    <Post
+      id={id}
+      title={title}
+      content={content}
+      media_url={media_url}
+      media_type={media_type}
+      created_at={created_at}
+      likes={likes}
+      interativeBar={true}
+      navigation={navigation}
+    />
   );
 
   const [posts, setPosts] = useState([]);
@@ -31,8 +33,8 @@ export default function Posts({ navigation, route }) {
 
   useEffect(() => {
     setShowPlaceholder(false)
-    Api.db.vendors.getPosts(route.params.vendor_id).then(({data: posts}) => {
-      if(posts.length === 0) {
+    Api.db.vendors.getPosts(route.params.vendor_id).then(({ data: posts }) => {
+      if (posts.length === 0) {
         setShowPlaceholder(true)
       }
       setPosts(posts)
@@ -43,13 +45,13 @@ export default function Posts({ navigation, route }) {
 
   const Placeholder = () => {
     return (
-        <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum post</Text>
+      <Text style={styles.placeholder}>Esta empresa ainda não publicou nenhum post</Text>
     )
   }
 
   return (
     <View style={styles.container}>
-       {showPlaceholder && <Placeholder/>}
+      {showPlaceholder && <Placeholder />}
       <FlatList
         data={posts}
         renderItem={renderItem}

@@ -68,21 +68,22 @@ export default function Posts({ navigation }) {
   }
 
   const renderItem = ({
-    item: { id, title, content, media_url, created_at, media_type },
+    item: { id, title, content, media_url, created_at, media_type, likes },
   }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { id })}>
-        <Post
-          id={id}
-          title={title}
-          content={content}
-          media_url={media_url}
-          media_type={media_type}
-          created_at={created_at}
-          onRemove={removePostFromList}
-          options={true}
-        />
-      </TouchableOpacity>
+      <Post
+        id={id}
+        title={title}
+        content={content}
+        media_url={media_url}
+        media_type={media_type}
+        created_at={created_at}
+        onRemove={removePostFromList}
+        options={true}
+        likes={likes}
+        interativeBarStatistics={true}
+        navigation={navigation}
+      />
     );
   };
 

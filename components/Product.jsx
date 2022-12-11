@@ -8,7 +8,17 @@ import Price from "./Price";
 import { useEffect } from "react";
 import { useState } from "react";
 
-export default function Product({ id, description, photo_url, price, onRemove, onEdit, options = false, vendorId }) {
+export default function Product({
+    id,
+    description,
+    photo_url,
+    price,
+    onRemove,
+    onEdit,
+    options = false,
+    vendorId,
+    navigation
+}) {
     const [vendor, setVendor] = useState(null)
 
     async function deleteProduct() {
@@ -46,7 +56,6 @@ export default function Product({ id, description, photo_url, price, onRemove, o
                             actions={[onEdit, deleteProduct]}>
                         </OptionMenu>
                     </View>}
-
                     {
                         (!options && vendorId && vendor) && <View style={styles.vendorContainer}>
                             <Image style={styles.image} source={{ uri: vendor.photo_url }} />
@@ -54,11 +63,14 @@ export default function Product({ id, description, photo_url, price, onRemove, o
                         </View>
                     }
 
-                    <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
-                    <Text style={styles.desc} numberOfLines={1}>
-                        {description}
-                    </Text>
-                    <Price style={styles.val} value={price} />
+                    <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}
+                        style={{ width: '100%', alignItems: 'center' }}>
+                        <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
+                        <Text style={styles.desc} numberOfLines={1}>
+                            {description}
+                        </Text>
+                        <Price style={styles.val} value={price} />
+                    </TouchableOpacity>
                 </>
             }
 

@@ -24,11 +24,6 @@ export default function Conection({ navigation }) {
   const [refreshing, setRefreshing] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
 
-  async function fetchVendors() {
-    const { data: connections } = await Api.db.customers.getConnections(await SecureStore.getItemAsync('CustomerId'))
-    return connections
-  }
-
   useEffect(() => {
     SecureStore.getItemAsync('CustomerId').then(id => {
       Api.db.customers.get(id).then(({ data }) => {

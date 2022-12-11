@@ -17,7 +17,7 @@ export default function Login({ navigation }) {
 
   async function login() {
     setLoading(true);
-
+    
     const { data, status } = await Api.auth.login({
       email: email,
       password: password,
@@ -27,6 +27,7 @@ export default function Login({ navigation }) {
     if (status === 200) {
       await Api.token.set(data.token);
       await SecureStore.setItemAsync("UserType", data.user_type);
+      await SecureStore.setItemAsync("UserId", String(data.user_id));
 
       if (data.user_type === "customer") {
         await SecureStore.setItemAsync("CustomerId", String(data.id));
