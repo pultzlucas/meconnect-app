@@ -4,15 +4,36 @@ import * as SecureStore from 'expo-secure-store'
 import { Colors } from "meconnect-sdk"
 import Date from "./Date"
 
-export default function VendorProfile({ id, created_at, event, message, vendor }) {
-    return (
-        <View style={styles.item} key={id}>
+export default function Notification({ created_at, message, vendor, user, event }) {
+
+    function CustomerNotification() {
+        return <>
             <View style={styles.vendorContainer}>
                 <Image style={styles.image} source={{ uri: vendor.photo_url }} />
                 <Text style={styles.title}>{vendor.commercial}</Text>
                 <Date style={styles.created_at} date={created_at} />
             </View>
-            <Text style={styles.desc}>{message}</Text>
+            <Text style={styles.message}>{message}</Text>
+        </>
+    }
+
+    function VendorNotification() {
+        return <>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.userEmail}>{user.email}</Text>
+                <Date style={styles.created_at} date={created_at} />
+            </View>
+            <View style={styles.messageContainer}>
+                <Text style={[styles.message, { fontWeight: 'bold' }]}>{user.name}</Text>
+                <Text style={styles.message}>{String(message).replace(user.name, '')}</Text>
+            </View>
+        </>
+    }
+
+    return (
+        <View style={styles.item}>
+            {(event === 'new_post' || event === 'new_product') && <CustomerNotification />}
+            {(event === 'post_like' || event === 'new_connection') && <VendorNotification />}
         </View>
     )
 }
@@ -37,17 +58,16 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#333333",
     },
-    desc: {
-        fontSize: 14,
-        color: "#333333",
+    messageContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
         marginTop: 5,
+        flexWrap: 'wrap'
     },
-    event: {
-        color: Colors.Black,
-        fontSize: 12,
-        textAlign: "right",
-        fontWeight: "bold",
-        paddingBottom: 0,
+    message: {
+        lineHeight: 14,
+        fontSize: 14,
+        marginTop: 10,
     },
     created_at: {
         fontSize: 12,
@@ -67,4 +87,9 @@ const styles = StyleSheet.create({
         marginRight: 10,
         borderWidth: 2,
     },
+    userEmail: {
+        fontSize: 12,
+        color: Colors.DarkGray,
+        fontStyle: 'italic',
+    }
 })

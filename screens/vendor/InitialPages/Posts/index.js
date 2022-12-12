@@ -70,6 +70,7 @@ export default function Posts({ navigation }) {
   const renderItem = ({
     item: { id, title, content, media_url, created_at, media_type, likes },
   }) => {
+    console.log(likes)
     return (
       <Post
         id={id}

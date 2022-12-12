@@ -37,34 +37,30 @@ export default function ProductScreen({ navigation, route: { params: { id: postI
                 </HeaderOption>
             </MCHeader>
             {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
+
             {
                 !isLoading && <ScrollView contentContainerStyle={styles.item}>
-                    {
-                        !isLoading &&
-                        <>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.title}>{post.title}</Text>
-                            </View>
-                            {
-                                post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} resizeMode='stretch'/> : <></>
-                            }
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>{post.title}</Text>
+                    </View>
 
-                            {
-                                post.media_type === 'video' && post.media_url ?
-                                    <Video
-                                        style={styles.media}
-                                        source={{ uri: post.media_url }}
-                                        useNativeControls
-                                        resizeMode={ResizeMode.STRETCH}
-                                        isLooping
-                                    /> : <></>
-                            }
-                            {post.content && <Text style={styles.content}>{post.content}</Text>}
-                            <View style={styles.textContainer}>
-                                <Date date={post.created_at} style={styles.createdAt}>{post.created_at}</Date>
-                            </View>
-                        </>
+                    <Date date={post.created_at} style={styles.createdAt}>{post.created_at}</Date>
+
+                    {
+                        post.media_type === 'image' && post.media_url ? <Image style={styles.media} source={{ uri: post.media_url }} resizeMode='stretch' /> : <></>
                     }
+
+                    {
+                        post.media_type === 'video' && post.media_url ?
+                            <Video
+                                style={styles.media}
+                                source={{ uri: post.media_url }}
+                                useNativeControls
+                                resizeMode={ResizeMode.STRETCH}
+                                isLooping
+                            /> : <></>
+                    }
+                    {post.content && <Text style={styles.content}>{post.content}</Text>}
                 </ScrollView>
             }
 
@@ -84,10 +80,8 @@ const styles = StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 20,
         borderRadius: 8,
-        marginTop: 10,
-        marginHorizontal: 10,
-        display: 'flex',
-        alignItems: 'center',
+        marginVertical: 8,
+        marginHorizontal: 16,
     },
     media: {
         width: 300,
@@ -104,19 +98,10 @@ const styles = StyleSheet.create({
     },
     createdAt: {
         color: Colors.DarkGray,
-        textAlign: 'right',
-        width: 340,
         fontSize: 12,
-        marginTop: 10,
-        paddingRight: 30,
-    },
-    textContainer: {
-        width: '100%',
     },
     content: {
         marginTop: 10,
-        width: 340,
         lineHeight: 20,
-        paddingHorizontal: 20,
     }
 });

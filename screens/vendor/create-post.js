@@ -75,17 +75,21 @@ export default function CreatePost({ navigation }) {
 
             let saveMedia = 0
 
+
+            
             if (imageUrl) {
                 const { status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
                 saveMedia = status
             }
-
+            
             if (videoUrl) {
                 const { status } = await Api.db.posts.setVideo(resData.post.id, videoUrl)
                 saveMedia = status
             }
+            
+            console.log(saveData)
 
-            if (saveData === 200 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
+            if (saveData === 201 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
                 ToastAndroid.show('Post foi publicado', ToastAndroid.SHORT)
                 navigation.navigate('VendorScreens')
                 setShowSplash(false)

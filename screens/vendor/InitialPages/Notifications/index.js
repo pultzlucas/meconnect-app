@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, ActivityIndicator, FlatList, RefreshControl, ToastAndroid } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar, SafeAreaView, ActivityIndicator, FlatList, RefreshControl } from "react-native";
 import MCHeader from "../../../../components/MCHeader";
 import NotificationComponent from "../../../../components/Notification";
 import { Api, Colors } from "meconnect-sdk";
@@ -22,15 +22,27 @@ export default function Notification({ navigation }) {
     setNotifications([])
     setShowPlaceholder(false)
 
-    SecureStore.getItemAsync('CustomerId').then(customerId => {
-      Api.db.customers.getNotifications(customerId).then(({ data, status }) => {
-        setIsLoading(false)
-        if (data.length === 0) setShowPlaceholder(true)
-        if (status === 200) {
-          setNotifications(data)
+    SecureStore.getItemAsync('VendorId').then(vendorId => {
+      fetch(`http://192.168.15.177:80/api/users/vendor/${vendorId}/notifications`, {
+        headers: {
+          'Authorization': 'Bearer 1|L5zxqScJOu0wiFfb5enlZTbBmLcRpuXb9clURxYu'
         }
-      }).catch(fetchDataError)
+      })
+        .then(async res => ({
+          status: res.status,
+          data: await res.json()
+        }))
+        .then(({ data, status }) => {
+          console.log(data)
+          setIsLoading(false)
+          if (data.length === 0) setShowPlaceholder(true)
+          if (status === 200) {
+            setNotifications(data)
+          }
+        })
+        .catch(fetchDataError)
     }).catch(fetchDataError)
+
   }, [refreshing, useIsFocused()])
 
   const wait = (timeout) => {
@@ -50,14 +62,14 @@ export default function Notification({ navigation }) {
   }
 
 
-  const renderItem = ({ item: { created_at, event, redirect_id,  message, vendor } }) => {
+  const renderItem = ({ item: { created_at, event, redirect_id, message, user } }) => {
     return (
       <TouchableOpacity onPress={() => redirectToScreen(event, redirect_id)}>
         <NotificationComponent
           created_at={created_at}
           event={event}
           message={message}
-          vendor={vendor}
+          user={user}
         />
       </TouchableOpacity>
     )
@@ -69,7 +81,7 @@ export default function Notification({ navigation }) {
   )
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={Colors.DarkOrange}/>
+      <StatusBar backgroundColor={Colors.DarkOrange} />
       <MCHeader title={"Notificações"}></MCHeader>
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}

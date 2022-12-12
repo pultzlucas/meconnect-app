@@ -15,6 +15,7 @@ import { Api, Colors } from "meconnect-sdk";
 import { Alert, Image, NativeModules } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as SecureStore from 'expo-secure-store'
+import Notifications from "./Notifications";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -24,7 +25,7 @@ export default function Routes() {
 
   useEffect(() => {
     console.log(vendorId)
-    if(!vendorId) {
+    if (!vendorId) {
       SecureStore.getItemAsync('VendorId').then(id => {
         setVendorId(id)
       })
@@ -85,6 +86,16 @@ export default function Routes() {
             options={{
               tabBarIcon: ({ color }) => (
                 <Ionicons name="compass" size={25} color={color} />
+              ),
+            }}
+          />
+
+          <Tab.Screen
+            name="Notificações"
+            component={Notifications}
+            options={{
+              tabBarIcon: ({ color }) => (
+                <Ionicons name="notifications" size={25} color={color} />
               ),
             }}
           />

@@ -17,7 +17,7 @@ export default function RegisterVendorScreen({ navigation, route: { params: { ve
             name,
             password,
             tel,
-            device_token: 'asd'
+            device_token: await SecureStore.getItemAsync('DeviceToken')
         })
 
         if (status === 200) {
