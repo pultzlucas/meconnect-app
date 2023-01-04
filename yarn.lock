@@ -4889,10 +4889,10 @@ md5hex@^1.0.0:
   resolved "https://registry.yarnpkg.com/md5hex/-/md5hex-1.0.0.tgz#ed74b477a2ee9369f75efee2f08d5915e52a42e8"
   integrity sha512-c2YOUbp33+6thdCUi34xIyOU/a7bvGKj/3DB1iaPMTuPHf/Q2d5s4sn1FaCOO43XkXggnb08y5W2PU8UNYNLKQ==
 
-meconnect-sdk@^1.5.1:
-  version "1.5.1"
-  resolved "https://registry.yarnpkg.com/meconnect-sdk/-/meconnect-sdk-1.5.1.tgz#b200f35abad80d191e1ad4ca5fbc742674852bdd"
-  integrity sha512-ZxDKJ2PAMHunPqB0kGfYzLKNMWG9MTpfBXp6SYMjKNfI+so51orwdC9QN8fU5GBBjrLJcnhZJZmp95m9pKHj/Q==
+meconnect-sdk@^1.5.4:
+  version "1.5.4"
+  resolved "https://registry.yarnpkg.com/meconnect-sdk/-/meconnect-sdk-1.5.4.tgz#5fbb143d524f158684ce159f6e148483c1aa1748"
+  integrity sha512-mR7QtdF5phbVnK6IY4BXQF3IXwfHeEkD/QZ6kfNwYlXAjLdaB8WVrQ09GpK+FcgNsegZxLajdBdSU12n/G7Ung==
   dependencies:
     "@react-native-async-storage/async-storage" "^1.17.7"
     expo-image-picker "^13.1.1"

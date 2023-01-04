@@ -68,16 +68,15 @@ export default function Posts({ navigation }) {
   }
 
   const renderItem = ({
-    item: { id, title, content, media_url, created_at, media_type, likes },
+    item: { id, title, content, images, videos, created_at, likes },
   }) => {
-    console.log(likes)
     return (
       <Post
         id={id}
         title={title}
         content={content}
-        media_url={media_url}
-        media_type={media_type}
+        images={images}
+        videos={videos}
         created_at={created_at}
         onRemove={removePostFromList}
         options={true}

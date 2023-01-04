@@ -4,7 +4,7 @@ import * as SecureStore from 'expo-secure-store'
 import { Colors } from "meconnect-sdk"
 import Date from "./Date"
 
-export default function Notification({ created_at, message, vendor, user, event }) {
+export default function Notification({ created_at, message, vendor, user, event, view }) {
 
     function CustomerNotification() {
         return <>
@@ -32,6 +32,9 @@ export default function Notification({ created_at, message, vendor, user, event 
 
     return (
         <View style={styles.item}>
+            {
+                view === 0 && <View style={styles.unseenMark}></View>
+            }
             {(event === 'new_post' || event === 'new_product') && <CustomerNotification />}
             {(event === 'post_like' || event === 'new_connection') && <VendorNotification />}
         </View>
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
         borderRadius: 8,
         marginVertical: 5,
-        marginHorizontal: 12,
+        marginHorizontal: 6,
     },
     vendorContainer: {
         display: 'flex',
@@ -91,5 +94,13 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: Colors.DarkGray,
         fontStyle: 'italic',
+    },
+    unseenMark: {
+        width: 14,
+        height: 14,
+        backgroundColor: 'red',
+        borderRadius: 10,
+        position: 'absolute',
+        // right: 0,
     }
 })

@@ -14,13 +14,13 @@ import { Api, Colors } from "meconnect-sdk";
 import Post from '../../../components/Post'
 
 export default function Posts({ navigation, route }) {
-  const renderItem = ({ item: { id, title, content, media_url, created_at, media_type, likes } }) => (
+  const renderItem = ({ item: { id, title, content, created_at, videos, images, likes } }) => (
     <Post
       id={id}
       title={title}
       content={content}
-      media_url={media_url}
-      media_type={media_type}
+      images={images}
+      videos={videos}
       created_at={created_at}
       likes={likes}
       interativeBar={true}
@@ -33,7 +33,11 @@ export default function Posts({ navigation, route }) {
 
   useEffect(() => {
     setShowPlaceholder(false)
-    Api.db.vendors.getPosts(route.params.vendor_id).then(({ data: posts }) => {
+    Api.db.vendors.getPosts(route.params.vendor_id).then(({ data: posts, status }) => {
+      if(status !== 200) {
+        ToastAndroid.show(posts.message, ToastAndroid.LONG)
+      }
+
       if (posts.length === 0) {
         setShowPlaceholder(true)
       }

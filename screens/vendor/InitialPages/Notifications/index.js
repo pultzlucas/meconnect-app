@@ -6,6 +6,7 @@ import { Api, Colors } from "meconnect-sdk";
 import { useCallback } from "react";
 import * as SecureStore from 'expo-secure-store'
 import { useIsFocused } from "@react-navigation/native";
+import HeaderOption from "../../../../components/HeaderOption";
 
 export default function Notification({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
@@ -23,24 +24,11 @@ export default function Notification({ navigation }) {
     setShowPlaceholder(false)
 
     SecureStore.getItemAsync('VendorId').then(vendorId => {
-      fetch(`http://192.168.15.177:80/api/users/vendor/${vendorId}/notifications`, {
-        headers: {
-          'Authorization': 'Bearer 1|L5zxqScJOu0wiFfb5enlZTbBmLcRpuXb9clURxYu'
-        }
-      })
-        .then(async res => ({
-          status: res.status,
-          data: await res.json()
-        }))
-        .then(({ data, status }) => {
-          console.log(data)
-          setIsLoading(false)
-          if (data.length === 0) setShowPlaceholder(true)
-          if (status === 200) {
-            setNotifications(data)
-          }
-        })
-        .catch(fetchDataError)
+      Api.db.vendors.getNotifications(vendorId).then(({ data, status }) => {
+        setIsLoading(false)
+        if (data.length === 0) setShowPlaceholder(true)
+        if (status === 200) setNotifications(data)
+      }).catch(fetchDataError)
     }).catch(fetchDataError)
 
   }, [refreshing, useIsFocused()])
@@ -55,14 +43,20 @@ export default function Notification({ navigation }) {
   }, []);
 
   function redirectToScreen(event, redirectId) {
-    const screen = event === 'new_post' ? 'PostScreen' : 'ProductScreen'
-    navigation.navigate(screen, {
-      id: redirectId
-    })
+    if (event === 'post_like') {
+      navigation.navigate('PostScreen', {
+        id: redirectId
+      })
+    }
+
+    if (event === 'new_connection') {
+      navigation.navigate('VendorScreens', { screen: 'Perfil' })
+    }
+
   }
 
 
-  const renderItem = ({ item: { created_at, event, redirect_id, message, user } }) => {
+  const renderItem = ({ item: { created_at, event, redirect_id, message, user, view } }) => {
     return (
       <TouchableOpacity onPress={() => redirectToScreen(event, redirect_id)}>
         <NotificationComponent
@@ -70,6 +64,7 @@ export default function Notification({ navigation }) {
           event={event}
           message={message}
           user={user}
+          view={view}
         />
       </TouchableOpacity>
     )
@@ -85,7 +80,7 @@ export default function Notification({ navigation }) {
       <MCHeader title={"Notificações"}></MCHeader>
 
       {isLoading && <ActivityIndicator style={{ marginTop: 20 }} size="large" color={Colors.DarkOrange} />}
-      {(showPlaceholder && notifications.length === 0) && <Placeholder />}
+      {showPlaceholder && <Placeholder />}
 
       <FlatList
         data={notifications}

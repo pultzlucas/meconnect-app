@@ -14,22 +14,23 @@ export default function Products({ navigation, route }) {
   const [products, setProducts] = useState([])
   const [showPlaceholder, setShowPlaceholder] = useState(false)
 
-  const renderItem = ({ item: { id, photo_url, description, price } }) => {
-    return <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
-      <Product
-        id={id}
-        description={description}
-        photo_url={photo_url}
-        price={price}
-        onEdit={() => navigation.navigate('EditProduct', { id })}
-      />
-    </TouchableOpacity>
-
+  const renderItem = ({ item: { id, images, description, price } }) => {
+    return <Product
+      id={id}
+      description={description}
+      photo_url={images[0]}
+      price={price}
+      navigation={navigation}
+      onEdit={() => navigation.navigate('EditProduct', { id })}
+    />
   }
 
   useEffect(() => {
     setShowPlaceholder(false)
-    Api.db.vendors.getProducts(route.params.vendor_id).then(({data: prods}) => {
+    Api.db.vendors.getProducts(route.params.vendor_id).then(({ data: prods, status }) => {
+      if (status !== 200) {
+        ToastAndroid.show(prods.message, ToastAndroid.LONG)
+      }
       if (prods.length == 0) setShowPlaceholder(true)
       setProducts(prods)
     }).catch(() => {

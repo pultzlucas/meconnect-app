@@ -9,14 +9,15 @@ export default function SearchProducts({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
 
   const [showPlaceholder, setShowPlaceholder] = useState(false)
-  const renderItem = ({ item: { id, photo_url, description, price, vendor_id } }) => (
+  const renderItem = ({ item: { id, images, description, price, vendor_id } }) => (
     <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}>
       <Product
         id={id}
         description={description}
-        photo_url={photo_url}
+        photo_url={images[0]}
         price={price}
         vendorId={vendor_id}
+        navigation={navigation}
         onEdit={() => navigation.navigate('EditProduct', { id })}
       />
     </TouchableOpacity>

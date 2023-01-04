@@ -27,6 +27,7 @@ import DisconnectedScreen from './screens/DisconnectedScreen';
 import EmailVerificationCodeScreen from './screens/initial/EmailVerificationCode';
 import RegisterClientScreen from './screens/initial/RegisterCustomer';
 import RegisterVendorScreen from './screens/initial/RegisterVendor';
+import ImageView from './screens/ImageView';
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,7 @@ export default function App() {
         <Stack.Screen name="VendorProfileScreen" component={VendorProfileScreen} />
         <Stack.Screen name="DisconnectedScreen" component={DisconnectedScreen} />
         <Stack.Screen name="EmailVerificationCodeScreen" component={EmailVerificationCodeScreen} />
+        <Stack.Screen name="ImageView" component={ImageView} />
 
         {/* Customer Screens */}
         <Stack.Screen name="CustomerScreens" component={CustomerScreens} />

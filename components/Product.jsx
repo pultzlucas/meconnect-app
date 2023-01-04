@@ -36,7 +36,6 @@ export default function Product({
     useEffect(() => {
         if (vendorId) {
             Api.db.vendors.get(vendorId).then(({ data: vendor }) => {
-                console.log(vendor)
                 setVendor(vendor)
             })
         }
@@ -52,7 +51,7 @@ export default function Product({
                         <OptionMenu
                             customButton={<Entypo name="dots-three-horizontal" size={20} color={Colors.DarkGray}></Entypo>}
                             destructiveIndex={1}
-                            options={["Editar", "Delete", "Cancel"]}
+                            options={["Editar", "Deletar", "Cancel"]}
                             actions={[onEdit, deleteProduct]}>
                         </OptionMenu>
                     </View>}
@@ -63,13 +62,10 @@ export default function Product({
                         </View>
                     }
 
-                    <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })}
-                        style={{ width: '100%', alignItems: 'center' }}>
+                    <TouchableOpacity onPress={() => navigation.navigate('ProductScreen', { id })} style={{ width: '100%'}}>
                         <Image style={styles.prodImg} source={{ uri: photo_url }} resizeMode='stretch' />
-                        <Text style={styles.desc} numberOfLines={1}>
-                            {description}
-                        </Text>
-                        <Price style={styles.val} value={price} />
+                        <Text style={styles.description}>{description}</Text>
+                        <Price style={styles.price} value={price} />
                     </TouchableOpacity>
                 </>
             }
@@ -86,7 +82,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
         paddingBottom: 14,
         borderRadius: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 10,
         marginBottom: 10
     },
     prodHeader: {
@@ -100,15 +96,15 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         marginBottom: 10,
     },
-    desc: {
-        fontSize: 15,
+    description: {
+        fontSize: 16,
         marginTop: 10,
-        marginBottom: 0,
     },
-    val: {
-        fontSize: 15,
+    price: {
+        fontSize: 18,
         fontWeight: "bold",
-        paddingTop: 6,
+        marginTop: 8,
+        color: Colors.DarkOrange
     },
     vendorContainer: {
         display: 'flex',

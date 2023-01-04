@@ -28,7 +28,7 @@
       "package": "com.meconnect.meconnect",
       "useNextNotificationsApi": true,
       "googleServicesFile": "./google-services.json",
-      "versionCode": 11
+      "versionCode": 12
     },
     "web": {
       "favicon": "./assets/adaptive-icon.png"

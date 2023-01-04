@@ -43,12 +43,12 @@ export default function Products({ navigation, route: { params: { vendorId } } }
     if (prodsFiltered.length === 0) setShowPlaceholder(true)
   }
 
-  const renderItem = ({ item: { id, description, photo_url, price } }) => {
+  const renderItem = ({ item: { id, description, images, price } }) => {
     return (
       <Product
         id={id}
         description={description}
-        photo_url={photo_url}
+        photo_url={images[0]}
         price={price}
         options={true}
         onEdit={() => navigation.navigate('EditProduct', { id })}

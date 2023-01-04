@@ -70,12 +70,9 @@ export default function CreatePost({ navigation }) {
                 title,
                 content
             })
-
             const resData = data
 
             let saveMedia = 0
-
-
             
             if (imageUrl) {
                 const { status } = await Api.db.posts.setImage(resData.post.id, imageUrl)
@@ -87,9 +84,10 @@ export default function CreatePost({ navigation }) {
                 saveMedia = status
             }
             
-            console.log(saveData)
+            console.log(saveData === 201)
 
-            if (saveData === 201 && (saveMedia === 200 || !imageUrl || !videoUrl)) {
+
+            if ((saveData === 201 || saveData === 200) && (saveMedia === 200 || !imageUrl || !videoUrl)) {
                 ToastAndroid.show('Post foi publicado', ToastAndroid.SHORT)
                 navigation.navigate('VendorScreens')
                 setShowSplash(false)
@@ -98,6 +96,7 @@ export default function CreatePost({ navigation }) {
                 ToastAndroid.show('Ocorreu um erro ao publicar o post', ToastAndroid.LONG)
             }
         } catch (error) {
+            console.log(error)
             ToastAndroid.show('Ocorreu um erro ao publicar o post', ToastAndroid.LONG)
         }
     }

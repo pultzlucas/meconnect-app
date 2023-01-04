@@ -1,15 +1,17 @@
 import { Api, Colors } from "meconnect-sdk";
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ToastAndroid } from "react-native";
+import { View, Text, Image, StyleSheet, TouchableOpacity, StatusBar, ScrollView, ToastAndroid, Dimensions } from "react-native";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MCHeader from "../components/MCHeader";
 import Price from "../components/Price";
 import HeaderOption from "../components/HeaderOption";
+import HorizontalLine from "../components/HorizontalLine";
 
 export default function ProductScreen({ navigation, route: { params: { id: productId } } }) {
     const [product, setProduct] = useState({
         price: 0,
-        description: '...'
+        description: '...',
+        images: []
     })
 
     function error() {
@@ -34,24 +36,28 @@ export default function ProductScreen({ navigation, route: { params: { id: produ
             <StatusBar></StatusBar>
             <MCHeader title={'Produto'}>
                 <HeaderOption noMargin onClick={() => navigation.goBack()}>
-                <Ionicons name="close" color={'white'} size={26}></Ionicons>
+                    <Ionicons name="close" color={'white'} size={26}></Ionicons>
                 </HeaderOption>
             </MCHeader>
             <ScrollView contentContainerStyle={styles.item}>
-                <Image style={styles.photo} source={{ uri: product.photo_url }} resizeMode='stretch'/>
                 <Text style={styles.description}>{product.description}</Text>
                 <Price style={styles.price} value={product.price} />
-                {/* <MCButton style={styles.btn}>Ver mais</MCButton> */}
-                {
-                   /*  product.details && <>
-                        <HorizontalLine width={300} marginVertical={20} title={'DETALHES'} titleBackgroundColor='#F3F3F3' />
-                        <View style={styles.detailsContainer}>
-                            <Text style={styles.details}>{product.details}</Text>
-                        </View>
-                    </> */
-                }
-            </ScrollView>
-        </View>
+
+                <HorizontalLine />
+
+                <View>
+                    <Image style={styles.photo} source={{ uri: product.images[0] }} resizeMode='stretch' />
+                    <View style={{ flexDirection: 'row', marginTop: 10 }}>
+                        {
+                            product.images.slice(1, product.images.length).map((uri, i) => {
+                                return <Image style={styles.sidePhotos} key={i} source={{ uri }} resizeMode='stretch' />
+                            })
+                        }
+                    </View>
+                </View>
+
+            </ScrollView >
+        </View >
     );
 }
 
@@ -61,40 +67,40 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     item: {
-        backgroundColor: '#f3f3f3',
-        paddingHorizontal: 14,
-        paddingTop: 10,
-        paddingBottom: 20,
-        borderRadius: 8,
         marginVertical: 8,
-        marginHorizontal: 16,
+        marginHorizontal: 10,
+        paddingBottom: 30,
     },
     backBtn: {
         marginLeft: 'auto',
         textAlign: 'left',
     },
-    description: {
-        marginTop: 10,
-        textAlign: 'center',
-        fontSize: 20,
-        width: 300,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-    },
-    photo: {
-        width: 300,
-        height: 300,
+   /*  header: {
+        borderWidth: 2,
+        borderColor: '#ddd',
         borderRadius: 10,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-        marginTop: 10,
-        backgroundColor: 'white',
+        padding: 10,
+        marginBottom: 10,
+    }, */
+    photo: {
+        height: Dimensions.get('screen').width - 10,
+        borderRadius: 10,
+    },
+    sidePhotos: {
+        width: 60,
+        height: 60,
+        marginRight: 10,
+        borderRadius: 5,
+    },
+    description: {
+        // marginTop: 10,
+        fontSize: 20,
     },
     price: {
         fontSize: 24,
         fontWeight: 'bold',
-        textAlign: 'center',
         marginTop: 10,
+        color: Colors.DarkOrange
     },
     btn: {
         marginTop: 20,

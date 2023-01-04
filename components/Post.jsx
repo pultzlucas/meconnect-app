@@ -10,15 +10,16 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { useState } from "react";
 import * as SecureStore from 'expo-secure-store'
 import { useEffect } from "react";
+import MediaCollection from "./MediaCollection";
 
 export default function Post({
   id: postId,
   title,
   content,
-  media_url,
+  images,
+  videos,
   created_at,
-  likes,
-  media_type,
+  likes = 0,
   onRemove,
   options = false,
   interativeBar = false,
@@ -53,13 +54,13 @@ export default function Post({
     }
   }
 
-  // function reduceContent(content) {
-  //   if (content.length > 100) {
-  //     const contentCutted = String(content).split("").slice(0, 100);
-  //     return contentCutted.join("") + "...";
-  //   }
-  //   return content;
-  // }
+  function reduceContent(content) {
+    if (content.length > 500) {
+      const contentCutted = String(content).split("").slice(0, 100);
+      return contentCutted.join("") + "...";
+    }
+    return content;
+  }
 
   async function incrementLikes() {
     setLikesUpdated(likesUpdated + 1)
@@ -123,32 +124,9 @@ export default function Post({
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => navigation.navigate('PostScreen', { id: postId })}>
-            <Date style={styles.date} date={created_at} />
-
-            {media_type === "image" && media_url ? (
-              <Image
-                style={styles.media}
-                source={{ uri: media_url }}
-                resizeMode={"stretch"}
-              />
-            ) : (
-              <></>
-            )}
-
-            {media_type === "video" && media_url ? (
-              <Video
-                style={styles.media}
-                source={{ uri: media_url }}
-                useNativeControls
-                resizeMode={ResizeMode.COVER}
-                isLooping
-              />
-            ) : (
-              <></>
-            )}
-            <Text style={styles.desc}>{content}</Text>
-          </TouchableOpacity>
+          <Date style={styles.date} date={created_at} />
+          <Text style={styles.desc}>{reduceContent(content)}</Text>
+          {(images || videos) && <MediaCollection navigation={navigation} style={styles.media} videos={videos} images={images} />}
 
           {
             interativeBarStatistics && <>
@@ -193,7 +171,7 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
     borderRadius: 8,
     marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 10,
   },
   postHeader: {
     display: "flex",
@@ -203,6 +181,8 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
+    flexWrap: 'wrap',
+    width: '90%',
     fontWeight: "bold",
   },
   desc: {
@@ -217,10 +197,7 @@ const styles = StyleSheet.create({
     marginTop: 6,
   },
   media: {
-    width: 300,
-    height: 300,
     marginTop: 10,
-    borderRadius: 10,
     marginLeft: "auto",
     marginRight: "auto",
   },

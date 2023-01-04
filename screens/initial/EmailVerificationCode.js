@@ -40,6 +40,7 @@ export default function EmailVerificationCodeScreen({ navigation, route: { param
         <View style={styles.container}>
             <Text style={styles.title}>Um código de confirmação de email foi enviado para <Text style={styles.email}>{user.email}</Text></Text>
             <MCInput style={styles.codeInput} placeholder={'Insira o código'} maxLength={6} type='numeric' onInput={txt => setInputCode(txt)} />
+            <Text style={styles.spanText}>Se você não recebeu o email, confira sua caixa de spam</Text>
             <MCButton style={styles.btn} onClick={confirmVerificationCode} disabled={isLoading} isLoading={isLoading}>Ok</MCButton>
             <MCButton style={styles.btn} onClick={sendEmailVerificationCode} styleType='secondary'>Reenviar código</MCButton>
         </View>
@@ -66,5 +67,12 @@ const styles = StyleSheet.create({
     },
     email: {
         color: Colors.DarkOrange,
+    },
+    spanText: {
+        width: 300,
+        color: Colors.DarkGray,
+        marginTop: 10,
+        textAlign: 'center',
+        fontSize: 12,
     }
 })

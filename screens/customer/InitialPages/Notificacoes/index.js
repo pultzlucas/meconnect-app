@@ -13,7 +13,7 @@ export default function Notification({ navigation }) {
   const [notifications, setNotifications] = useState([])
   const [showPlaceholder, setShowPlaceholder] = useState(false)
 
-  function fetchDataError() {
+  function fetchDataError(err) {
     ToastAndroid.show('Ocorreu um erro ao buscar as notificações', ToastAndroid.LONG)
   }
 
@@ -50,7 +50,7 @@ export default function Notification({ navigation }) {
   }
 
 
-  const renderItem = ({ item: { created_at, event, redirect_id,  message, vendor } }) => {
+  const renderItem = ({ item: { created_at, event, redirect_id,  message, vendor, view } }) => {
     return (
       <TouchableOpacity onPress={() => redirectToScreen(event, redirect_id)}>
         <NotificationComponent
@@ -58,6 +58,7 @@ export default function Notification({ navigation }) {
           event={event}
           message={message}
           vendor={vendor}
+          view={view}
         />
       </TouchableOpacity>
     )

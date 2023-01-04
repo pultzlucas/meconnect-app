@@ -166,12 +166,15 @@ export default function Principal({ route, navigation }) {
           <Text style={styles.customersConnectedTotal}>{vendor.connections}</Text>
         </View>
 
-        <Text style={styles.bio}>{vendor.bio}</Text>
+        {vendor.bio && <Text style={styles.bio}>{vendor.bio}</Text>}
 
-        <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} />
-        <VendorProfileTopic title={'Email'} info={vendor.email} />
-        <VendorProfileTopic title={'Tel'} info={vendor.tel} />
-        <VendorProfileTopic title={'CEP'} info={vendor.cep} />
+
+        <View>
+          <VendorProfileTopic title={'CNPJ'} info={vendor.cnpj} />
+          <VendorProfileTopic title={'Email'} info={vendor.email} />
+          <VendorProfileTopic title={'Tel'} info={vendor.tel} />
+          <VendorProfileTopic title={'CEP'} info={vendor.cep} />
+        </View>
 
       </View>
       <Splash show={showSplash} />
@@ -226,7 +229,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 10,
     width: '50%',
-    marginTop: 10,
+    marginVertical: 10,
   },
   customersConnectedTitle: {
     backgroundColor: "#DDDDDD",
@@ -258,22 +261,10 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginBottom: 10,
   },
-  cnpj: {
-    borderColor: "#EEEEEE",
-    borderBottomWidth: 7,
-    borderTopWidth: 7,
-    color: Colors.Black,
-    width: '100%',
-    textAlign: "center",
-    fontSize: 18,
-    marginTop: 20,
-    padding: 10,
-  },
   bio: {
-    marginTop: 10,
-    fontSize: 17,
+    marginVertical: 10,
+    fontSize: 14,
     color: Colors.Black,
-    width: '100%',
-    padding: 10,
+    paddingHorizontal: 20,
   },
 });

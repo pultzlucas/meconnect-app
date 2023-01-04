@@ -1,5 +1,6 @@
-import { useEffect, useState, RefreshControl } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
+  RefreshControl,
   View,
   Text,
   StyleSheet,
@@ -25,11 +26,20 @@ import HorizontalLine from "../../../../components/HorizontalLine";
 import VendorProfileTopic from "../../../../components/VendorProfileTopic";
 import Splash from "../../../../components/Splash"
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
+
 export default function Principal({ navigation }) {
   const [vendor, setVendor] = useState('')
-  const isFocused = useIsFocused();
   const [visible, setVisible] = useState(false);
   const [showSplash, setShowSplash] = useState(false)
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(500).then(() => setRefreshing(false));
+  }, []);
 
   function getVendorInfo() {
     setShowSplash(false)
@@ -38,6 +48,7 @@ export default function Principal({ navigation }) {
       Api.db.vendors.get(vendorId).then(({ data: vendor }) => {
         vendor.cnpj = vendor.cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, "$1.$2.$3/$4-$5")
         vendor.cep = vendor.cep.replace(/^(\d{5})(\d{3})/, "$1-$2")
+        console.log(vendor)
         setVendor(vendor)
         setShowSplash(false)
       }).catch(() => {
@@ -50,7 +61,7 @@ export default function Principal({ navigation }) {
 
   useEffect(() => {
     getVendorInfo()
-  }, [isFocused])
+  }, [useIsFocused(), refreshing])
 
   const toggleBottomNavigationView = () => {
     setVisible(!visible);
@@ -60,8 +71,15 @@ export default function Principal({ navigation }) {
     <ScrollView style={{
       flex: 1,
       backgroundColor: 'white'
-    }}>
-      <StatusBar backgroundColor={Colors.DarkOrange}/>
+    }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
+      <StatusBar backgroundColor={Colors.DarkOrange} />
       <View style={styles.container}>
         <MCHeader title={'Perfil'}>
           <HeaderOption onClick={() => { navigation.navigate('VendorProfileEdit') }}>
@@ -92,7 +110,7 @@ export default function Principal({ navigation }) {
         <VendorProfileTopic title={'Tel'} info={vendor.tel} style={styles.vendorInfo} />
         <VendorProfileTopic title={'CEP'} info={vendor.cep} style={styles.vendorInfo} />
 
-        <Splash show={showSplash}/>
+        <Splash show={showSplash} />
 
         <BottomSheet
           visible={visible}
@@ -201,10 +219,10 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bio: {
-    fontSize: 17,
+    marginVertical: 10,
+    fontSize: 14,
     color: Colors.Black,
-    width: '100%',
-    padding: 10,
+    paddingHorizontal: 20,
   },
   vendorInfo: {
     display: 'flex',
